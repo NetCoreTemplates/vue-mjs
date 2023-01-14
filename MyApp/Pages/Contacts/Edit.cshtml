@@ -1,0 +1,86 @@
+@page
+@using MyApp.ServiceModel
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@if (!await Html.EnsureAuthenticatedAsync()) { return; }
+
+@{ 
+    var Continue = "/Contacts";
+    var id = int.Parse(Html.Query("id"));
+    var api = await Gateway.ApiAsync(new GetContacts { Id = id });
+    var contact = api.Response?.Results.FirstOrDefault();
+}
+
+@if (api.Error != null)
+{
+    <div class="max-w-sm">
+        <div class="alert alert-warning">@api.Error.SummaryMessage()</div>
+        <p><a href="@Continue">&lt; back</a></p>
+    </div>
+    return;
+}
+else if (contact == null) { return; }
+
+<div class="w-sm">
+    <h3>Update Contact</h3>
+    
+    <form action=@(typeof(UpdateContact).ToApiUrl()) method="post" class="w-100">
+        <input type="hidden" name="id" value="@id"/>
+        <div class="mb-3" data-validation-summary="title,name,color,filmGenres,age"></div>
+
+        <div class="mb-3">
+            <div class="form-check">
+                @foreach (var it in Html.ContactTitles())
+                {
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="title-@it.Key" name="title" value="@it.Key" class="custom-control-input">
+                        <label class="custom-control-label" for="title-@it.Key">@it.Value</label>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="name">Full Name</label>
+            <input class="form-control" id="name" name="name" type="text" placeholder="Name">
+            <small id="name-help" class="text-muted">Your first and last name</small>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="color">Favorite color</label>
+            <select id="color" name="color" class="col-4 form-control">
+                <option value=""></option>
+                @foreach (var it in Html.ContactColors())
+                {
+                    <option value="@it.Key">@it.Value</option>
+                }
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-check-label">Favorite Film Genre</label>
+            <div class="form-check">
+                @foreach (var it in Html.ContactGenres())
+                {
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="favoriteGenre-@it" name="favoriteGenre" value="@it" class="custom-control-input">
+                        <label class="custom-control-label" for="favoriteGenre-@it">@it</label>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="mb-3">
+            <input class="form-control col-4" name="age" type="number" min="3" placeholder="Age">
+        </div>
+        <div class="mb-3">
+            <button class="btn btn-primary me-2" type="submit">Update Contact</button>
+            <a href="@Continue">cancel</a>
+        </div>
+    </form>
+</div>
+    
+<script type="module">
+import { $1, bootstrapForm } from "@@servicestack/client"
+bootstrapForm($1("form"), {
+    model: @contact.AsRawJson(),
+    success: r => {
+        location.href = '@Continue'
+    },
+})
+</script>

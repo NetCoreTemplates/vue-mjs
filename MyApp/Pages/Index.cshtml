@@ -1,0 +1,101 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="container mx-auto px-5">
+    <section class="flex-col md:flex-row flex items-center md:justify-between mt-16 mb-16 md:mb-12">
+        <h1 class="text-6xl md:text-8xl font-bold tracking-tighter leading-tight md:pr-8">Vue.mjs</h1>
+        <div class="flex flex-col">
+            <h4 class="text-lg mt-5">A Modern .NET + JS App with 
+                <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules" class="@Css.LinkUnderline">JS modules</a>, 
+                <a href="https://vuejs.org" class="@Css.LinkUnderline">Vue.js</a>, 
+                Markdown &amp; <a href="https://servicestack.net" class="@Css.LinkUnderline">ServiceStack</a>.
+            </h4>
+            <div class="flex justify-between items-center">
+                <div id="hello-api" class="mr-4"></div>
+                @Html.SrcComponent("HelloApi.mjs", size:"w-8 h-8 mt-2")
+            </div>
+        </div>
+    </section>
+</div>
+
+<section>
+    <h2 class="text-4xl md:text-6xl font-bold tracking-tighter leading-tight md:pr-8 whitespace-nowrap text-center pt-8">
+      Getting Started
+    </h2>
+    <div class="mb-8 md:mb-16">
+        <div class="sm:mx-0 sm:px-4 sm:py-8 flex justify-evenly">
+            <div id="getting-started"></div>
+        </div>
+        <div class="flex justify-center">
+            @Html.SrcComponent("GettingStarted.mjs")
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="mx-auto max-w-xl py-8 sm:py-16">
+        <div class="text-center">
+            <h2 class="py-2 text-3xl font-bold text-gray-900 dark:text-gray-100 sm:text-4xl">
+                Simple, Modern JavaScript Development
+            </h2>
+            <p class="py-2 text-lg text-gray-500 dark:text-gray-400">
+                Leverage Modern Browser features for Simple, Fast App development
+            </p>
+        </div>
+
+        <ul role="list" class="mt-4 divide-y divide-gray-200 dark:divide-gray-800 border-t border-b border-gray-200 dark:border-gray-800">
+        @{
+            void NavListItem(string title, string childContent)
+            {
+                <li class="relative flex items-start space-x-4 py-6">
+                    <div class="min-w-0 flex-1">
+                        <h3 class="text-base font-medium text-gray-900 dark:text-gray-100">
+                            <span class="rounded-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2">
+                                <span class="focus:outline-none">
+                                    @title
+                                </span>
+                            </span>
+                        </h3>
+                        <p class="text-base text-gray-500">
+                            @Html.Raw(childContent)
+                        </p>
+                    </div>
+                </li>
+            }
+            NavListItem("Simple", "No <b>node_modules</b>, no build tools, no client side routing, no heavy client state");
+            NavListItem("Fast", $"Initial SSR HTML &amp; JSON for fast <a href='https://web.dev/fcp/' class='{Css.Link}'>FCP</a>, avoid full page reloads with <a href='https://htmx.org/attributes/hx-boost/' class='{Css.Link}'>htmlx boost</a>");
+            NavListItem("Lightweight", "Only load JS each page needs, built-in optimizer for optimal dev &amp; prod bundles");
+            NavListItem("Rapid Development", "View code &amp; style changes instantly on Save with <b>dotnet watch</b>");
+            NavListItem("Maintainable", "Logically structure &amp; encapsulate components using native JavaScript Modules");
+            NavListItem("Type Safety", "Use JSDoc and Library TypeScript definitions for IDE static analysis");
+            NavListItem("SEO Friendly", "Use Razor for SEO-friendly HTML content, Progressive JS for interactive pages");
+            NavListItem("Modern", "Use latest Vue3, htmlx or any preferred 3rd Party libraries");
+            NavListItem("Tailwind", "Productive, maintainable, responsive-first styling");
+        }
+        </ul>
+    </div>
+</section>
+
+@section Scripts {
+<script type="module">
+import { $1, on } from "@@servicestack/client"
+import { client } from "/mjs/app.mjs"
+import { Hello } from "/mjs/dtos.mjs"
+import { mount } from "/mjs/app.mjs"
+import HelloApi from "/mjs/components/HelloApi.mjs" 
+import GettingStarted from "/mjs/components/GettingStarted.mjs" 
+
+mount('#hello-api', HelloApi, { value: 'Vue.mjs' })
+mount('#getting-started', GettingStarted)
+
+on("#txtName", {
+    async keyup(e) {
+        let api = await client.api(new Hello({ name:e.target.value }))
+        $1('#result').innerHTML = api.response.result
+    },
+})
+</script>
+}

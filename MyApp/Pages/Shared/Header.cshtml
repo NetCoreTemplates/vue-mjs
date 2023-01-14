@@ -1,0 +1,55 @@
+<header class="border-b border-gray-200 pr-3">
+    <div class="flex flex-wrap items-center">
+        <div class="flex-shrink flex-grow-0">
+            <div class="cursor-pointer">
+                <a hx-boost="true" class="navbar-brand" href="/">
+                    <img class="ml-2 w-12 h-12" src="/img/logo.svg" alt="MyApp logo">
+                </a>
+            </div>
+        </div>
+        <div class="flex flex-grow flex-shrink flex-nowrap justify-end items-center">
+            <nav hx-boost="true" class="relative flex flex-grow leading-6 font-semibold text-slate-700 dark:text-slate-200">
+                <ul class="flex flex-wrap items-center justify-end w-full m-0">
+                    @{
+                        var isAuthenticated = await Html.IsAuthenticatedAsync();
+                        var isAdmin = await Html.HasRoleAsync("Admin");
+                        void RenderNavLink(string href, string childContent)
+                        {
+                            <li class="relative flex flex-wrap just-fu-start m-0">
+                                <a href="@href" class="@CssUtils.ClassNames("p-4 flex items-center justify-start mw-full hover:text-sky-500 dark:hover:text-sky-400", 
+                                                           Html.MatchesPath(href) ? "text-blue-700" : "")">
+                                    @Html.Raw(childContent)
+                                </a>
+                            </li>
+                        }
+                        void RenderLinkButton(string href, string childContent, string? cls = null)
+                        {
+                            cls ??= "ml-2 inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500";
+                            <li class="relative flex flex-wrap just-fu-start m-0">
+                                <a href="@href" class="@cls">
+                                    @Html.Raw(childContent)
+                                </a>
+                            </li>
+                        }
+
+                        RenderNavLink("/posts", "Blog");
+                        RenderNavLink("/todomvc", "Todos");
+                        RenderNavLink("/bookings-crud", "Bookings");
+                        if (isAuthenticated)
+                            RenderNavLink("/profile", "Profile");
+                        if (isAdmin)
+                            RenderNavLink("/admin", "Admin");
+                        if (isAuthenticated)
+                            RenderLinkButton("/auth/logout?continue=/", "Sign Out");
+                        if (!isAuthenticated)
+                            RenderLinkButton("/signin", "Sign In");
+                        if (!isAuthenticated)
+                            RenderLinkButton("/signup", "Sign Up", 
+                                "ml-2 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-50");
+                    }
+                </ul>
+            </nav>
+
+        </div>
+    </div>
+</header>

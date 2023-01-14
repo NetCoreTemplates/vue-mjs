@@ -1,0 +1,47 @@
+﻿@inherits Microsoft.AspNetCore.Mvc.Razor.RazorPage<TModel>
+<!doctype html>
+<html lang="en">
+@{
+    var dev = HostContext.AppHost.IsDevelopmentEnvironment();
+    var min = dev ? "" : "[hash].min";
+}
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewData["Title"] - My App</title>
+    <link rel="stylesheet" href="/css/app.css">
+    
+    @Html.BundleJs(new BundleOptions {
+        Sources = {
+            "/lib/js/"
+        },
+        SaveToDisk = !dev,
+        OutputTo = $"/js/lib.bundle{min}.js"
+    })
+
+    @Html.ImportMap(new() {
+        ["vue"]                  = new("/lib/mjs/vue.mjs", "https://unpkg.com/vue@3/dist/vue.esm-browser.prod.js"),
+        ["@servicestack/client"] = new("/lib/mjs/servicestack-client.mjs", "https://unpkg.com/@servicestack/client/dist/servicestack-client.min.mjs"),
+        ["@servicestack/vue"]    = new("/lib/mjs/servicestack-vue.mjs", "https://unpkg.com/@servicestack/vue@3/dist/servicestack-vue.min.mjs")
+    })
+    
+    <script type="module" async>
+        import { init } from "/mjs/app.mjs"
+        init(window)
+    </script>
+</head>
+<body>
+@await Html.PartialAsync("Header")
+
+<div class="min-h-screen">
+    <main role="main" class="pb-3" hx-ext="class-tools">
+        @RenderBody()
+    </main>
+</div>
+
+@await Html.PartialAsync("Footer")
+
+@await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

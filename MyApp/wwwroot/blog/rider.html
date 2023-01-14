@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title> - My App</title>
+    <link rel="stylesheet" href="/css/app.css">
+    
+    <script src="/js/lib.bundle.js"></script>
+
+    <script type="importmap">
+{
+    "imports": {
+        "vue": "/lib/mjs/vue.mjs",
+        "@servicestack/client": "/lib/mjs/servicestack-client.mjs",
+        "@servicestack/vue": "/lib/mjs/servicestack-vue.mjs"
+    }
+}
+</script>
+    
+    <script type="module" async>
+        import { init } from "/mjs/app.mjs"
+        init(window)
+    </script>
+</head>
+<body>
+<header class="border-b border-gray-200 pr-3">
+    <div class="flex flex-wrap items-center">
+        <div class="flex-shrink flex-grow-0">
+            <div class="cursor-pointer">
+                <a hx-boost="true" class="navbar-brand" href="/">
+                    <img class="ml-2 w-12 h-12" src="/img/logo.svg" alt="MyApp logo">
+                </a>
+            </div>
+        </div>
+        <div class="flex flex-grow flex-shrink flex-nowrap justify-end items-center">
+            <nav hx-boost="true" class="relative flex flex-grow leading-6 font-semibold text-slate-700 dark:text-slate-200">
+                <ul class="flex flex-wrap items-center justify-end w-full m-0">
+                            <li class="relative flex flex-wrap just-fu-start m-0">
+                                <a href="/posts" class="p-4 flex items-center justify-start mw-full hover:text-sky-500 dark:hover:text-sky-400">
+                                    Blog
+                                </a>
+                            </li>
+                            <li class="relative flex flex-wrap just-fu-start m-0">
+                                <a href="/todomvc" class="p-4 flex items-center justify-start mw-full hover:text-sky-500 dark:hover:text-sky-400">
+                                    Todos
+                                </a>
+                            </li>
+                            <li class="relative flex flex-wrap just-fu-start m-0">
+                                <a href="/bookings-crud" class="p-4 flex items-center justify-start mw-full hover:text-sky-500 dark:hover:text-sky-400">
+                                    Bookings
+                                </a>
+                            </li>
+                            <li class="relative flex flex-wrap just-fu-start m-0">
+                                <a href="/signin" class="ml-2 inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    Sign In
+                                </a>
+                            </li>
+                            <li class="relative flex flex-wrap just-fu-start m-0">
+                                <a href="/signup" class="ml-2 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-50">
+                                    Sign Up
+                                </a>
+                            </li>
+                </ul>
+            </nav>
+
+        </div>
+    </div>
+</header>
+
+
+<div class="min-h-screen">
+    <main role="main" class="pb-3" hx-ext="class-tools">
+        
+
+<link rel="stylesheet" href="/css/typography.css">
+
+<div class="container px-5 mb-32 mx-auto">
+        <article class="mt-20">
+            <h1 class="text-6xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-tight md:leading-none mb-12 text-center md:text-left">
+                Develop using JetBrains Rider
+            </h1>
+            <div class="hidden md:block md:mb-12">
+                <div class="flex items-center">
+                    <img class="w-12 h-12 rounded-full mr-4 text-cyan-600" src="/img/authors/author1.svg">
+                    <div class="text-xl font-bold">Lucy Bates</div>
+                </div>
+            </div>
+            <div class="mb-8 md:mb-16 sm:mx-0">
+                <div class="sm:mx-0">
+                    <img src="https://images.unsplash.com/photo-1485841890310-6a055c88698a?crop=entropy&amp;fit=crop&amp;h=1000&amp;w=2000" alt="Develop using JetBrains Rider Background" class="shadow-small">
+                </div>
+            </div>
+            <div class="mb-4 max-w-2xl mx-auto flex flex-wrap">
+                <a href="/posts?tag=c%23" class="mr-2 text-xs leading-5 font-semibold bg-slate-400/10 rounded-full py-1 px-3 flex items-center space-x-2 hover:bg-slate-400/20 dark:highlight-white/5">c#</a>
+                <a href="/posts?tag=dev" class="mr-2 text-xs leading-5 font-semibold bg-slate-400/10 rounded-full py-1 px-3 flex items-center space-x-2 hover:bg-slate-400/20 dark:highlight-white/5">dev</a>
+            </div>
+                <div class="max-w-2xl mx-auto">
+                    <div class="mb-6 text-lg text-gray-500">
+                        <time datetime="2023-01-02T00:00:00.0000000">January 2, 2023</time>
+                        <span aria-hidden="true">&middot;</span>
+                        <span>4 min read</span>
+                    </div>
+                </div>
+            <div class="max-w-2xl mx-auto">
+                <div class="prose lg:prose-xl max-w-none mb-32">
+                    <a href="https://www.jetbrains.com/rider/">
+<img src="https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/svg/rider.svg" 
+     class="sm:float-left mr-8 w-24 h-24" style="margin-top:0"></a>
+<p><a href="https://www.jetbrains.com/rider/">JetBrains Rider</a> is our recommended IDE for any C# + npm SPA development as it
+offers a great development UX for both C# and npm projects, including excellent support
+for TypeScript and popular JavaScript Framework SPA assets like <a href="https://v3.vuejs.org/guide/single-file-component.html">Vue SFC's</a>.</p>
+<p><img src="https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/spa/vue-vite-rider-sln.png"
+class="sm:float-right w-60 ml-8" style="margin-top:1rem"></p>
+<h4 id="setup-rider-ide">Setup Rider IDE</h4>
+<p>Rider already understands and provides excellent support npm so you're immediately productive out-of-the-box,
+the only plugin we'd add is:</p>
+<a href="https://plugins.jetbrains.com/plugin/15321-tailwind-css" class="text-2xl flex items-center" style="text-decoration:none">
+     <svg class="sm:float-left w-12 h-12" style="margin:0 .5rem 0 0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#44a8b3" d="M9 13.7q1.4-5.6 7-5.6c5.6 0 6.3 4.2 9.1 4.9q2.8.7 4.9-2.1q-1.4 5.6-7 5.6c-5.6 0-6.3-4.2-9.1-4.9q-2.8-.7-4.9 2.1Zm-7 8.4q1.4-5.6 7-5.6c5.6 0 6.3 4.2 9.1 4.9q2.8.7 4.9-2.1q-1.4 5.6-7 5.6c-5.6 0-6.3-4.2-9.1-4.9q-2.8-.7-4.9 2.1Z"/></svg>
+     <span class="">Tailwind CSS Plugin</span>
+</a>
+<p>Which provides provides intelligent support for <a href="https://tailwindcss.com">Tailwind CSS</a>.</p>
+<h4 id="setup-c-solution">Setup C# Solution</h4>
+<p>To modify both C# and npm TypeScript projects within the same solution, open the C#
+<code>/api/ProjectName.sln</code> in Rider, then on the Solution Name right-click on the context menu
+<code>Add &gt; Attach Existing Folder...</code></p>
+<p>Then add the <code>/ui</code> folder which will add your UI folder to the solution as seen on the right:</p>
+<p>After this one-time setup you're ready to begin!</p>
+<h3 id="start-both-npm-c-projects">Start both npm &amp; C# projects</h3>
+<p>To take advantage of <a href="https://vitejs.dev">Vite</a> excellent Hot Module reload support, we're now recommending
+UI development through its dev server which you can do in rider by opening <code>package.json</code> and running the
+<strong>dev</strong> script:</p>
+<p><img src="https://github.com/ServiceStack/docs/raw/master/docs/images/spa/vue-vite-scripts.png" alt="" /></p>
+<p><img src="https://github.com/ServiceStack/docs/raw/master/docs/images/spa/vue-vite-run-myapp.png"
+class="sm:float-right w-72" style="margin:0 0 0 1rem"></p>
+<p>This launch vite in HMR mode where any changes to <code>/ui</code> assets will have immediate effect.</p>
+<p>Then to start the back-end C# project, right-click on the Host Project and click <strong>Run</strong> on the projects context menu.</p>
+<p>With both projects started you can open and leave a browser tab running at <code>http://localhost:3000</code>
+where it will automatically reload itself at every <code>Ctrl+S</code>.</p>
+<p>When you're ready to preview a development build of the Client UI in your .NET App, run:</p>
+<pre><code class="language-bash">$ npm run build:local
+</code></pre>
+<p>Which will publish your Vue 3's App static assets to the .NET App's <code>/wwwroot</code> where it can be previewed from
+<code>https://localhost:5001</code>.</p>
+<h3 id="riders-new-task-runner">Rider's new Task Runner</h3>
+<p>In the latest version of Rider, once you run the npm and dotnet tasks after the first time, they will appear in Rider's
+new useful task runner widget where you'll be able to easily, stop and rerun all project tasks:</p>
+<p><img src="https://github.com/ServiceStack/docs/raw/master/docs/images/spa/rider-run-widget.png" alt="" /></p>
+<h3 id="start-npm-c-projects-from-the-terminal">Start npm &amp; C# projects from the terminal</h3>
+<p>These GUI tasks are just managing running CLI commands behind-the-scenes, which if you prefer you can use JetBrains
+excellent multi-terminal support to run <code>$ dotnet watch</code> and <code>$ npm run dev</code> from separate or split Terminal windows:</p>
+<p><img src="https://github.com/ServiceStack/docs/raw/master/docs/images/spa/vue-vite-rider-terminals.png" alt="" /></p>
+<h3 id="deploying-to-production">Deploying to Production</h3>
+<p>When you're ready to deploy your App you can create a production build with:</p>
+<pre><code class="language-bash">$ npm run publish
+</code></pre>
+<p>Which will generate production builds of your C# projects and npm projects with its static generated UI assets
+written to <code>/wwwroot</code> to be deployed together with your complete .NET App.</p>
+<p>Our recommendation for the best possible responsive UX is to deploy your App's <code>/wwwwroot</code> static assets to a CDN in
+order for the initial load of your App to be downloaded from nearby CDN edge caches.</p>
+<p>To do this configure the production url the UI should use for all its <code>/api</code> Ajax requests by modifying
+<code>DEPLOY_API</code> in your <code>vite.config.ts</code>:</p>
+<pre><code class="language-csharp">const DEPLOY_API = 'https://vue-ssg-api.jamstacks.net'
+</code></pre>
+<p>This template also includes the necessary GitHub Actions to deploy this Apps production static assets to GitHub Pages CDN,
+for more info, checkout <a href="/posts/deploy">GitHub Actions Deployments</a>.</p>
+<h3 id="get-started">Get Started</h3>
+<p>Driven by the static typing benefits of TypeScript, Vue 3 was itself written in TypeScript, a benefit that sees it
+extend to elevate TypeScript with first-class citizen support that development IDEs like Rider take full advantage of
+that's used to power its type-safe &amp; productive intelli-sense dev UX.</p>
+<p>If you're new to Vue 3 a good place to start is
+<a href="https://v3.vuejs.org/api/sfc-script-setup.html">Vue 3 composition APIs in SFC</a></p>
+
+                </div>
+            </div>
+        </article>
+</div>
+    </main>
+</div>
+
+<footer class="bg-accent-1 border-t border-accent-2">
+    <div class="container mx-auto px-5">
+        <div class="py-28 flex flex-col lg:flex-row items-center">
+            <h3 class="text-4xl lg:text-6xl font-bold tracking-tighter leading-tight text-center lg:text-left mb-10 lg:mb-0 lg:pr-4 lg:w-1/2">A ServiceStack Project</h3>
+            <div class="flex flex-col lg:flex-row justify-center items-center lg:pl-4 lg:w-1/2">
+                <a href="https://docs.servicestack.net" class="mx-3 bg-black hover:bg-white hover:text-black border border-black text-white font-bold py-3 px-12 lg:px-8 duration-200 transition-colors mb-6 lg:mb-0">Read Documentation</a>
+                <a href="https://github.com/NetCoreTemplates/vue-mjs" class="mx-3 font-bold hover:underline">View on GitHub</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+</body>
+</html>

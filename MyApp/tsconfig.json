@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "sourceMap": true,
+    "allowJs": true,
+    "baseUrl": "./",
+    "typeRoots": ["./wwwroot/lib/typings"],
+    "paths": {
+      "*": [
+        "./wwwroot/lib/*",
+        "./wwwroot/lib/typings/*"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
