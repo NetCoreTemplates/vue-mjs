@@ -2,14 +2,11 @@ using System.Globalization;
 using System.Text;
 using Markdig;
 using Markdig.Syntax;
-using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using MyApp.Pages;
-using ServiceStack.Host.Handlers;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
 using ServiceStack.IO;
 using ServiceStack.Logging;
 using ServiceStack.Text;
-using RazorPage = Microsoft.AspNetCore.Mvc.Razor.RazorPage;
 
 [assembly: HostingStartup(typeof(MyApp.ConfigureMarkdown))]
 
@@ -18,41 +15,40 @@ namespace MyApp;
 public class ConfigureMarkdown : IHostingStartup
 {
     public void Configure(IWebHostBuilder builder) => builder
-        .ConfigureServices(services => { services.AddSingleton<BlogPosts>(); })
+        .ConfigureServices(services =>
+        {
+            services.AddSingleton<RazorPagesEngine>();
+            services.AddSingleton<BlogPosts>();
+        })
         .ConfigureAppHost(afterAppHostInit: appHost =>
         {
             var blogPosts = appHost.Resolve<BlogPosts>();
             blogPosts.VirtualFiles = appHost.GetVirtualFileSource<FileSystemVirtualFiles>();
 
-            //Optional, prerender on deployment with: dotnet run --AppTasks=prerender 
+            //Optional, prerender /blog on deployment with: `$ npm run prerender` 
             AppTasks.Register("prerender", args => blogPosts.LoadPosts("_blog/posts", renderTo: "blog"));
             AppTasks.Run();
 
-            if (appHost.IsDevelopmentEnvironment())
-            {
-                blogPosts.LoadPosts("_blog/posts", renderTo: "blog");
-            }
-            else
-            {
-                blogPosts.LoadPosts("_blog/posts");
-            }
+            blogPosts.LoadPosts("_blog/posts");
+            // Alternatively always prerender /blog on Startup with:
+            // blogPosts.LoadPosts("_blog/posts", renderTo: "blog");
         });
 }
 
 public class BlogPosts
 {
-    private ILogger<BlogPosts> log;
-    private IRazorViewEngine viewEngine;
-    public BlogPosts(ILogger<BlogPosts> log, IRazorViewEngine viewEngine)
+    private readonly ILogger<BlogPosts> log;
+    private readonly RazorPagesEngine razorPages;
+    public BlogPosts(ILogger<BlogPosts> log, RazorPagesEngine razorPages)
     {
         this.log = log;
-        this.viewEngine = viewEngine;
+        this.razorPages = razorPages;
     }
 
-    public string PagePath { get; set; } = "/Pages/Post.cshtml";
+    public string PagesPath { get; set; } = "/Pages/Posts/Index.cshtml";
+    public string PagePath { get; set; } = "/Pages/Posts/Post.cshtml";
 
-    public string FallbackProfileUrl { get; set; } =
-        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%230891b2' d='M12 2a5 5 0 1 0 5 5a5 5 0 0 0-5-5zm0 8a3 3 0 1 1 3-3a3 3 0 0 1-3 3zm9 11v-1a7 7 0 0 0-7-7h-4a7 7 0 0 0-7 7v1h2v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1z'%3E%3C/path%3E%3C/svg%3E";
+    public string FallbackProfileUrl { get; set; } = Svg.ToDataUri(Svg.Create(Svg.Body.User, stroke:"none").Replace("fill='currentColor'","fill='#0891b2'"));
     public string FallbackSplashUrl { get; set; } = "https://source.unsplash.com/random/2000x1000/?stationary";
 
     public Dictionary<string, string> AuthorProfileUrls { get; set; } = new()
@@ -147,19 +143,12 @@ public class BlogPosts
         writer.Flush();
         doc.Preview = writer.ToString();
 
-        var page = viewEngine.GetView("", PagePath, isMainPage:false);
-        var feature = HostContext.AssertPlugin<RazorFormat>();
-        using var ms = MemoryStreamFactory.GetStream();
-        //var razorPage = (Microsoft.AspNetCore.Mvc.RazorPages.Page)((RazorView)page.View!).RazorPage;
-        var model = new PostModel(this) {
-            Static = true,
-        }.Populate(doc);
-        feature.WriteHtmlAsync(ms, page.View, model).GetAwaiter().GetResult();
-        ms.Position = 0;
-        doc.HtmlPage = Encoding.UTF8.GetString(ms.ReadFullyAsMemory().Span);
+        var page = razorPages.GetView(PagePath);
+        var model = new Pages.Posts.PostModel(this) { Static = true }.Populate(doc);
+        doc.HtmlPage = RenderToHtml(page.View, model);
         return doc;
     }
-
+    
     public MarkdownPipeline CreatePipeline()
     {
         var pipeline = new MarkdownPipelineBuilder()
@@ -185,7 +174,6 @@ public class BlogPosts
         {
             try
             {
-                log.InfoFormat("Found {0}", file.VirtualPath);
                 var doc = Load(file.VirtualPath, pipeline);
                 if (doc == null)
                     continue;
@@ -194,6 +182,7 @@ public class BlogPosts
 
                 if (renderTo != null)
                 {
+                    log.InfoFormat("Writing {0}/{1}...", renderTo, doc.HtmlFileName);
                     fs.WriteFile($"{renderTo}/{doc.HtmlFileName}", doc.HtmlPage);
                 }
             }
@@ -202,6 +191,36 @@ public class BlogPosts
                 log.Error(e, "Couldn't load {0}: {1}", file.VirtualPath, e.Message);
             }
         }
+
+        // prerender /blog/index.html
+        if (renderTo != null)
+        {
+            log.InfoFormat("Writing {0}/index.html...", renderTo);
+            RenderToFile(razorPages.GetView(PagesPath).View, new Pages.Posts.IndexModel { Static = true }, $"{renderTo}/index.html");
+        }
+    }
+
+    public void RenderToFile(IView? page, PageModel model, string renderTo) => 
+        VirtualFiles.WriteFile(renderTo, RenderToHtml(page, model));
+    public async Task RenderToFileAsync(IView? page, PageModel model, string renderTo, CancellationToken token=default) => 
+        await VirtualFiles.WriteFileAsync(renderTo, await RenderToHtmlAsync(page, model, token), token);
+
+    public string RenderToHtml(IView? page, PageModel model)
+    {
+        using var ms = MemoryStreamFactory.GetStream();
+        razorPages.WriteHtmlAsync(ms, page, model).GetAwaiter().GetResult(); // No better way to run Async on Startup
+        ms.Position = 0;
+        var html = Encoding.UTF8.GetString(ms.ReadFullyAsMemory().Span);
+        return html;
+    }
+
+    public async Task<string> RenderToHtmlAsync(IView? page, PageModel model, CancellationToken token=default)
+    {
+        using var ms = MemoryStreamFactory.GetStream();
+        await razorPages.WriteHtmlAsync(ms, page, model);
+        ms.Position = 0;
+        var html = Encoding.UTF8.GetString((await ms.ReadFullyAsMemoryAsync(token)).Span);
+        return html;
     }
 
     public string GetSummarySplash(MarkdownFileInfo post)

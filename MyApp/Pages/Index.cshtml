@@ -10,7 +10,8 @@
         <div class="flex flex-col">
             <h4 class="text-lg mt-5">A Modern .NET + JS App with 
                 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules" class="@Css.LinkUnderline">JS modules</a>, 
-                <a href="https://vuejs.org" class="@Css.LinkUnderline">Vue.js</a>, 
+                <a href="https://vuejs.org" class="@Css.LinkUnderline">Vue.js</a>,
+                <a href="https://htmx.org" class="@Css.LinkUnderline">htmx</a>,
                 Markdown &amp; <a href="https://servicestack.net" class="@Css.LinkUnderline">ServiceStack</a>.
             </h4>
             <div class="flex justify-between items-center">
@@ -68,12 +69,13 @@
             NavListItem("Simple", "No <b>node_modules</b>, no build tools, no client side routing, no heavy client state");
             NavListItem("Fast", $"Initial SSR HTML &amp; JSON for fast <a href='https://web.dev/fcp/' class='{Css.Link}'>FCP</a>, avoid full page reloads with <a href='https://htmx.org/attributes/hx-boost/' class='{Css.Link}'>htmlx boost</a>");
             NavListItem("Lightweight", "Only load JS each page needs, built-in optimizer for optimal dev &amp; prod bundles");
+            NavListItem("Modern", "Use latest Vue3, htmlx or any preferred 3rd Party libraries");
             NavListItem("Rapid Development", "View code &amp; style changes instantly on Save with <b>dotnet watch</b>");
             NavListItem("Maintainable", "Logically structure &amp; encapsulate components using native JavaScript Modules");
             NavListItem("Type Safety", "Use JSDoc and Library TypeScript definitions for IDE static analysis");
-            NavListItem("SEO Friendly", "Use Razor for SEO-friendly HTML content, Progressive JS for interactive pages");
-            NavListItem("Modern", "Use latest Vue3, htmlx or any preferred 3rd Party libraries");
+            NavListItem("SEO Friendly", "Use Server Side Rendering for SEO-friendly Markdown and HTML content");
             NavListItem("Tailwind", "Productive, maintainable, responsive-first styling");
+            NavListItem("Prerendering", $"<a href='/posts' class='{Css.Link}'>Blog</a> can be prerendered on deployment with <b>$ npm run prerender</b>");
         }
         </ul>
     </div>

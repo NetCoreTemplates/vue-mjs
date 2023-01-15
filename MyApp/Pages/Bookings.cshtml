@@ -1,0 +1,36 @@
+@page "/bookings-crud"
+@{
+    if (!await Html.EnsureRoleAsync("Employee")) return;
+    ViewData["Title"] = "Bookings CRUD";
+}
+
+<script>window.Server=@Gateway.Send(new MetadataApp()).ToJson().AsRaw()</script>
+
+<div class="mt-8 mx-auto max-w-fit">
+    <div id="bookings"></div>
+
+    <div class="mt-16 mx-auto text-gray-500 max-w-screen-lg">
+        <h2 class="mt-4 text-3xl sm:text-4xl text-slate-900 font-extrabold tracking-tight dark:text-slate-50">
+            Create a multi-user Booking system in minutes
+        </h2>
+
+        <p class="my-3 mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl">
+            The Bookings APIs are built using
+            <a class="@Css.Link" href="https://docs.servicestack.net/autoquery-crud">AutoQuery CRUD</a>,
+            allowing for rapid development of typed CRUD Services using only declarative POCO DTOs, enabling
+            developing entire
+            <a class="@Css.Link" href="https://docs.servicestack.net/autoquery-crud#advanced-crud-example">audited</a>
+            &amp; <a class="@Css.Link" href="https://docs.servicestack.net/autoquery-audit-log">verifiable</a>
+            data-driven systems in mins
+            <a class="@Css.Link" href="https://docs.servicestack.net/autoquery-crud-bookings">more...</a>
+        </p>
+
+        <iframe class="mt-4 w-full aspect-video" src="https://www.youtube.com/embed/nhc4MZufkcM" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
+</div>
+
+<script type="module">
+import Bookings from "/Pages/BookingsCrud/Index.mjs"
+import { mount } from "/mjs/app.mjs"
+mount("#bookings", Bookings)
+</script>

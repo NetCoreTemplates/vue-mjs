@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace MyApp.Pages;
+namespace MyApp.Pages.Posts;
 
-public class Posts : PageModel
+public class IndexModel : PageModel
 {
     [FromQuery]
     public bool Static { get; set; }

@@ -13,13 +13,9 @@ public class ConfigureUi : IHostingStartup
 {
     public void Configure(IWebHostBuilder builder) => builder
         .ConfigureAppHost(appHost => {
-            appHost.CustomErrorHttpHandlers[HttpStatusCode.Forbidden] = new RazorHandler("/Forbidden");
-
-            appHost.Plugins.Add(new RazorFormat {
-                RazorPages = true,
-                ForbiddenRedirect = "/forbidden",
-                //ForbiddenPartial = "~/Pages/Shared/Forbidden.cshtml", //alternative: render partial instead 
-            });
+            RazorPage.Config = new() {
+                ForbiddenPartial = "~/Pages/Shared/Forbidden.cshtml", //Optional. render error in page instead
+            };
             
             //Referenced in Contacts.cs EvalAllowableEntries
             appHost.ScriptContext.Args[nameof(AppData)] = AppData.Instance;

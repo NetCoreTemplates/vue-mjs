@@ -12,10 +12,10 @@ export default {
         <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
           <div class="flex flex-col gap-y-4">
             <TextInput id="displayName" help="Your first and last name" v-model="displayName"/>
-            <TextInput id="userName" placeholder="Email" help="" v-model="username"/>
+            <TextInput id="userName" label="Email" placeholder="Email" help="" v-model="userName"/>
             <TextInput id="password" type="password" help="6 characters or more" v-model="password"/>
             <TextInput id="confirmPassword" type="password" v-model="confirmPassword"/>
-            <CheckboxInput id="autoLogin" />
+            <CheckboxInput id="autoLogin" v-model="autoLogin" />
           </div>
         </div>
         <div class="pt-5 px-4 py-3 bg-gray-50 text-right sm:px-6">
@@ -40,22 +40,22 @@ export default {
     setup(props) {
         const { api, setError } = useClient()
         const displayName = ref("")
-        const username = ref("")
+        const userName = ref("")
         const password = ref("")
         const confirmPassword = ref("")
+        const autoLogin = ref(true)
 
         /** @param email {string} */
         const setUser = (email) => {
             let first = leftPart(email, '@')
             let last = rightPart(leftPart(email, '.'), '@')
             displayName.value = toPascalCase(first) + ' ' + toPascalCase(last)
-            username.value = email
+            userName.value = email
             confirmPassword.value = password.value = 'p@55wOrd'
         }
         /** @param e {Event} */
         const onSubmit = async (e) => {
-            const { displayName, userName, password, confirmPassword, autoLogin } = serializeToObject(e.currentTarget)
-            if (password !== confirmPassword) {
+            if (password.value !== confirmPassword.value) {
                 setError({fieldName: 'confirmPassword', message: 'Passwords do not match'})
                 return
             }
@@ -64,12 +64,12 @@ export default {
                 email: userName,
                 password,
                 confirmPassword,
-                autoLogin
+                autoLogin,
             }))
             if (r.succeeded) {
                 location.href = '/signin'
             }
         }
-        return { displayName, username, password, confirmPassword, setUser, onSubmit }
+        return { displayName, userName, password, confirmPassword, autoLogin, setUser, onSubmit }
     }
 }

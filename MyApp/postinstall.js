@@ -14,6 +14,7 @@ const files = {
   typings: {
       '@servicestack/client/index.d.ts': 'https://unpkg.com/@servicestack/client/dist/index.d.ts',  
       '@servicestack/vue/index.d.ts':    'https://unpkg.com/@servicestack/vue@3/dist/index.d.ts',
+      '@servicestack/ui/index.d.ts':     'https://unpkg.com/@servicestack/ui/shared.d.ts',
   }
 }
 

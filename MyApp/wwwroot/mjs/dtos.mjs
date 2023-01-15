@@ -1,5 +1,5 @@
 /* Options:
-Date: 2023-01-13 11:08:11
+Date: 2023-01-15 21:03:41
 Version: 6.51
 Tip: To override a DTO option, remove "//" prefix before updating
 BaseUrl: https://localhost:5001
@@ -51,6 +51,58 @@ export class QueryBase {
 export class QueryData extends QueryBase {
     /** @param {{skip?:number,take?:number,orderBy?:string,orderByDesc?:string,include?:string,fields?:string,meta?:{ [index: string]: string; }}} [init] */
     constructor(init) { super(init); Object.assign(this, init); }
+}
+/** @typedef T {any} */
+export class QueryDb extends QueryBase {
+    /** @param {{skip?:number,take?:number,orderBy?:string,orderByDesc?:string,include?:string,fields?:string,meta?:{ [index: string]: string; }}} [init] */
+    constructor(init) { super(init); Object.assign(this, init); }
+}
+export class AuditBase {
+    /** @param {{createdDate?:string,createdBy?:string,modifiedDate?:string,modifiedBy?:string,deletedDate?:string,deletedBy?:string}} [init] */
+    constructor(init) { Object.assign(this, init); }
+    /** @type {string} */
+    createdDate;
+    /** @type {string} */
+    createdBy;
+    /** @type {string} */
+    modifiedDate;
+    /** @type {string} */
+    modifiedBy;
+    /** @type {?string} */
+    deletedDate;
+    /** @type {string} */
+    deletedBy;
+}
+/** @typedef {'Single'|'Double'|'Queen'|'Twin'|'Suite'} */
+export var RoomType;
+(function (RoomType) {
+    RoomType["Single"] = "Single";
+    RoomType["Double"] = "Double";
+    RoomType["Queen"] = "Queen";
+    RoomType["Twin"] = "Twin";
+    RoomType["Suite"] = "Suite";
+})(RoomType || (RoomType = {}));
+export class Booking extends AuditBase {
+    /** @param {{id?:number,name?:string,roomType?:RoomType,roomNumber?:number,bookingStartDate?:string,bookingEndDate?:string,cost?:number,notes?:string,cancelled?:boolean,createdDate?:string,createdBy?:string,modifiedDate?:string,modifiedBy?:string,deletedDate?:string,deletedBy?:string}} [init] */
+    constructor(init) { super(init); Object.assign(this, init); }
+    /** @type {number} */
+    id;
+    /** @type {string} */
+    name;
+    /** @type {RoomType} */
+    roomType;
+    /** @type {number} */
+    roomNumber;
+    /** @type {string} */
+    bookingStartDate;
+    /** @type {?string} */
+    bookingEndDate;
+    /** @type {number} */
+    cost;
+    /** @type {?string} */
+    notes;
+    /** @type {?boolean} */
+    cancelled;
 }
 export class Contact {
     /** @param {{id?:number,userAuthId?:number,title?:Title,name?:string,color?:string,favoriteGenre?:FilmGenre,age?:number}} [init] */
@@ -224,6 +276,14 @@ export class RegisterResponse {
     responseStatus;
     /** @type {{ [index: string]: string; }} */
     meta;
+}
+export class IdResponse {
+    /** @param {{id?:string,responseStatus?:ResponseStatus}} [init] */
+    constructor(init) { Object.assign(this, init); }
+    /** @type {string} */
+    id;
+    /** @type {ResponseStatus} */
+    responseStatus;
 }
 export class GetContacts {
     /** @param {{id?:number}} [init] */
@@ -435,5 +495,71 @@ export class Register {
     getTypeName() { return 'Register'; };
     getMethod() { return 'POST'; };
     createResponse() { return new RegisterResponse(); };
+}
+export class QueryBookings extends QueryDb {
+    /** @param {{id?:number,skip?:number,take?:number,orderBy?:string,orderByDesc?:string,include?:string,fields?:string,meta?:{ [index: string]: string; }}} [init] */
+    constructor(init) { super(init); Object.assign(this, init); }
+    /** @type {?number} */
+    id;
+    getTypeName() { return 'QueryBookings'; };
+    getMethod() { return 'GET'; };
+    createResponse() { return new QueryResponse(); };
+}
+export class CreateBooking {
+    /** @param {{name?:string,roomType?:RoomType,roomNumber?:number,cost?:number,bookingStartDate?:string,bookingEndDate?:string,notes?:string}} [init] */
+    constructor(init) { Object.assign(this, init); }
+    /**
+     * @type {string}
+     * @description Name this Booking is for */
+    name;
+    /** @type {RoomType} */
+    roomType;
+    /** @type {number} */
+    roomNumber;
+    /** @type {number} */
+    cost;
+    /** @type {string} */
+    bookingStartDate;
+    /** @type {?string} */
+    bookingEndDate;
+    /** @type {?string} */
+    notes;
+    getTypeName() { return 'CreateBooking'; };
+    getMethod() { return 'POST'; };
+    createResponse() { return new IdResponse(); };
+}
+export class UpdateBooking {
+    /** @param {{id?:number,name?:string,roomType?:RoomType,roomNumber?:number,cost?:number,bookingStartDate?:string,bookingEndDate?:string,notes?:string,cancelled?:boolean}} [init] */
+    constructor(init) { Object.assign(this, init); }
+    /** @type {number} */
+    id;
+    /** @type {?string} */
+    name;
+    /** @type {?RoomType} */
+    roomType;
+    /** @type {?number} */
+    roomNumber;
+    /** @type {?number} */
+    cost;
+    /** @type {?string} */
+    bookingStartDate;
+    /** @type {?string} */
+    bookingEndDate;
+    /** @type {?string} */
+    notes;
+    /** @type {?boolean} */
+    cancelled;
+    getTypeName() { return 'UpdateBooking'; };
+    getMethod() { return 'PATCH'; };
+    createResponse() { return new IdResponse(); };
+}
+export class DeleteBooking {
+    /** @param {{id?:number}} [init] */
+    constructor(init) { Object.assign(this, init); }
+    /** @type {number} */
+    id;
+    getTypeName() { return 'DeleteBooking'; };
+    getMethod() { return 'DELETE'; };
+    createResponse() { };
 }
 

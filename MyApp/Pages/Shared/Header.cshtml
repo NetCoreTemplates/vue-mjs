@@ -2,8 +2,9 @@
     <div class="flex flex-wrap items-center">
         <div class="flex-shrink flex-grow-0">
             <div class="cursor-pointer">
-                <a hx-boost="true" class="navbar-brand" href="/">
+                <a hx-boost="true" class="navbar-brand flex items-center" href="/">
                     <img class="ml-2 w-12 h-12" src="/img/logo.svg" alt="MyApp logo">
+                    <span class="text-2xl font-semibold">.mjs</span>
                 </a>
             </div>
         </div>
@@ -17,7 +18,7 @@
                         {
                             <li class="relative flex flex-wrap just-fu-start m-0">
                                 <a href="@href" class="@CssUtils.ClassNames("p-4 flex items-center justify-start mw-full hover:text-sky-500 dark:hover:text-sky-400", 
-                                                           Html.MatchesPath(href) ? "text-blue-700" : "")">
+                                    Html.MatchesPath(href) ? "text-blue-700" : "")">
                                     @Html.Raw(childContent)
                                 </a>
                             </li>
@@ -32,7 +33,7 @@
                             </li>
                         }
 
-                        RenderNavLink("/posts", "Blog");
+                        RenderNavLink(Html.IsDebug() ? "/posts" : "/blog/", "Blog"); // Uses prerendered /blog for production
                         RenderNavLink("/todomvc", "Todos");
                         RenderNavLink("/bookings-crud", "Bookings");
                         if (isAuthenticated)

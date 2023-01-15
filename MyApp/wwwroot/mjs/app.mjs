@@ -2,6 +2,7 @@ import { createApp, reactive } from "vue"
 import { JsonServiceClient, $1, $$ } from "@servicestack/client"
 import ServiceStackVue, { useClient, RouterLink } from "@servicestack/vue"
 import { Authenticate } from "./dtos.mjs"
+import SrcLink from "./components/SrcLink.js"
 
 let client = null, AppData = { init:false, loaded:false }, Apps = []
 export { client, AppData, Apps, useClient }
@@ -9,6 +10,7 @@ export { client, AppData, Apps, useClient }
 /** Shared Components */
 const Components = {
     RouterLink,
+    SrcLink,
 }
 
 /** Mount Vue3 Component

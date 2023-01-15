@@ -11,9 +11,9 @@ export default {
         <ErrorSummary except="userName,password,rememberMe"/>
         <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
           <div class="flex flex-col gap-y-4">
-            <TextInput id="userName" placeholder="Email" help="Email you signed up with" v-model="username" />
+            <TextInput id="userName" placeholder="Email" help="Email you signed up with" v-model="userName" />
             <TextInput id="password" type="password" help="6 characters or more" v-model="password"/>
-            <CheckboxInput id="rememberMe" />
+            <CheckboxInput id="rememberMe" v-model="rememberMe" />
           </div>
         </div>
         <div class="pt-5 px-4 py-3 bg-gray-50 text-right sm:px-6">
@@ -50,21 +50,21 @@ export default {
     props:['redirect'],
     setup(props) {
         const { api } = useClient()
-        const username = ref('')
+        const userName = ref('')
         const password = ref('')
+        const rememberMe = ref(true)
         
         function setUser(email) {
-            username.value = email
+            userName.value = email
             password.value = "p@55wOrd"
         }
         async function submit(e) {
-            const { userName, password, rememberMe } = serializeToObject(e.currentTarget)
             const r = await api(new Authenticate({ provider: 'credentials', userName, password, rememberMe }))
             if (r.succeeded) {
                 AppData.Auth = r.response
                 location.href = props.redirect || '/'
             }
         }
-        return { username, password, setUser, submit }
+        return { userName, password, rememberMe, setUser, submit }
     }
 }

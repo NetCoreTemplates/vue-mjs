@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace MyApp.Pages;
+namespace MyApp.Pages.Posts;
 
 public class PostModel : PageModel
 {
@@ -30,7 +30,6 @@ public class PostModel : PageModel
                 doc = BlogPosts.Load(doc.Path);
             if (doc != null)
             {
-                ViewData["Title"] = doc.Title;
                 Populate(doc);
             }
         }
