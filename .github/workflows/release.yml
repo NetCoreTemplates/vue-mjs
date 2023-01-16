@@ -22,7 +22,7 @@ on:
 
 jobs:
   push_to_registry:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     if: ${{ github.event.workflow_run.conclusion != 'failure' }}
     steps:
       # Checkout latest or specific tag
@@ -65,8 +65,9 @@ jobs:
         run: | 
           dotnet publish -c Release /p:APP_TASKS=prerender
 
+      # Authenticate, build and push to GitHub Container Registry (ghcr.io)
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
@@ -74,7 +75,7 @@ jobs:
       
       # Build and push new docker image, skip for manual redeploy other than 'latest'
       - name: Build and push Docker images
-        uses: docker/build-push-action@v2.2.2
+        uses: docker/build-push-action@v3
         if: ${{ github.event.inputs.version == '' || github.event.inputs.version == 'latest' }}
         with:
           file: Dockerfile
@@ -84,7 +85,7 @@ jobs:
   
   deploy_via_ssh:
     needs: push_to_registry
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     if: ${{ github.event.workflow_run.conclusion != 'failure' }}
     steps:
       # Checkout latest or specific tag
