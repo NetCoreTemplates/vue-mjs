@@ -13,7 +13,7 @@ public class Booking : AuditBase
 {
     [AutoIncrement]
     public int Id { get; set; }
-    public string Name { get; set; }
+    public string Name { get; set; } = default!;
     public RoomType RoomType { get; set; }
     public int RoomNumber { get; set; }
     public DateTime BookingStartDate { get; set; }

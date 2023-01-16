@@ -16,7 +16,7 @@ public class PostModel : PageModel
     public string? Author { get; set; }
     public string? Splash { get; set; }
     public string? AuthorProfileUrl { get; set; }
-    public List<string> Tags { get; set; }
+    public List<string> Tags { get; set; } = new();
     public DateTime? Date { get; set; }
     public int? WordCount { get; set; }
     public string? HtmlContent { get; set; }

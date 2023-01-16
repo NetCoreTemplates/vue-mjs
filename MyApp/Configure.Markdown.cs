@@ -41,6 +41,8 @@ public class BlogPosts
         this.log = log;
         this.razorPages = razorPages;
     }
+    public IVirtualFiles VirtualFiles { get; set; } = default!;
+    public List<MarkdownFileInfo> Posts { get; set; } = new();
 
     public string PagesPath { get; set; } = "/Pages/Posts/Index.cshtml";
     public string PagePath { get; set; } = "/Pages/Posts/Post.cshtml";
@@ -58,9 +60,6 @@ public class BlogPosts
     public string GetAuthorProfileUrl(string? name) => name != null && AuthorProfileUrls.TryGetValue(name, out var url)
         ? url
         : FallbackProfileUrl;
-
-    public IVirtualFiles VirtualFiles { get; set; }
-    public List<MarkdownFileInfo> Posts { get; set; } = new();
 
     public List<MarkdownFileInfo> GetPosts(string? author = null, string? tag = null)
     {
