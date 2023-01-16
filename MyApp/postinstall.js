@@ -4,10 +4,10 @@ const writeTo = './wwwroot/lib'
 const files = {
   js: {
       'htmx.js':                 'https://unpkg.com/htmx.org@1/dist/htmx.js',
-      'htmxclasses.js':          'https://unpkg.com/htmx.org@1.8.4/dist/ext/class-tools.js',
+      'htmxclasses.js':          'https://unpkg.com/htmx.org@/dist/ext/class-tools.js',
   },
   mjs: {
-      'vue.mjs':                 'https://unpkg.com/vue@3.2.45/dist/vue.esm-browser.js',
+      'vue.mjs':                 'https://unpkg.com/vue@3/dist/vue.esm-browser.js',
       'servicestack-client.mjs': 'https://unpkg.com/@servicestack/client/dist/servicestack-client.mjs',
       'servicestack-vue.mjs':    'https://unpkg.com/@servicestack/vue@3/dist/servicestack-vue.mjs',
   },
