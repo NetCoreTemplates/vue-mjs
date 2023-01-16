@@ -56,6 +56,12 @@ jobs:
           npm install
         working-directory: ./MyApp
 
+      # Publish .NET Project
+      - name: Publish dotnet project
+        working-directory: ./MyApp
+        run: | 
+          dotnet publish -c Release /p:APP_TASKS=prerender
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
         with:
@@ -129,6 +135,22 @@ jobs:
         run: |
           echo "GH_TOKEN=${{ secrets.CR_PAT }}" >> $GITHUB_ENV
           echo "USERNAME=${{ secrets.DEPLOY_USERNAME }}" >> $GITHUB_ENV
+
+      - name: Run remote db migrations
+        uses: appleboy/ssh-action@v0.1.4
+        env:
+          APPTOKEN: ${{ secrets.GITHUB_TOKEN }}
+          USERNAME: ${{ secrets.DEPLOY_USERNAME }}
+        with:
+          host: ${{ secrets.DEPLOY_API }}
+          username: ${{ secrets.DEPLOY_USERNAME }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          port: 22
+          envs: APPTOKEN,USERNAME
+          script: |
+            echo $APPTOKEN | docker login ghcr.io -u $USERNAME --password-stdin
+            docker compose -f ~/.deploy/${{ github.event.repository.name }}-docker-compose.yml pull
+            docker compose -f ~/.deploy/${{ github.event.repository.name }}-docker-compose.yml up ${{ github.event.repository.name }}-migration --exit-code-from ${{ github.event.repository.name }}-migration
 
       # Deploy Docker image with ServiceStack application using `docker compose up` remotely
       - name: remote docker-compose up via ssh

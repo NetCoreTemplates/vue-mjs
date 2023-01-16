@@ -20,7 +20,7 @@ public class ConfigureMarkdown : IHostingStartup
             services.AddSingleton<RazorPagesEngine>();
             services.AddSingleton<BlogPosts>();
         })
-        .ConfigureAppHost(afterAppHostInit: appHost =>
+        .ConfigureAppHost(afterPluginsLoaded: appHost =>
         {
             var blogPosts = appHost.Resolve<BlogPosts>();
             blogPosts.VirtualFiles = appHost.GetVirtualFileSource<FileSystemVirtualFiles>();
@@ -30,8 +30,6 @@ public class ConfigureMarkdown : IHostingStartup
             AppTasks.Run();
 
             blogPosts.LoadPosts("_blog/posts");
-            // Alternatively always prerender /blog on Startup with:
-            // blogPosts.LoadPosts("_blog/posts", renderTo: "blog");
         });
 }
 

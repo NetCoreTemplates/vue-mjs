@@ -10,3 +10,11 @@ services:
       VIRTUAL_HOST: ${HOST_DOMAIN}
       LETSENCRYPT_HOST: ${HOST_DOMAIN}
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+  ${APP_NAME}-migration:
+    image: ghcr.io/${IMAGE_REPO}:${RELEASE_VERSION}
+    restart: "no"
+    profiles:
+      - migration
+    command: --AppTasks=migrate
+    volumes:
+      - ${APP_NAME}-mydb:/app/App_Data
