@@ -9,7 +9,8 @@
       "*": [
         "./wwwroot/lib/*",
         "./wwwroot/lib/typings/*"
-      ]
+      ],
+      "vue": ["./wwwroot/lib/typings/vue/index.d.ts"]
     }
   },
   "exclude": [
