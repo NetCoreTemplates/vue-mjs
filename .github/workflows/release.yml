@@ -142,7 +142,7 @@ jobs:
           APPTOKEN: ${{ secrets.GITHUB_TOKEN }}
           USERNAME: ${{ secrets.DEPLOY_USERNAME }}
         with:
-          host: ${{ secrets.DEPLOY_API }}
+          host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USERNAME }}
           key: ${{ secrets.DEPLOY_KEY }}
           port: 22
