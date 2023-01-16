@@ -118,7 +118,7 @@ jobs:
           RELEASE_VERSION: ${{ env.TAG_NAME }}
           IMAGE_REPO: ${{ env.image_repository_name }}
           APP_NAME: ${{ github.event.repository.name }}
-          HOST_DOMAIN: ${{ env.domain }}
+          HOST_DOMAIN: ${{ secrets.DEPLOY_HOST }}
           LETSENCRYPT_EMAIL: ${{ env.letsencrypt_email }}
         with:
           input: .deploy/docker-compose-template.yml
