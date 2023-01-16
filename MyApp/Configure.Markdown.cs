@@ -22,7 +22,6 @@ public class ConfigureMarkdown : IHostingStartup
         })
         .ConfigureAppHost(afterPluginsLoaded: appHost =>
         {
-            Console.WriteLine("TEMP Running ConfigureMarkdown.ConfigureAppHost(afterPluginsLoaded)");
             var blogPosts = appHost.Resolve<BlogPosts>();
             blogPosts.VirtualFiles = appHost.GetVirtualFileSource<FileSystemVirtualFiles>();
 
@@ -158,8 +157,7 @@ public class BlogPosts
 
     public void LoadPosts(string fromDirectory, string? renderTo = null)
     {
-        Console.WriteLine($"LoadPosts() {Environment.StackTrace}");
-        //Posts.Clear();
+        Posts.Clear();
         var fs = VirtualFiles ?? throw new NullReferenceException($"{nameof(VirtualFiles)} is not populated");
         var files = fs.GetDirectory(fromDirectory).GetAllFiles().ToList();
         var log = LogManager.GetLogger(GetType());
