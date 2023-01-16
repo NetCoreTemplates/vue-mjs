@@ -27,7 +27,6 @@ public class ConfigureMarkdown : IHostingStartup
 
             //Optional, prerender /blog on deployment with: `$ npm run prerender` 
             AppTasks.Register("prerender", args => blogPosts.LoadPosts("_blog/posts", renderTo: "blog"));
-            AppTasks.Run();
 
             blogPosts.LoadPosts("_blog/posts");
         });
