@@ -81,17 +81,15 @@
     </div>
 </section>
 
-@section Scripts {
 <script type="module">
 import { $1, on } from "@@servicestack/client"
-import { client } from "/mjs/app.mjs"
+import { client, mount } from "/mjs/app.mjs"
 import { Hello } from "/mjs/dtos.mjs"
-import { mount } from "/mjs/app.mjs"
 import HelloApi from "/mjs/components/HelloApi.mjs" 
 import GettingStarted from "/mjs/components/GettingStarted.mjs" 
 
 mount('#hello-api', HelloApi, { value: 'Vue.mjs' })
-mount('#getting-started', GettingStarted)
+mount('#getting-started', GettingStarted, { template:'vue-mjs' })
 
 on("#txtName", {
     async keyup(e) {
@@ -100,4 +98,3 @@ on("#txtName", {
     },
 })
 </script>
-}
