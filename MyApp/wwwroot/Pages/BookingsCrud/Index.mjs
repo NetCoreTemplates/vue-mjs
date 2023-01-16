@@ -10,9 +10,7 @@ export default {
   components: { Create, Edit },
   template:/*html*/`<div title="Bookings CRUD" class="max-w-fit">
     <Create v-if="newBooking" @done="onDone" title="New Booking" />
-    <SlideOver v-if="editBookingId" @done="onDone">
-      <Edit :id="editBookingId" @done="onDone" />
-    </SlideOver>
+    <Edit v-else-if="editId" :id="editId" @done="onDone" />
     <OutlineButton @click="() => reset({newBooking:true})">
       <svg class="w-5 h-5 mr-1 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"></path></svg>
       New Booking
@@ -48,8 +46,8 @@ export default {
               </tr>
               </thead>
               <tbody>
-              <tr v-for="(booking, index) in bookings" :key="booking.id" @click="editBookingId = editBookingId == booking.id ? null : booking.id" 
-                  :class="[booking.id == editBookingId ? css.trActive : css.tr + (index % 2 === 0 ? ' bg-white dark:bg-black' : ' bg-gray-50 dark:bg-gray-800')]">
+              <tr v-for="(booking, index) in bookings" :key="booking.id" @click="editId = editId == booking.id ? null : booking.id" 
+                  :class="[booking.id == editId ? css.trActive : css.tr + (index % 2 === 0 ? ' bg-white dark:bg-black' : ' bg-gray-50 dark:bg-gray-800')]">
                 <td :class="css.td">
                   {{ booking.id }}
                 </td>
@@ -87,6 +85,7 @@ export default {
       </SrcLink>
     </div>
   </div>`,
+  props:['bookings'],
   setup(props) {
     const css = {
       trActive:'cursor-pointer bg-indigo-100 dark:bg-blue-800',
@@ -96,37 +95,30 @@ export default {
     }
     
     const newBooking = ref(false)
-    const editBookingId = ref()
+    const editId = ref()
     const expandAbout = ref(false)
-    const bookings = ref([])
+    const bookings = ref(props.bookings || [])
 
     const { api } = useClient()
     
-    const refreshBookings = async () => {
+    const refresh = async () => {
       const r = await api(new QueryBookings())
       if (r.succeeded) {
         bookings.value = r.response.results || []
       }
     }
 
-    onMounted(async () => await refreshBookings())
-
-    /** @param {{ newBooking?: boolean, editBookingId?:number }} [args] */
+    /** @param {{ newBooking?: boolean, editId?:number }} [args] */
     const reset = (args={}) => {
       newBooking.value = args.newBooking ?? false
-      editBookingId.value = args.editBookingId ?? undefined
+      editId.value = args.editId ?? undefined
     }
 
     const onDone = () => {
       reset()
-      refreshBookings()
+      refresh()
     }
-
-    const toggleAbout = () => expandAbout.value = !expandAbout.value
     
-    return { 
-      css, newBooking, editBookingId, expandAbout, bookings, 
-      refreshBookings, reset, onDone, toggleAbout, formatDate, formatCurrency 
-    }
+    return { css, newBooking, editId, expandAbout, bookings, refresh, reset, onDone, formatDate, formatCurrency }
   }
 }

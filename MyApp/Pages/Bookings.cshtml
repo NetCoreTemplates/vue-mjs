@@ -29,8 +29,9 @@
     </div>
 </div>
 
+<script>bookings = @((await Gateway.SendAsync(new QueryBookings())).Results.AsRawJson())</script>
 <script type="module">
 import Bookings from "/Pages/BookingsCrud/Index.mjs"
 import { mount } from "/mjs/app.mjs"
-mount("#bookings", Bookings)
+mount("#bookings", Bookings, { bookings })
 </script>

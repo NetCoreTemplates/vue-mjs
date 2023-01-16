@@ -4,9 +4,8 @@ import { client } from "../mjs/app.mjs"
 import { Todo, QueryTodos, CreateTodo, UpdateTodo, DeleteTodos } from "../mjs/dtos.mjs"
 
 let store = {
-    /** @typedef TODOS - declared in TodoMvc.cshtml 
-      * @type {Todo[]} */ 
-    todos: (window.TODOS || []),
+    /** @type {Todo[]} */
+    todos: [],
     newTodo:'',
     filter: 'all',
     error:null,
@@ -74,7 +73,9 @@ const FilterTab = {
 export default {
     components:{ FilterTab },
     template: $1('#TodoMvc-template'),
+    props:['todos'],
     setup(props) {
+        store.todos = props.todos || [] 
         return {
             store,
         }
