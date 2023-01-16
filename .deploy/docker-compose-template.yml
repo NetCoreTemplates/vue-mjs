@@ -18,3 +18,6 @@ services:
     command: --AppTasks=migrate
     volumes:
       - ${APP_NAME}-mydb:/app/App_Data
+
+volumes:
+  ${APP_NAME}-mydb:
