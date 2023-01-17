@@ -8,6 +8,7 @@ dist/
 coverage/
 lib/
 blog/
+package-lock.json
 
 # User-specific files
 *.suo
