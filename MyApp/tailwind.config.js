@@ -1,5 +1,5 @@
 module.exports = {
-  content: ["./**/*.{html,js,mjs,cshtml,razor}","./Css.cs"],
+  content: ["./**/*.{html,js,mjs,md,cshtml,razor}","./Css.cs"],
   theme: {
     extend: {
       colors: {

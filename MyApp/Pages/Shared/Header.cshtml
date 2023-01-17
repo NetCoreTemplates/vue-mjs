@@ -17,7 +17,7 @@
                         void RenderNavLink(string href, string childContent)
                         {
                             <li class="relative flex flex-wrap just-fu-start m-0">
-                                <a href="@href" class="@CssUtils.ClassNames("p-4 flex items-center justify-start mw-full hover:text-sky-500 dark:hover:text-sky-400", 
+                                <a href="@href" class="@Html.ClassNames("p-4 flex items-center justify-start mw-full hover:text-sky-500 dark:hover:text-sky-400", 
                                     Html.MatchesPath(href) ? "text-blue-700" : "")">
                                     @Html.Raw(childContent)
                                 </a>

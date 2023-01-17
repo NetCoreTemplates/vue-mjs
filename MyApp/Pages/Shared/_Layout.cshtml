@@ -19,10 +19,11 @@
         OutputTo = $"/js/lib.bundle{min}.js"
     })
 
-    @Html.ImportMap(new() {
-        ["vue"]                  = new("/lib/mjs/vue.mjs", "https://unpkg.com/vue@3/dist/vue.esm-browser.prod.js"),
-        ["@servicestack/client"] = new("/lib/mjs/servicestack-client.mjs", "https://unpkg.com/@servicestack/client/dist/servicestack-client.min.mjs"),
-        ["@servicestack/vue"]    = new("/lib/mjs/servicestack-vue.mjs", "https://unpkg.com/@servicestack/vue@3/dist/servicestack-vue.min.mjs")
+    @Html.ImportMap(new()
+    {
+        ["vue"]                  = ("/lib/mjs/vue.mjs",                 "https://unpkg.com/vue@3/dist/vue.esm-browser.prod.js"),
+        ["@servicestack/client"] = ("/lib/mjs/servicestack-client.mjs", "https://unpkg.com/@servicestack/client@1/dist/servicestack-client.min.mjs"),
+        ["@servicestack/vue"]    = ("/lib/mjs/servicestack-vue.mjs",    "https://unpkg.com/@servicestack/vue@3/dist/servicestack-vue.min.mjs")
     })
     
     <script type="module" async>
