@@ -6,8 +6,15 @@
 
 <script>window.Server=@Gateway.Send(new MetadataApp()).ToJson().AsRaw()</script>
 
-<div class="mt-8 mx-auto max-w-fit">
+<div class="mt-3 mx-auto max-w-fit">
+    <h2 class="py-2 text-center text-3xl font-bold text-gray-900 dark:text-gray-100 sm:text-4xl">
+      @ViewData["Title"]
+    </h2>
     <div id="bookings"></div>
+
+    <h4 class="mt-8 text-center text-xl">
+        <a href="/ui/QueryBookings" class="font-semibold text-indigo-600 hover:text-indigo-500">Manage Bookings</a> in API Explorer
+    </h4>
 
     <div class="mt-16 mx-auto text-gray-500 max-w-screen-lg">
         <h2 class="mt-4 text-3xl sm:text-4xl text-slate-900 font-extrabold tracking-tight dark:text-slate-50">

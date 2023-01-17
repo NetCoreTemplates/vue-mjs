@@ -7,7 +7,7 @@ import { useClient } from "@servicestack/vue"
 export default {
     template:/*html*/`
     <SlideOver @done="close" title="Edit Booking">
-      <form @submit.prevent="onSubmit">
+      <form @submit.prevent="submit">
         <input type="submit" class="hidden">
         <fieldset>
           <ErrorSummary :except="visibleFields" class="mb-4" />
@@ -50,7 +50,7 @@ export default {
             <ConfirmDelete @delete="onDelete">Delete</ConfirmDelete>
           </div>
           <div>
-            <PrimaryButton>Update Booking</PrimaryButton>
+            <PrimaryButton @click="submit">Update Booking</PrimaryButton>
           </div>
         </div>
       </template>
@@ -72,7 +72,7 @@ export default {
         })
 
         /** @param {Event} e */
-        const onSubmit = async (e) => {
+        const submit = async (e) => {
             const api = await client.api(request.value)
             if (api.succeeded) close()
         }
@@ -83,6 +83,6 @@ export default {
 
         const close = () => emit('done')
         
-        return { visibleFields, request, onSubmit, onDelete, close, enumOptions, }
+        return { visibleFields, request, submit, onDelete, close, enumOptions, }
     }
 }
