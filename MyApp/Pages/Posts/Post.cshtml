@@ -27,10 +27,10 @@
                 </div>
             </div>
             <div class="mb-4 max-w-2xl mx-auto flex flex-wrap">
-            @foreach (var tag in Model.Tags)
-            {
-                <a href="@BlogPosts.GetTagLink(tag)" class="mr-2 text-xs leading-5 font-semibold bg-slate-400/10 rounded-full py-1 px-3 flex items-center space-x-2 hover:bg-slate-400/20 dark:highlight-white/5">@tag</a>
-            }
+                @foreach (var tag in Model.Tags)
+                {
+                    <a href="@BlogPosts.GetTagLink(tag)" class="mr-2 text-xs leading-5 font-semibold bg-slate-400/10 rounded-full py-1 px-3 flex items-center space-x-2 hover:bg-slate-400/20 dark:highlight-white/5">@tag</a>
+                }
             </div>
             @if (Model.Date != null)
             {
@@ -56,3 +56,7 @@
         </h2>
     }
 </div>
+
+<link rel="stylesheet" href="//unpkg.com/@@highlightjs/cdn-assets/styles/atom-one-dark.min.css">
+<script src="//unpkg.com/@@highlightjs/cdn-assets/highlight.min.js"></script>
+<script>hljs.highlightAll()</script>
