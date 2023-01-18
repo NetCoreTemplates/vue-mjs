@@ -924,6 +924,10 @@ select{
   margin-bottom: -0.5rem;
 }
 
+.mt-3 {
+  margin-top: 0.75rem;
+}
+
 .mt-8 {
   margin-top: 2rem;
 }
@@ -970,10 +974,6 @@ select{
 
 .mb-32 {
   margin-bottom: 8rem;
-}
-
-.mt-3 {
-  margin-top: 0.75rem;
 }
 
 .mb-3 {
@@ -1619,14 +1619,14 @@ select{
   padding: 1rem;
 }
 
-.px-4 {
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
 .py-2 {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
+}
+
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .py-1 {
@@ -1789,6 +1789,11 @@ select{
   line-height: 2.25rem;
 }
 
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
 .text-base {
   font-size: 1rem;
   line-height: 1.5rem;
@@ -1824,13 +1829,12 @@ select{
   line-height: 1rem;
 }
 
-.text-xl {
-  font-size: 1.25rem;
-  line-height: 1.75rem;
-}
-
 .font-semibold {
   font-weight: 600;
+}
+
+.font-bold {
+  font-weight: 700;
 }
 
 .font-extrabold {
@@ -1843,10 +1847,6 @@ select{
 
 .font-normal {
   font-weight: 400;
-}
-
-.font-bold {
-  font-weight: 700;
 }
 
 .uppercase {
@@ -1903,6 +1903,11 @@ select{
   color: rgb(203 213 225 / var(--tw-text-opacity));
 }
 
+.text-gray-900 {
+  --tw-text-opacity: 1;
+  color: rgb(17 24 39 / var(--tw-text-opacity));
+}
+
 .text-gray-500 {
   --tw-text-opacity: 1;
   color: rgb(107 114 128 / var(--tw-text-opacity));
@@ -1916,11 +1921,6 @@ select{
 .text-black {
   --tw-text-opacity: 1;
   color: rgb(0 0 0 / var(--tw-text-opacity));
-}
-
-.text-gray-900 {
-  --tw-text-opacity: 1;
-  color: rgb(17 24 39 / var(--tw-text-opacity));
 }
 
 .text-gray-700 {
@@ -2353,14 +2353,14 @@ select{
     color: rgb(71 85 105 / var(--tw-text-opacity));
   }
 
-  .dark\:text-slate-50 {
-    --tw-text-opacity: 1;
-    color: rgb(248 250 252 / var(--tw-text-opacity));
-  }
-
   .dark\:text-gray-100 {
     --tw-text-opacity: 1;
     color: rgb(243 244 246 / var(--tw-text-opacity));
+  }
+
+  .dark\:text-slate-50 {
+    --tw-text-opacity: 1;
+    color: rgb(248 250 252 / var(--tw-text-opacity));
   }
 
   .dark\:text-gray-400 {
@@ -2597,6 +2597,10 @@ select{
 
   .md\:block {
     display: block;
+  }
+
+  .md\:table-cell {
+    display: table-cell;
   }
 
   .md\:max-w-xl {

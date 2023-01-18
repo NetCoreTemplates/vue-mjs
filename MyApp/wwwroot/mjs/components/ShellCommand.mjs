@@ -18,6 +18,7 @@ export default {
   </div>`,
     setup(props) {
         let successText = ref('')
+        /** @param {MouseEvent} e */
         function copy(e) {
             let $el = document.createElement("input")
             let $lbl = e.target.parentElement.querySelector('label')

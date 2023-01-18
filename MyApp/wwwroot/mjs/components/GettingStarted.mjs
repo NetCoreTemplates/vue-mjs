@@ -2,6 +2,9 @@ import { ref } from "vue"
 import ShellCommand from "./ShellCommand.mjs"
 
 export default {
+    components: {
+        ShellCommand,
+    },
     template:/*html*/`
     <div class="flex flex-col w-96">
         <h4 class="py-6 text-center text-xl">Create New Project</h4>
@@ -25,10 +28,7 @@ export default {
         </div>
       </div>        
     </div>`,
-    components: {
-        ShellCommand,
-    },
-    props:['template'],
+    props: { template:String },
     setup(props) {
         const project = ref('ProjectName')
         /** @param path {string}
@@ -38,7 +38,7 @@ export default {
         const apiPath = () => resolvePath(`api/${project.value}`)
 
         /** @param e {KeyboardEvent} */
-        const validateSafeName = (e) => {
+        function validateSafeName(e) {
             if (e.key.match(/[\W]+/g)) {
                 e.preventDefault()
                 return false

@@ -36,9 +36,9 @@ export default {
       </button>
     </span>
     </div>`,
-    props: ['returnUrl'],
+    props: { returnUrl:String },
     setup(props) {
-        const { api, setError } = useClient()
+        const { api, setError, unRefs } = useClient()
         const displayName = ref("")
         const userName = ref("")
         const password = ref("")
@@ -46,27 +46,26 @@ export default {
         const autoLogin = ref(true)
 
         /** @param email {string} */
-        const setUser = (email) => {
+        function setUser(email) {
             let first = leftPart(email, '@')
             let last = rightPart(leftPart(email, '.'), '@')
             displayName.value = toPascalCase(first) + ' ' + toPascalCase(last)
             userName.value = email
             confirmPassword.value = password.value = 'p@55wOrd'
         }
-        /** @param e {Event} */
-        const onSubmit = async (e) => {
+        async function onSubmit() {
             if (password.value !== confirmPassword.value) {
-                setError({fieldName: 'confirmPassword', message: 'Passwords do not match'})
+                setError({ fieldName: 'confirmPassword', message: 'Passwords do not match' })
                 return
             }
-            const r = await api(new Register({
+            const registerApi = await api(new Register(unRefs({
                 displayName,
                 email: userName,
                 password,
                 confirmPassword,
                 autoLogin,
-            }))
-            if (r.succeeded) {
+            })))
+            if (registerApi.succeeded) {
                 location.href = '/signin'
             }
         }

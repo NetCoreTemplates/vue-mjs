@@ -37,10 +37,10 @@ export default {
                 <th scope="col" :class="css.th">
                   Cost
                 </th>
-                <th :class="['hidden sm:table-cell',css.th]">
+                <th :class="['hidden md:table-cell',css.th]">
                   Start Date
                 </th>
-                <th :class="['hidden sm:table-cell',css.th]">
+                <th :class="['hidden md:table-cell',css.th]">
                   Created By
                 </th>
               </tr>
@@ -54,7 +54,7 @@ export default {
                 <td :class="['hidden sm:table-cell',css.td]">
                   {{ booking.name }}
                 </td>
-                <td :class="['hidden sm:table-cell',css.td]">
+                <td :class="css.td">
                   {{ booking.roomType }}
                 </td>
                 <td :class="css.td">
@@ -63,10 +63,10 @@ export default {
                 <td :class="css.td">
                   {{ formatCurrency(booking.cost) }}
                 </td>
-                <td :class="['hidden sm:table-cell',css.td]">
+                <td :class="['hidden md:table-cell',css.td]">
                   {{ formatDate(booking.bookingStartDate) }}
                 </td>
-                <td :class="['hidden sm:table-cell',css.td]">
+                <td :class="['hidden md:table-cell',css.td]">
                   {{ booking.createdBy }}
                 </td>
               </tr>
@@ -85,7 +85,7 @@ export default {
       </SrcLink>
     </div>
   </div>`,
-  props:['bookings'],
+  props: { bookings:Array },
   setup(props) {
     const css = {
       trActive:'cursor-pointer bg-indigo-100 dark:bg-blue-800',

@@ -55,13 +55,12 @@ export default {
         </div>
       </template>
     </SlideOver>`,
-    props: ['id'],
+    props: { id:Number },
     emits: ['done'],
     setup(props, { emit }) {
         const visibleFields = "name,roomType,roomNumber,bookingStartDate,bookingEndDate,cost,notes"
 
         const client = useClient()
-
         const request = ref(new UpdateBooking())
 
         watchEffect(async () => {

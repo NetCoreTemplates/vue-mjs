@@ -47,9 +47,9 @@ export default {
         </button>
       </span>
     </div>`,
-    props:['redirect'],
+    props: { redirect:String },
     setup(props) {
-        const { api } = useClient()
+        const { api, unRefs } = useClient()
         const userName = ref('')
         const password = ref('')
         const rememberMe = ref(true)
@@ -58,10 +58,10 @@ export default {
             userName.value = email
             password.value = "p@55wOrd"
         }
-        async function submit(e) {
-            const r = await api(new Authenticate({ provider: 'credentials', userName, password, rememberMe }))
-            if (r.succeeded) {
-                AppData.Auth = r.response
+        async function submit() {
+            const authApi = await api(new Authenticate(unRefs({ provider: 'credentials', userName, password, rememberMe })))
+            if (authApi.succeeded) {
+                AppData.Auth = authApi.response
                 location.href = props.redirect || '/'
             }
         }
