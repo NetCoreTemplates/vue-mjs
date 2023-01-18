@@ -72,7 +72,7 @@ public class BlogPosts
         return latestPosts.OrderByDescending(x => x.Date).ToList();
     }
 
-    public string GetPostLink(MarkdownFileInfo post, bool isStatic) => isStatic
+    public string GetPostLink(MarkdownFileInfo post, bool isStatic = false) => isStatic
         ? $"/blog/{post.Slug}"
         : $"/posts/{post.Slug}";
 

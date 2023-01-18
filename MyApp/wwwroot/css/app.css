@@ -968,16 +968,28 @@ select{
   margin-bottom: 2rem;
 }
 
-.ml-3 {
-  margin-left: 0.75rem;
+.mb-20 {
+  margin-bottom: 5rem;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.mb-5 {
+  margin-bottom: 1.25rem;
+}
+
+.mb-3 {
+  margin-bottom: 0.75rem;
 }
 
 .mb-32 {
   margin-bottom: 8rem;
 }
 
-.mb-3 {
-  margin-bottom: 0.75rem;
+.ml-3 {
+  margin-left: 0.75rem;
 }
 
 .ml-4 {
@@ -998,10 +1010,6 @@ select{
 
 .mb-12 {
   margin-bottom: 3rem;
-}
-
-.mb-4 {
-  margin-bottom: 1rem;
 }
 
 .mr-2 {
@@ -1116,6 +1124,10 @@ select{
   height: 1.25rem;
 }
 
+.h-12 {
+  height: 3rem;
+}
+
 .h-36 {
   height: 9rem;
 }
@@ -1134,10 +1146,6 @@ select{
 
 .h-10 {
   height: 2.5rem;
-}
-
-.h-12 {
-  height: 3rem;
 }
 
 .h-24 {
@@ -1180,16 +1188,16 @@ select{
   width: 1.25rem;
 }
 
+.w-12 {
+  width: 3rem;
+}
+
 .w-36 {
   width: 9rem;
 }
 
 .w-10 {
   width: 2.5rem;
-}
-
-.w-12 {
-  width: 3rem;
 }
 
 .w-24 {
@@ -1317,6 +1325,10 @@ select{
           user-select: none;
 }
 
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
 .grid-cols-6 {
   grid-template-columns: repeat(6, minmax(0, 1fr));
 }
@@ -1371,6 +1383,10 @@ select{
 
 .gap-6 {
   gap: 1.5rem;
+}
+
+.gap-y-20 {
+  row-gap: 5rem;
 }
 
 .gap-y-4 {
@@ -1444,12 +1460,12 @@ select{
   border-radius: 0.25rem;
 }
 
-.rounded-sm {
-  border-radius: 0.125rem;
-}
-
 .rounded-full {
   border-radius: 9999px;
+}
+
+.rounded-sm {
+  border-radius: 0.125rem;
 }
 
 .rounded-md {
@@ -1617,6 +1633,10 @@ select{
 
 .p-4 {
   padding: 1rem;
+}
+
+.p-8 {
+  padding: 2rem;
 }
 
 .py-2 {
@@ -1865,6 +1885,14 @@ select{
   line-height: 1.25;
 }
 
+.leading-relaxed {
+  line-height: 1.625;
+}
+
+.leading-snug {
+  line-height: 1.375;
+}
+
 .leading-5 {
   line-height: 1.25rem;
 }
@@ -2086,6 +2114,12 @@ select{
   transition-duration: 150ms;
 }
 
+.transition-shadow {
+  transition-property: box-shadow;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
 .transition {
   transition-property: color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
@@ -2235,6 +2269,12 @@ select{
 .hover\:underline:hover {
   -webkit-text-decoration-line: underline;
           text-decoration-line: underline;
+}
+
+.hover\:shadow-2xl:hover {
+  --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
 .focus\:z-10:focus {
@@ -2595,6 +2635,14 @@ select{
     margin-bottom: 4rem;
   }
 
+  .md\:mb-28 {
+    margin-bottom: 7rem;
+  }
+
+  .md\:mb-0 {
+    margin-bottom: 0px;
+  }
+
   .md\:block {
     display: block;
   }
@@ -2603,8 +2651,16 @@ select{
     display: table-cell;
   }
 
+  .md\:grid {
+    display: grid;
+  }
+
   .md\:max-w-xl {
     max-width: 36rem;
+  }
+
+  .md\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .md\:flex-row {
@@ -2613,6 +2669,15 @@ select{
 
   .md\:justify-between {
     justify-content: space-between;
+  }
+
+  .md\:gap-x-16 {
+    -moz-column-gap: 4rem;
+         column-gap: 4rem;
+  }
+
+  .md\:gap-y-32 {
+    row-gap: 8rem;
   }
 
   .md\:pr-8 {
@@ -2633,13 +2698,13 @@ select{
     line-height: 1;
   }
 
-  .md\:text-6xl {
-    font-size: 3.75rem;
+  .md\:text-7xl {
+    font-size: 4.5rem;
     line-height: 1;
   }
 
-  .md\:text-7xl {
-    font-size: 4.5rem;
+  .md\:text-6xl {
+    font-size: 3.75rem;
     line-height: 1;
   }
 
@@ -2674,6 +2739,16 @@ select{
     flex-direction: row;
   }
 
+  .lg\:gap-x-8 {
+    -moz-column-gap: 2rem;
+         column-gap: 2rem;
+  }
+
+  .lg\:gap-x-32 {
+    -moz-column-gap: 8rem;
+         column-gap: 8rem;
+  }
+
   .lg\:px-8 {
     padding-left: 2rem;
     padding-right: 2rem;
@@ -2699,13 +2774,13 @@ select{
     text-align: left;
   }
 
-  .lg\:text-8xl {
-    font-size: 6rem;
+  .lg\:text-6xl {
+    font-size: 3.75rem;
     line-height: 1;
   }
 
-  .lg\:text-6xl {
-    font-size: 3.75rem;
+  .lg\:text-8xl {
+    font-size: 6rem;
     line-height: 1;
   }
 }
