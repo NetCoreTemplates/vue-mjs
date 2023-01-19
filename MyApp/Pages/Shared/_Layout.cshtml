@@ -11,6 +11,14 @@
     <title>@ViewData["Title"] - My App</title>
     <link rel="stylesheet" href="/css/app.css">
     
+    <script>
+    const colorScheme = localStorage.getItem('color-scheme')
+    if (colorScheme === 'dark')
+        document.querySelector('html').classList.add('dark')
+    else
+        document.querySelector('html').classList.remove('dark')
+    </script>
+
     @Html.BundleJs(new BundleOptions {
         Sources = {
             "/lib/js/"
@@ -29,13 +37,8 @@
         ["@servicestack/client"] = ("/lib/mjs/servicestack-client.mjs", "https://unpkg.com/@servicestack/client@1/dist/servicestack-client.min.mjs"),
         ["@servicestack/vue"]    = ("/lib/mjs/servicestack-vue.mjs",    "https://unpkg.com/@servicestack/vue@3/dist/servicestack-vue.min.mjs")
     })
-
-    <script type="module" async>
-        import { init } from "/mjs/app.mjs"
-        init(window)
-    </script>
 </head>
-<body>
+<body class="bg-white dark:bg-black dark:text-white">
 @await Html.PartialAsync("Header")
 
 <div class="min-h-screen">
@@ -45,6 +48,11 @@
 </div>
 
 @await Html.PartialAsync("Footer")
+
+<script type="module">
+    import { init } from "/mjs/app.mjs"
+    init(window)
+</script>
 
 @await RenderSectionAsync("Scripts", required: false)
 

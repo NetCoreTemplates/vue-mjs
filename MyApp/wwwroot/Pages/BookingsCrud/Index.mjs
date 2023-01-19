@@ -8,7 +8,7 @@ import { Booking, QueryBookings } from "../../mjs/dtos.mjs"
 
 export default {
   components: { Create, Edit },
-  template:/*html*/`<div title="Bookings CRUD" class="max-w-fit">
+  template:/*html*/`<div title="Bookings CRUD" class="sm:max-w-fit">
     <Create v-if="newBooking" @done="onDone" title="New Booking" />
     <Edit v-else-if="editId" :id="editId" @done="onDone" />
     <OutlineButton @click="() => reset({newBooking:true})">
@@ -18,9 +18,9 @@ export default {
     <div v-if="bookings.length > 0" class="mt-4 flex flex-col">
       <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-          <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-            <table class="min-w-full divide-y divide-gray-200">
-              <thead class="bg-gray-50">
+          <div class="shadow overflow-hidden border-b border-gray-200 dark:border-gray-700 sm:rounded-lg">
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+              <thead class="bg-gray-50 dark:bg-gray-900">
               <tr class="select-none">
                 <th scope="col" :class="css.th">
                   Id
@@ -91,7 +91,7 @@ export default {
       trActive:'cursor-pointer bg-indigo-100 dark:bg-blue-800',
       tr:'cursor-pointer hover:bg-yellow-50 dark:hover:bg-blue-900',
       th:'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider',
-      td:'px-6 py-4 whitespace-nowrap text-sm text-gray-500',
+      td:'px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400',
     }
     
     const newBooking = ref(false)

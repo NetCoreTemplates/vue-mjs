@@ -407,7 +407,7 @@ after installing the template in [postinstall.js](https://github.com/NetCoreTemp
 ### Import Maps
 
 [Import Maps](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type/importmap) is a useful browser feature that allows
-to specify optimal names for modules, where it can be used to map package names to the implementation it should use, e.g:
+specifying optimal names for modules, where it can be used to map package names to the implementation it should use, e.g:
 
 ```csharp
 @Html.StaticImportMap(new() {
@@ -426,8 +426,8 @@ import { useClient } from "@servicestack/vue"
 import { JsonServiceClient, $1, on } from '@servicestack/client'
 ```
 
-It's also a great solution for specifying to use local unminified debug builds during **Development**, and more optimal CDN hosted 
-production builds when running in **Production**:
+It's a great solution for specifying using local unminified debug builds during **Development**, and more optimal CDN hosted 
+production builds when running in **Production**, alleviating the need to rely on complex build tools to do this code transformation for us:
 
 ```csharp
 @Html.ImportMap(new()
@@ -436,6 +436,19 @@ production builds when running in **Production**:
     ["@servicestack/client"] = ("/lib/mjs/servicestack-client.mjs", "https://unpkg.com/@servicestack/client@1/dist/servicestack-client.min.mjs"),
     ["@servicestack/vue"]    = ("/lib/mjs/servicestack-vue.mjs",    "https://unpkg.com/@servicestack/vue@3/dist/servicestack-vue.min.mjs")
 })
+```
+
+#### Polyfill for Safari
+
+Unfortunately Safari is the last modern browser to [support import maps](https://caniuse.com/import-maps) which is only now in
+Technical Preview. Luckily this feature can be polyfilled with the [ES Module Shims](https://github.com/guybedford/es-module-shims)
+that's configured in this template:
+
+```html
+@if (Context.Request.Headers.UserAgent.Any(x => x.Contains("Safari")))
+{
+    <script async src="https://ga.jspm.io/npm:es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+}
 ```
 
 ### Fast Component Loading

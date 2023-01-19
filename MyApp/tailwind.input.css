@@ -68,4 +68,13 @@ select{
     left: 0;
 }
 
+/* dark mode autocomplete fields */
+.dark input:-webkit-autofill,
+.dark input:-webkit-autofill:focus {
+    transition: background-color 600000s 0s, color 600000s 0s;
+}
+.dark input[data-autocompleted] {
+    background-color: transparent !important;
+}
+
 @tailwind utilities;

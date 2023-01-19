@@ -14,7 +14,7 @@
       @Html.SrcPage("TodoMvc.mjs")
   </div>
   <h4 class="mt-8 text-center text-xl">
-    <a href="/ui/QueryTodos" class="font-semibold text-indigo-600 hover:text-indigo-500">Manage Todos</a> in API Explorer
+    <a href="/ui/QueryTodos" class="font-semibold text-indigo-600 dark:text-indigo-300 hover:text-indigo-500">Manage Todos</a> in API Explorer
   </h4>
 </div>
 
@@ -24,8 +24,8 @@
               v-model="store.newTodo" v-on:keyup.enter.stop="store.addTodo()"></text-input>
 </div>
 
-  <div class="bg-white shadow overflow-hidden rounded-md">
-    <ul role="list" class="divide-y divide-gray-200">
+  <div class="bg-white dark:bg-gray-900 shadow overflow-hidden rounded-md">
+    <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
       <li v-for="todo in store.filteredTodos()" :key="todo.id" class="px-6 py-4">
         <div class="relative flex items-start" v-on:click.stop="store.toggleTodo(todo.id)">
           <div class="flex items-center h-6">
@@ -51,7 +51,7 @@
   </div>
 
 <div class="mt-4 flex justify-between">
-  <div class="text-gray-400 leading-8 mr-4">
+  <div class="text-gray-400 leading-8 mr-4 ml-2 sm:ml-0">
     {{ store.unfinishedTodos().length }} <span class="hidden sm:inline">item(s)</span> left
   </div>
 
@@ -67,7 +67,7 @@
     </filter-tab>
   </div>
 
-  <div class="leading-8 ml-4">
+  <div class="leading-8 ml-4 mr-2 sm:mr-0">
     <a href="#" :class="{ invisible: store.finishedTodos().length === 0 }" v-on:click.prevent="store.removeFinishedTodos()">
       clear <span class="hidden sm:inline">completed</span>
     </a>

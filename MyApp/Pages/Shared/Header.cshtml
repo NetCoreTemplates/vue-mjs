@@ -1,16 +1,16 @@
-<header class="border-b border-gray-200 pr-3">
+<header class="border-b border-gray-200 dark:border-gray-600 pr-3">
     <div class="flex flex-wrap items-center">
-        <div class="flex-shrink flex-grow-0">
+        <div class="absolute top-2 left-2 sm:static flex-shrink flex-grow-0">
             <div class="cursor-pointer">
                 <a hx-boost="true" class="navbar-brand flex items-center" href="/">
-                    <img class="ml-2 w-12 h-12" src="/img/logo.svg" alt="MyApp logo">
-                    <span class="text-2xl font-semibold">.mjs</span>
+                    <img class="w-8 h-8 sm:ml-2 sm:w-12 sm:h-12" src="/img/logo.svg" alt="MyApp logo">
+                    <span class="hidden sm:block text-2xl font-semibold">.mjs</span>
                 </a>
             </div>
         </div>
         <div class="flex flex-grow flex-shrink flex-nowrap justify-end items-center">
             <nav hx-boost="true" class="relative flex flex-grow leading-6 font-semibold text-slate-700 dark:text-slate-200">
-                <ul class="flex flex-wrap items-center justify-end w-full m-0">
+                <ul class="flex flex-wrap items-center justify-end w-full m-0 pb-2 sm:pb-0">
                     @{
                         var isAuthenticated = await Html.IsAuthenticatedAsync();
                         var isAdmin = await Html.HasRoleAsync("Admin");
@@ -18,16 +18,15 @@
                         {
                             <li class="relative flex flex-wrap just-fu-start m-0">
                                 <a href="@href" class="@Html.ClassNames("p-4 flex items-center justify-start mw-full hover:text-sky-500 dark:hover:text-sky-400", 
-                                    Html.MatchesPath(href) ? "text-blue-700" : "")">
+                                                           Html.MatchesPath(href) ? "text-blue-700 dark:text-blue-300" : "")">
                                     @Html.Raw(childContent)
                                 </a>
                             </li>
                         }
                         void RenderLinkButton(string href, string childContent, string? cls = null)
                         {
-                            cls ??= "ml-2 inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500";
                             <li class="relative flex flex-wrap just-fu-start m-0">
-                                <a href="@href" class="@cls">
+                                <a href="@href" class="@(cls ?? Css.SecondaryButton)">
                                     @Html.Raw(childContent)
                                 </a>
                             </li>
@@ -45,12 +44,18 @@
                         if (!isAuthenticated)
                             RenderLinkButton("/signin", "Sign In");
                         if (!isAuthenticated)
-                            RenderLinkButton("/signup", "Sign Up", 
-                                "ml-2 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-50");
+                            RenderLinkButton("/signup", "Sign Up", $"ml-2 {Css.PrimaryButton}");
                     }
+                    <li class="relative flex flex-wrap just-fu-start m-0">
+                        <div data-component="DarkModeToggle" class="ml-2 w-10"></div>
+                    </li>
                 </ul>
             </nav>
 
         </div>
     </div>
 </header>
+<script type="module">
+import { init } from "/mjs/app.mjs"
+init(window)
+</script>

@@ -47,8 +47,13 @@ export function init(exports) {
         let componentName = el.getAttribute('data-component')
         let component = componentName && Components[componentName]
         if (!component) {
-            console.error(`Could not create component ${componentName}`)
-            return
+            /** @type any */
+            const resolver = { component(name,c) { if (name === componentName) component = c } }
+            ServiceStackVue.install(resolver)
+            if (!component) {
+                console.error(`Could not create component ${componentName}`)
+                return
+            }
         }
 
         let propsStr = el.getAttribute('data-props')
