@@ -20,12 +20,14 @@ public class ConfigureMarkdown : IHostingStartup
             services.AddSingleton<RazorPagesEngine>();
             services.AddSingleton<BlogPosts>();
         })
-        .ConfigureAppHost(afterPluginsLoaded: appHost =>
+        .ConfigureAppHost(
+            appHost => appHost.Plugins.Add(new StaticFilePrettyUrlsFeature()),
+            afterPluginsLoaded: appHost => 
         {
             var blogPosts = appHost.Resolve<BlogPosts>();
             blogPosts.VirtualFiles = appHost.GetVirtualFileSource<FileSystemVirtualFiles>();
 
-            //Optional, prerender /blog on deployment with: `$ npm run prerender` 
+            //Optional, prerender to /blog with: `$ npm run prerender` 
             AppTasks.Register("prerender", args => blogPosts.LoadPosts("_blog/posts", renderTo: "blog"));
 
             blogPosts.LoadPosts("_blog/posts");
@@ -177,6 +179,7 @@ public class BlogPosts
 
                 Posts.Add(doc);
 
+                // prerender /blog/{slug}.html
                 if (renderTo != null)
                 {
                     log.InfoFormat("Writing {0}/{1}...", renderTo, doc.HtmlFileName);

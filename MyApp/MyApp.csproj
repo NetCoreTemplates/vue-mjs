@@ -28,11 +28,6 @@
     <ProjectReference Include="..\MyApp.ServiceModel\MyApp.ServiceModel.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Pages\Contacts\Edit.cshtml" />
-    <_ContentIncludedByDefault Remove="Pages\Contacts\Index.cshtml" />
-  </ItemGroup>
-
   <!-- Prerender tasks run in release.yml -->
   <Target Name="AppTasks" AfterTargets="Build" Condition="$(APP_TASKS) != ''">
     <CallTarget Targets="Prerender" Condition="$(APP_TASKS.Contains('prerender'))" />

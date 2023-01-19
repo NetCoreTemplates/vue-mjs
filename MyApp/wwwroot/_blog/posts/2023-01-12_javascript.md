@@ -445,7 +445,7 @@ Technical Preview. Luckily this feature can be polyfilled with the [ES Module Sh
 that's configured in this template:
 
 ```html
-@if (Context.Request.Headers.UserAgent.Any(x => x.Contains("Safari")))
+@if (Context.Request.Headers.UserAgent.Any(x => x.Contains("Safari") && !x.Contains("Chrome")))
 {
     <script async src="https://ga.jspm.io/npm:es-module-shims@1.6.3/dist/es-module-shims.js"></script>
 }
