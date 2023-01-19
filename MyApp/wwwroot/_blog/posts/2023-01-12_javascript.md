@@ -38,11 +38,11 @@ development model using Razor Pages for Server Rendered content with any interac
 
 #### Freedom to use any JS library
 
-Avoiding the SPA route actually affords us more flexibility on which JS libraries each page can use as without a heavy bundled JS
+Avoiding the SPA route ends up affording more flexibility on which JS libraries each page can use as without a heavy bundled JS
 blob of all JS used by the entire App, it's free to only load the required JS each page needs to best implement its 
-required functionality, which can be any JS library, preferably using ESM builds that can be referenced from a 
+required functionality, which can be any JS library, preferably utilizing ESM builds that can be referenced from a 
 [JavaScript Module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules), taking advantage of the module system
-natively supported in modern browsers to efficiently download the declarative matrix of dependencies each script needs. 
+native to modern browsers able to efficiently download the declarative matrix of dependencies each script needs. 
 
 ### Best libraries for progressive Multi Page Apps
 
@@ -51,11 +51,11 @@ MPA Web Apps, specifically:
 
 #### [Tailwind CLI](https://tailwindcss.com/docs/installation)
 Tailwind enables a responsive, utility-first CSS framework for creating maintainable CSS at scale without the need for any CSS
-preprocessors like Sass, which is configured to run from an npx script that avoids needing any node_module dependencies.
+preprocessors like Sass, which is configured to run from an npx script to avoid needing any node_module dependencies.
 
 #### [Vue 3](https://vuejs.org/guide/introduction.html)
 Vue is a popular Progressive JavaScript Framework that makes it easy to create interactive Reactive Components whose
-[Composition API](https://vuejs.org/api/composition-api-setup.html) offers a nice development model that doesn't require any
+[Composition API](https://vuejs.org/api/composition-api-setup.html) offers a nice development model without requiring any
 pre-processors like JSX.
 
 Where creating a component is as simple as:
@@ -83,22 +83,22 @@ const Counter = {
 <div data-component="Counter" class="text-center text-2xl py-2 cursor-pointer select-none"></div>
 
 These components can be mounted using the standard [Vue 3 mount](https://vuejs.org/api/application.html#app-mount) API, but to 
-make it easier we've also added additional APIs, that can declaratively add components to pages using the `data-component` and `data-props`
-attributes, that's especially useful for including Vue components in Markdown content like this, e.g:  
+make it easier we've added additional APIs for declaratively mounting components to pages using the `data-component` and `data-props`
+attributes, especially useful for including Vue components in Markdown content, e.g:  
 
 ```html
 <div data-component="Hello" data-props="{ name: 'Vue 3' }"></div>
 ```
 
-Alternatively they can be programatically added using this App's custom `mount` API:
+Alternatively they can be programatically added using the custom `mount` method in `api.mjs`:
 
 ```js
 import { mount } from "/mjs/api.mjs"
 mount('#counter', Counter)
 ```
 
-Both approaches will create components with access to all your Shared Components and any 3rd Party Plugins which
-we can see in this example:
+Both methods create components with access to all your Shared Components and any 3rd Party Plugins which
+we can preview in this example that uses the `ModuleDialog` component from **@servicestack/vue**:
 
 ```js
 const Plugin = {
@@ -123,8 +123,8 @@ Apps, including Input Components with auto form validation binding which is used
 
 #### [@serviceStack/client](https://github.com/ServiceStack/servicestack-client)
 `@serviceStack/client` is our generic [JS/TypeScript](https://docs.servicestack.net/typescript-add-servicestack-reference) client library
-which enables a terse, typed API that requires **no build steps** which can be used with your App's annotated typed DTOs
-from the built-in `/types/mjs` endpoint to enable an effortless end-to-end Typed development model to call your APIs, e.g:
+which enables a terse, typed API that requires **no build steps** which can use your App's typed DTOs from the built-in `/types/mjs` endpoint 
+to enable an effortless end-to-end Typed development model for calling your APIs, e.g:
 
 ```html
 <input type="text" id="txtName">
@@ -150,14 +150,14 @@ For better IDE intelli-sense during development, save the annotated Typed DTOs t
 $ npm run dtos
 ```
 
-Where it can be referenced instead to enable IDE static analysis at development:
+That can be referenced instead to enable IDE static analysis benefits during development:
 
 ```js
 import { Hello } from '/js/dtos.mjs'
 client.api(new Hello({ name }))
 ```
 
-You'll typically use all libraries in your **API-enabled** components as seen in the 
+You'll typically use all these libraries in your **API-enabled** components as seen in the 
 [HelloApi.mjs](https://github.com/NetCoreTemplates/razor-tailwind/blob/main/MyApp/wwwroot/mjs/components/HelloApi.mjs)
 component on the home page which calls the [Hello](/ui/Hello) API on every key press:
 
@@ -190,28 +190,28 @@ export default {
 }
 ```
 
-Which can also be included here like any other component:
+Which we can also mount below:
 
 <div data-component="HelloApi" data-props="{ value: 'Vue 3' }" class="w-full font-semibold"></div>
 
-Some notes about new features used this component:
+We'll also go through and explain other features used in this component:
 
 #### `/*html*/`
 
-Although not needed in [Rider](/rider) which can automatically infer HTML in strings, the `/*html*/` is a type hint that tooling like the 
-[es6-string-html](https://marketplace.visualstudio.com/items?itemName=Tobermory.es6-string-html)
-VS Code extension uses to provide syntax highlighting and an enhanced authoring experience for HTML content in string literals. 
+Although not needed in [Rider](/rider) (which can automatically infer HTML in strings), the `/*html*/` type hint can be used 
+to instruct tooling like the [es6-string-html](https://marketplace.visualstudio.com/items?itemName=Tobermory.es6-string-html)
+VS Code extension to provide syntax highlighting and an enhanced authoring experience for HTML content in string literals. 
 
 #### useClient
 
 [useClient()](https://github.com/ServiceStack/servicestack-vue/blob/main/src/api.ts) provides managed APIs around the `JsonServiceClient` 
-instance, registered in your Vue App with:
+instance registered in Vue App's with:
 
 ```js
 app.provide('client', client)
 ```
 
-Which maintains contextual information around your API calls like **loading** and **error** states used by `@servicestack/vue` components to 
+Which maintains contextual information around your API calls like **loading** and **error** states, used by `@servicestack/vue` components to 
 enable its auto validation binding. Other functionality in this provider include:
 
 ```js
@@ -285,8 +285,8 @@ This populated `ResponseStatus` DTO can either be manually passed into each comp
 ```
 
 Where if you try adding an empty Todo the `CreateTodo` API will fail and populate its `store.error` reactive property with the 
-APIs Error Response DTO which the `<TextInput />` component checks and assigns any field validation errors matching the 
-field name in `id` and displays it adjacent to the HTML Input:
+APIs Error Response DTO which the `<TextInput />` component checks for to display any field validation errors matching the
+field in `id` adjacent to the HTML Input:
 
 ```js
 let store = {
@@ -374,19 +374,19 @@ const Edit = {
 }
 ```
 
-This effectively makes form validation binding a transparent implementation detail where it's able to 
-automatically apply contextual validation errors next to the fields they apply to: 
+This effectively makes form validation binding a transparent detail where all `@servicestack/vue` 
+Input Components are able to automatically apply contextual validation errors next to the fields they apply to: 
 
 ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/scripts/edit-contact-validation.png)
 
 #### [JSDoc](https://jsdoc.app)
 
-We get great value for using [TypeScript](https://www.typescriptlang.org) to maintain our libraries typed code bases, however it does mandate 
-using an external tool to strip out its annotations in order to be run JS Runtimes, something this template expressly avoids. 
+We get great value from using [TypeScript](https://www.typescriptlang.org) to maintain our libraries typed code bases, however it 
+does mandate using an external tool to convert it to valid JS before it can be run, something this template expressly avoids. 
 
-Instead it uses JSDoc to add type annotations to App code where they add value, which  at the cost of slightly more verbose syntax enables 
-much of the same static analysis and intelli-sense benefits of TypeScript, but without needing any tools to convert it to valid JavaScript
-at runtime, e.g:   
+Instead this template uses JSDoc to add type annotations to App code where they add value, which  at the cost of slightly more 
+verbose syntax enables much of the same static analysis and intelli-sense benefits of TypeScript, but without needing any tools 
+to convert it to valid JavaScript:   
 
 ```js
 /** @param {KeyboardEvent} e */
@@ -400,14 +400,14 @@ function validateSafeName(e) {
 
 #### TypeScript Language Service
 
-Whilst the code-base doesn't use TypeScript syntax in its code base directly, it still uses the TypeScript language service to enable
+Whilst the code-base doesn't use TypeScript syntax in its code base directly, it still TypeScript's language services to enable
 static analysis for the included libraries from the TypeScript definitions included in `/lib/typings`, downloaded 
-after installing the template in [postinstall.js](https://github.com/NetCoreTemplates/razor-tailwind/blob/main/MyApp/postinstall.js).
+in [postinstall.js](https://github.com/NetCoreTemplates/razor-tailwind/blob/main/MyApp/postinstall.js) after installing the template.
 
 ### Import Maps
 
 [Import Maps](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type/importmap) is a useful browser feature that allows
-specifying optimal names for modules, where it can be used to map package names to the implementation it should use, e.g:
+specifying optimal names for modules, that can be used to map package names to the implementation it should use, e.g:
 
 ```csharp
 @Html.StaticImportMap(new() {
@@ -417,17 +417,17 @@ specifying optimal names for modules, where it can be used to map package names 
 })
 ```
 
-This allows source code to be able to import from the package name instead of its physical location which can freely 
-managed in one place without needing to update any source code references:   
+Where they can be freely maintained in one place without needing to update any source code references.
+This allows source code to be able to import from the package name instead of its physical location:
 
 ```js
 import { ref } from "vue"
 import { useClient } from "@servicestack/vue"
-import { JsonServiceClient, $1, on } from '@servicestack/client'
+import { JsonServiceClient, $1, on } from "@servicestack/client"
 ```
 
 It's a great solution for specifying using local unminified debug builds during **Development**, and more optimal CDN hosted 
-production builds when running in **Production**, alleviating the need to rely on complex build tools to do this code transformation for us:
+production builds when running in **Production**, alleviating the need to rely on complex build tools to perform this code transformation for us:
 
 ```csharp
 @Html.ImportMap(new()
@@ -470,20 +470,21 @@ mount('#todomvc', TodoMvc, { todos })
 </script>
 ```
 
-The result of which should render the List of Todos instantly when the page loads since it doesn't need to perform an additional Ajax request
+The result of which should render the List of Todos instantly when the page loads since it doesn't need to perform any additional Ajax requests
 after the component is loaded.
 
 ### App Server Metadata
 
 The rich server metadata about your APIs that's used to generate your App's DTOs in 
 [Multiple Programming Languages](https://docs.servicestack.net/add-servicestack-reference) or power the built-in 
-[API Explorer](https://docs.servicestack.net/api-explorer) UIs are also available to your App that can be embedded in pages that need them with:
+[API Explorer UIs](https://docs.servicestack.net/api-explorer) are also available to your App where it can be embedded in pages 
+that need them with:
 
 ```html
 <script>window.Server=@Gateway.Send(new MetadataApp()).ToJson().AsRaw()</script>
 ```
 
-Where you'll be able to access with the helper functions in `types.mjs`, i.e:
+Which you'll be able to access with the helper functions in `types.mjs`:
 
 ```js
 import { getAppMetadata, getType, getProperty, propertyOptions, enumOptions } from "/mjs/types.mjs"
@@ -498,7 +499,7 @@ getType('Contact').properties.forEach(prop => console.log(`${prop.name}: ${prop.
 More usefully this can be used to avoid code maintenance and duplication efforts from maintaining enum values on both server
 and client forms. 
 
-Instead the [/Contacts](/Contacts) components uses this server metadata to populate the **Title** and
+An example of this is in the [/Contacts](/Contacts) component which uses the server metadata to populate the **Title** and
 **Favorite Genre** select options from the `Title` and `FilmGenre` enums:
 
 ```html
@@ -524,16 +525,18 @@ Instead the [/Contacts](/Contacts) components uses this server metadata to popul
 Whilst the `colorOptions` gets its values from the available options on the `CreateContact.Color` property:    
 
 ```js
+import { getProperty, propertyOptions, enumOptions } from "/mjs/types.mjs"
 const Edit = {
     //...
     setup(props) {
         const colorOptions = propertyOptions(getProperty('CreateContact','Color'))
+        return { enumOptions, colorOptions }
         //..
     }
 }
 ```
 
-As instead of an enum it's populated from a C# Dictionary referenced in:
+Which instead of an enum, references the C# Dictionary in:
 
 ```csharp
 public class CreateContact : IPost, IReturn<CreateContactResponse>
@@ -544,7 +547,7 @@ public class CreateContact : IPost, IReturn<CreateContactResponse>
 }
 ```
 
-Where it returns custom colors defined in:
+To return a C# Dictionary of custom colors defined in:
 
 ```csharp
 public class AppData
