@@ -19,13 +19,17 @@
         OutputTo = $"/js/lib.bundle{min}.js"
     })
 
+    @if (Context.Request.Headers.UserAgent.Contains("Safari"))
+    {
+        <script async src="https://ga.jspm.io/npm:es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+    }
     @Html.ImportMap(new()
     {
         ["vue"]                  = ("/lib/mjs/vue.mjs",                 "https://unpkg.com/vue@3/dist/vue.esm-browser.prod.js"),
         ["@servicestack/client"] = ("/lib/mjs/servicestack-client.mjs", "https://unpkg.com/@servicestack/client@1/dist/servicestack-client.min.mjs"),
         ["@servicestack/vue"]    = ("/lib/mjs/servicestack-vue.mjs",    "https://unpkg.com/@servicestack/vue@3/dist/servicestack-vue.min.mjs")
     })
-    
+
     <script type="module" async>
         import { init } from "/mjs/app.mjs"
         init(window)
