@@ -16,12 +16,12 @@ that we used to rely on external tools for is now available in modern browsers a
 complex tooling and npm dependencies that have historically plagued modern web development.
 
 The good news is that the complex npm tooling that was previously considered mandatory in modern JavaScript App 
-development can now be considered optional as can take advantage of modern browser features like  
+development can be considered optional as we can now utilize modern browser features like  
 [async/await](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function),
 [JavaScript Modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules), 
 [dynamic imports](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import), 
 [import maps](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type/importmap)
-and [modern language features](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide) allow for a 
+and [modern language features](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide) for a 
 sophisticated development workflow without the need for any npm build tools. 
 
 ### Brining Simplicity Back
@@ -39,8 +39,8 @@ development model using Razor Pages for Server Rendered content with any interac
 #### Freedom to use any JS library
 
 Avoiding the SPA route actually affords us more flexibility on which JS libraries each page can use as without a heavy bundled JS
-blob containing all JS used by the entire App, it's free to only load the required JS each page needs to best implement its 
-required functionality, which can be any library containing an ESM build that can be referenced from a 
+blob of all JS used by the entire App, it's free to only load the required JS each page needs to best implement its 
+required functionality, which can be any JS library, preferably using ESM builds that can be referenced from a 
 [JavaScript Module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules), taking advantage of the module system
 natively supported in modern browsers to efficiently download the declarative matrix of dependencies each script needs. 
 
@@ -192,7 +192,7 @@ export default {
 
 Which can also be included here like any other component:
 
-<div data-component="HelloApi" data-props="{ value: 'Vue 3' }" class="w-full"></div>
+<div data-component="HelloApi" data-props="{ value: 'Vue 3' }" class="w-full font-semibold"></div>
 
 Some notes about new features used this component:
 

@@ -1,16 +1,46 @@
-import { createApp, reactive } from "vue"
+import { createApp, reactive, ref } from "vue"
 import { JsonServiceClient, $1, $$ } from "@servicestack/client"
 import ServiceStackVue, { useClient, RouterLink } from "@servicestack/vue"
 import { Authenticate } from "./dtos.mjs"
+import HelloApi from "./components/HelloApi.mjs"
 import SrcLink from "./components/SrcLink.js"
 
 let client = null, AppData = { init:false, loaded:false }, Apps = []
 export { client, AppData, Apps, useClient }
 
+/** Simple inline component examples */
+const Hello = {
+    template: `<b>Hello, {{name}}!</b>`,
+    props: { name:String }
+}
+const Counter = {
+    template: `<b @click="count++">Counter {{count}}</b>`,
+    setup() {
+        let count = ref(1)
+        return { count }
+    }
+}
+const Plugin = {
+    template:`<div>
+        <b @click="show=true">Open Modal</b>
+        <ModalDialog v-if="show" @done="show=false">
+            <div class="p-8">Hello @servicestack/vue!</div>
+        </ModalDialog>
+    </div>`,
+    setup() {
+        const show = ref(false)
+        return { show }
+    }
+}
+
 /** Shared Components */
 const Components = {
     RouterLink,
+    HelloApi,
     SrcLink,
+    Hello,
+    Counter,
+    Plugin,
 }
 
 /** Mount Vue3 Component
