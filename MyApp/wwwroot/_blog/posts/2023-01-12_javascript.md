@@ -158,7 +158,7 @@ client.api(new Hello({ name }))
 ```
 
 You'll typically use all these libraries in your **API-enabled** components as seen in the 
-[HelloApi.mjs](https://github.com/NetCoreTemplates/razor-tailwind/blob/main/MyApp/wwwroot/mjs/components/HelloApi.mjs)
+[HelloApi.mjs](https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp/wwwroot/mjs/components/HelloApi.mjs)
 component on the home page which calls the [Hello](/ui/Hello) API on every key press:
 
 ```js
@@ -250,7 +250,7 @@ let api = await client.api(new Hello(unRefs({ name })))
 #### useClient - setError
 
 `setError` can be used to populate client-side validation errors which the 
-[SignUp.mjs](https://github.com/NetCoreTemplates/razor-tailwind/blob/main/MyApp/wwwroot/Pages/SignUp.mjs)
+[SignUp.mjs](https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp/wwwroot/Pages/SignUp.mjs)
 component uses to report an invalid submissions when passwords don't match:
 
 ```js
@@ -402,7 +402,7 @@ function validateSafeName(e) {
 
 Whilst the code-base doesn't use TypeScript syntax in its code base directly, it still TypeScript's language services to enable
 static analysis for the included libraries from the TypeScript definitions included in `/lib/typings`, downloaded 
-in [postinstall.js](https://github.com/NetCoreTemplates/razor-tailwind/blob/main/MyApp/postinstall.js) after installing the template.
+in [postinstall.js](https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp/postinstall.js) after installing the template.
 
 ### Import Maps
 
@@ -472,6 +472,36 @@ mount('#todomvc', TodoMvc, { todos })
 
 The result of which should render the List of Todos instantly when the page loads since it doesn't need to perform any additional Ajax requests
 after the component is loaded.
+
+### Fast Page Loading
+
+We can get SPA-like page loading performance using htmx's [Boosting](https://htmx.org/docs/#boosting) feature which avoids full page reloads
+by converting all anchor tags to use Ajax to load page content into the page body, improving perceived performance from needing to reload 
+scripts and CSS in `<head>`.
+
+This is used in [https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp/Pages/Shared/Header.cshtml](Header.cshtml) to **boost** all
+main navigation links:
+
+```html
+<nav hx-boost="true">
+    <ul>
+        <li><a href="/Blog">Blog</a></li>
+    </ul>
+</nav>
+```
+
+htmlx has lots of useful [real world examples](https://htmx.org/examples/) that can be activated with declarative attributes, 
+another feature this template uses is the [class-tools](https://htmx.org/extensions/class-tools/) extension to hide elements from 
+appearing until after the page is loaded:
+
+```html
+<div id="signin"></div>
+<div class="hidden mt-5 flex justify-center" classes="remove hidden:load">
+    @Html.SrcPage("SignIn.mjs")
+</div>
+```
+
+Which is used to reduce UI yankiness from showing server rendered content before JS components have loaded. 
 
 ### App Server Metadata
 
