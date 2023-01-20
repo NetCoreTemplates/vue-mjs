@@ -1,5 +1,5 @@
 ---
-title: Modern JavaScript
+title: Simple, Modern JavaScript
 summary: Learn about JS Modules, Vue 3 and available rich UI Components
 tags: js,dev
 splash: https://images.unsplash.com/photo-1497515114629-f71d768fd07c?crop=entropy&fit=crop&h=1000&w=2000
@@ -84,7 +84,7 @@ const Counter = {
 
 These components can be mounted using the standard [Vue 3 mount](https://vuejs.org/api/application.html#app-mount) API, but to 
 make it easier we've added additional APIs for declaratively mounting components to pages using the `data-component` and `data-props`
-attributes, especially useful for including Vue components in Markdown content, e.g:  
+attributes, especially useful for including Vue components in Markdown content like this, e.g:  
 
 ```html
 <div data-component="Hello" data-props="{ name: 'Vue 3' }"></div>
@@ -98,7 +98,7 @@ mount('#counter', Counter)
 ```
 
 Both methods create components with access to all your Shared Components and any 3rd Party Plugins which
-we can preview in this example that uses the `ModuleDialog` component from **@servicestack/vue**:
+we can preview in this example that uses **@servicestack/vue's** `ModuleDialog` component:
 
 ```js
 const Plugin = {
@@ -118,13 +118,13 @@ const Plugin = {
 <div data-component="Plugin" class="text-center text-2xl py-2 cursor-pointer select-none"></div>
 
 #### [@serviceStack/vue](https://github.com/ServiceStack/servicestack-vue)
-`@serviceStack/vue` is our growing Vue 3 Tailwind component library with many rich components useful in ServiceStack
-Apps, including Input Components with auto form validation binding which is used by all forms in this template. 
+`@serviceStack/vue` is our growing Vue 3 Tailwind component library with a number of rich Tailwind components useful 
+in .NET Web Apps, including Input Components with auto form validation binding which is used by all HTML forms in this template. 
 
 #### [@serviceStack/client](https://github.com/ServiceStack/servicestack-client)
 `@serviceStack/client` is our generic [JS/TypeScript](https://docs.servicestack.net/typescript-add-servicestack-reference) client library
-which enables a terse, typed API that requires **no build steps** which can use your App's typed DTOs from the built-in `/types/mjs` endpoint 
-to enable an effortless end-to-end Typed development model for calling your APIs, e.g:
+which enables a terse, typed API which can use your App's typed DTOs from the built-in `/types/mjs` endpoint 
+to enable an effortless end-to-end Typed development model for calling your APIs **without any build steps**, e.g:
 
 ```html
 <input type="text" id="txtName">
@@ -150,7 +150,7 @@ For better IDE intelli-sense during development, save the annotated Typed DTOs t
 $ npm run dtos
 ```
 
-That can be referenced instead to enable IDE static analysis benefits during development:
+That can be referenced instead to unlock your IDE's static analysis type-checking and intelli-sense benefits during development:
 
 ```js
 import { Hello } from '/js/dtos.mjs'
@@ -159,7 +159,7 @@ client.api(new Hello({ name }))
 
 You'll typically use all these libraries in your **API-enabled** components as seen in the 
 [HelloApi.mjs](https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp/wwwroot/mjs/components/HelloApi.mjs)
-component on the home page which calls the [Hello](/ui/Hello) API on every key press:
+component on the home page which calls the [Hello](/ui/Hello) API on each key press:
 
 ```js
 import { ref } from "vue"
