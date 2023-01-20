@@ -49,7 +49,7 @@ public class QueryBookings : QueryDb<Booking>
 
 [Tag("bookings"), Description("Create a new Booking")]
 [Route("/bookings", "POST")]
-[ValidateHasRole("Employee")]
+[ValidateHasRole(AppRoles.Employee)]
 [AutoApply(Behavior.AuditCreate)]
 public class CreateBooking : ICreateDb<Booking>, IReturn<IdResponse>
 {
@@ -68,7 +68,7 @@ public class CreateBooking : ICreateDb<Booking>, IReturn<IdResponse>
 
 [Tag("bookings"), Description("Update an existing Booking")]
 [Route("/booking/{Id}", "PATCH")]
-[ValidateHasRole("Employee")]
+[ValidateHasRole(AppRoles.Employee)]
 [AutoApply(Behavior.AuditModify)]
 public class UpdateBooking : IPatchDb<Booking>, IReturn<IdResponse>
 {
@@ -88,7 +88,7 @@ public class UpdateBooking : IPatchDb<Booking>, IReturn<IdResponse>
 
 [Tag("bookings"), Description("Delete a Booking")]
 [Route("/booking/{Id}", "DELETE")]
-[ValidateHasRole("Manager")]
+[ValidateHasRole(AppRoles.Manager)]
 [AutoApply(Behavior.AuditSoftDelete)]
 public class DeleteBooking : IDeleteDb<Booking>, IReturnVoid
 {
