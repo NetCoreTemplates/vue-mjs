@@ -9,15 +9,17 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@ViewData["Title"] - My App</title>
-    <link rel="stylesheet" href="/css/app.css">
-    
     <script>
-    const colorScheme = localStorage.getItem('color-scheme')
-    if (colorScheme === 'dark')
-        document.querySelector('html').classList.add('dark')
-    else
-        document.querySelector('html').classList.remove('dark')
+    let colorScheme = localStorage.getItem('color-scheme')
+    setColorScheme()
+    function setColorScheme() {
+        if (colorScheme === 'dark')
+            document.querySelector('html').classList.add('dark')
+        else
+            document.querySelector('html').classList.remove('dark')
+    }
     </script>
+    <link rel="stylesheet" href="/css/app.css">
 
     @Html.BundleJs(new BundleOptions {
         Sources = {
