@@ -71,6 +71,8 @@ const Hello = {
 Or a simple reactive example:
 
 ```js
+import { ref } from "vue"
+
 const Counter = {
     template: `<b @click="count++">Counter {{count}}</b>`,
     setup() {
@@ -400,7 +402,7 @@ function validateSafeName(e) {
 
 #### TypeScript Language Service
 
-Whilst the code-base doesn't use TypeScript syntax in its code base directly, it still TypeScript's language services to enable
+Whilst the code-base doesn't use TypeScript syntax in its code base directly, it still uses TypeScript's language services to enable
 static analysis for the included libraries from the TypeScript definitions included in `/lib/typings`, downloaded 
 in [postinstall.js](https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp/postinstall.js) after installing the template.
 
