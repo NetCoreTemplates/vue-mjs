@@ -74,13 +74,11 @@ doc.Slug = file.Name.RightPart('_').LastLeftPart('.');
 doc.HtmlFileName = $"{file.Name.RightPart('_').LastLeftPart('.')}.html";
 
 var datePart = file.Name.LeftPart('_');
-if (!DateTime.TryParseExact(datePart, "yyyy-MM-dd", CultureInfo.InvariantCulture,
+if (DateTime.TryParseExact(datePart, "yyyy-MM-dd", CultureInfo.InvariantCulture,
         DateTimeStyles.AdjustToUniversal, out var date))
 {
-    log.LogWarning("Could not parse date '{0}', ignoring...", datePart);
-    return null;
+    doc.Date = date;
 }
-doc.Date = date;
 ```
 
 The rendering itself is done using Markdig's `HtmlRenderer` which renders the Markdown content into a HTML fragment:  
@@ -93,6 +91,7 @@ var pipeline = new MarkdownPipelineBuilder()
 var writer = new StringWriter();
 var renderer = new Markdig.Renderers.HtmlRenderer(writer);
 pipeline.Setup(renderer);
+//...
 
 renderer.Render(document);
 writer.Flush();
@@ -103,8 +102,8 @@ At this point we've populated Markdown Blog Posts into a POCO which is the data 
 
 We can now start prerendering entire HTML Pages by rendering the markdown inside the 
 [Post.cshtml](https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp/Pages/Posts/Post.cshtml) Razor Page by populating its PageModel
-with `MarkdownFileInfo` POCO. We also set a `Static` flag to tell the Razor Page that this page is statically rendered so it can use
-the appropriate links.
+from the `MarkdownFileInfo` POCO. It also sets a `Static` flag that tells the Razor Page that this page is being statically rendered so 
+it can render the appropriate links.
 
 ```csharp
 var page = razorPages.GetView("/Pages/Posts/Post.cshtml");
@@ -159,12 +158,12 @@ if (renderTo != null)
 
 ### Prerendering Pages Task
 
-Next on the todo list is coming up with a solution to run this from the command-line.
+Next we need to come up with a solution to run this from the command-line.
 [App Tasks](https://docs.servicestack.net/app-tasks) is ideal for this which lets you run one-off tasks within the full context of your App 
-but without the overhead of maintaining a separate .exe with duplicated App configuration, instead we can run the ASP .NET Core App to 
+but without the overhead of maintaining a separate .exe with duplicated App configuration & logic, instead we can run the .NET App to 
 run the specified Tasks then exit before launching its HTTP Server.
 
-To do this we'll register the Prerender Task against the **prerender** AppTask name with:
+To do this we'll register this task with the **prerender** AppTask name:
 
 ```csharp
 AppTasks.Register("prerender", args => blogPosts.LoadPosts("_blog/posts", renderTo: "blog"));
@@ -186,7 +185,7 @@ To make it more discoverable, this is also registered as an npm script in `packa
 }
 ```
 
-That can be run instead to prerender this blog to `/wwwroot/blog`: 
+That can now be run to prerender this blog to `/wwwroot/blog` with: 
 
 ```bash
 $ npm run prerender
@@ -206,7 +205,7 @@ To ensure this is always run at deployment it's also added as an MS Build task i
 </Target>
 ```
 
-That's configured to run when the .NET App is published in the GitHub Actions deployment task 
+Configured to run when the .NET App is published in the GitHub Actions deployment task in 
 [/.github/workflows/release.yml](https://github.com/NetCoreTemplates/vue-mjs/blob/main/.github/workflows/release.yml):
 
 ```yaml
@@ -217,11 +216,11 @@ That's configured to run when the .NET App is published in the GitHub Actions de
      dotnet publish -c Release /p:APP_TASKS=prerender
 ```
 
-Which can be used to control which App Tasks are run at deployment. 
+Where it's able to control which App Tasks are run at deployment. 
 
 ### Pretty URLs for static .html pages
 
-A nicety we can add to serving static `.html` pages is giving them [Pretty URLs](https://en.wikipedia.org/wiki/Clean_URL),
+A nicety we can add to serving static `.html` pages is giving them [Pretty URLs](https://en.wikipedia.org/wiki/Clean_URL)
 by registering the Plugin: 
 
 ```csharp
