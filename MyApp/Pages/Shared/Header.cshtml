@@ -1,6 +1,6 @@
 <header class="border-b border-gray-200 dark:border-gray-600 pr-3">
     <div class="flex flex-wrap items-center">
-        <div class="absolute top-2 left-2 sm:static flex-shrink flex-grow-0">
+        <div class="absolute z-10 top-2 left-2 sm:static flex-shrink flex-grow-0">
             <div class="cursor-pointer">
                 <a hx-boost="true" class="navbar-brand flex items-center" href="/">
                     <img class="w-8 h-8 sm:ml-2 sm:w-12 sm:h-12" src="/img/logo.svg" alt="MyApp logo">
@@ -14,11 +14,11 @@
                     @{
                         var isAuthenticated = await Html.IsAuthenticatedAsync();
                         var isAdmin = await Html.HasRoleAsync("Admin");
-                        void RenderNavLink(string href, string childContent)
+                        void RenderNavLink(string href, string childContent, string? cls = null)
                         {
-                            <li class="relative flex flex-wrap just-fu-start m-0">
+                            <li class="@Html.ClassNames("relative flex flex-wrap just-fu-start m-0",cls)">
                                 <a href="@href" class="@Html.ClassNames("p-4 flex items-center justify-start mw-full hover:text-sky-500 dark:hover:text-sky-400", 
-                                                           Html.MatchesPath(href) ? "text-blue-700 dark:text-blue-300" : "")">
+                                    Html.MatchesPath(href) ? "text-blue-700 dark:text-blue-300" : "")">
                                     @Html.Raw(childContent)
                                 </a>
                             </li>
@@ -32,7 +32,8 @@
                             </li>
                         }
 
-                        RenderNavLink(Html.IsDebug() ? "/posts" : "/blog/", "Blog"); // Uses prerendered /blog for production
+                        // Uses prerendered /blog for production
+                        RenderNavLink(Html.IsDebug() ? "/posts" : "/blog/", "Blog", "ml-8 sm:ml-0");
                         RenderNavLink("/todomvc", "Todos");
                         RenderNavLink("/bookings-crud", "Bookings");
                         if (isAuthenticated)
