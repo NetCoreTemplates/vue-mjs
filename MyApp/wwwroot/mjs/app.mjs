@@ -1,22 +1,14 @@
-import { createApp, reactive, ref } from "vue"
-import { JsonServiceClient, $1, $$ } from "@servicestack/client"
-import ServiceStackVue, { useClient, RouterLink } from "@servicestack/vue"
-import { Authenticate } from "./dtos.mjs"
+import { createApp, reactive, ref, computed } from "vue"
+import { JsonApiClient, $1, $$ } from "@servicestack/client"
+import ServiceStackVue, { RouterLink } from "@servicestack/vue"
 import HelloApi from "./components/HelloApi.mjs"
 import SrcLink from "./components/SrcLink.js"
 
 let client = null, Apps = []
 let AppData = { 
-    init:false, 
-    loaded:false,
-    /**@type AuthenticateResponse */
-    Auth: null,
-    isAuthenticated() { return this.Auth != null },
-    isAdmin() { return this.Auth?.roles?.indexOf('Admin') >= 0 },
-    hasRole(role) { return this.Auth?.roles?.indexOf(role) >= 0 },
-    hasPermission(permission) { return this.Auth?.permissions?.indexOf(permission) >= 0 },
+    init:false 
 }
-export { client, AppData, Apps, useClient }
+export { client, Apps }
 
 /** Simple inline component examples */
 const Hello = {
@@ -59,12 +51,11 @@ const Components = {
  * @param [props] {any} */
 export function mount(sel, component, props) {
     if (!AppData.init) {
-        init(window)
+        init(globalThis)
     }
     const el = $1(sel)
     const app = createApp(component, props)
     app.provide('client', client)
-    app.provide('AppData', AppData)
     Object.keys(Components).forEach(name => {
         app.component(name, Components[name])
     })
@@ -74,16 +65,9 @@ export function mount(sel, component, props) {
     return app
 }
 
-/** @param [exports] */
-export function init(exports) {
-    client = new JsonServiceClient().apply(c => {
-        c.basePath = "/api"
-        c.headers = new Headers() //avoid pre-flight CORS requests
-    })
-    AppData = reactive(AppData)
-    AppData.init = true
-
+export function mountAll() {
     $$('[data-component]').forEach(el => {
+        if (el.hasAttribute('data-v-app')) return
         let componentName = el.getAttribute('data-component')
         let component = componentName && Components[componentName]
         if (!component) {
@@ -100,16 +84,18 @@ export function init(exports) {
         let props = propsStr && new Function(`return (${propsStr})`)() || {}
         mount(el, component, props)
     })
+}
 
-    client.api(new Authenticate())
-        .then(api => {
-            AppData.Auth = api.succeeded ? api.response : null
-            AppData.loaded = true
-        })
+/** @param {any} [exports] */
+export function init(exports) {
+    if (AppData.init) return
+    client = JsonApiClient.create()
+    AppData = reactive(AppData)
+    AppData.init = true
+    mountAll()
     
     if (exports) {
         exports.client = client
-        exports.AppData = AppData
         exports.Apps = Apps
     }
 }

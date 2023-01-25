@@ -1,7 +1,7 @@
 import { CreateBooking, RoomType } from "../../mjs/dtos.mjs"
 import { dateInputFormat } from "../../mjs/utils.mjs"
 import { enumOptions } from "../../mjs/types.mjs"
-import { useClient } from "../../mjs/app.mjs"
+import { useClient } from "@servicestack/vue"
 
 export default {
   template:/*html*/`

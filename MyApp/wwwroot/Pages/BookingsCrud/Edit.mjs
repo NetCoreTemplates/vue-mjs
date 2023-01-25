@@ -2,7 +2,7 @@ import { computed, inject, ref, watchEffect } from "vue"
 import { DeleteBooking, QueryBookings, UpdateBooking } from "../../mjs/dtos.mjs"
 import { sanitizeForUi } from "../../mjs/utils.mjs"
 import { enumOptions } from "../../mjs/types.mjs"
-import { useClient } from "@servicestack/vue"
+import { useClient, useAuth } from "@servicestack/vue"
 
 export default {
     template:/*html*/`
@@ -60,8 +60,8 @@ export default {
     setup(props, { emit }) {
         const visibleFields = "name,roomType,roomNumber,bookingStartDate,bookingEndDate,cost,notes"
 
-        const AppData = inject('AppData')
-        const canDelete = computed(() => AppData.hasRole('Manager'))
+        const { hasRole, user, isAuthenticated } = useAuth()
+        const canDelete = computed(() => hasRole('Manager'))
         const client = useClient()
         const request = ref(new UpdateBooking())
 
@@ -84,6 +84,6 @@ export default {
 
         const close = () => emit('done')
         
-        return { visibleFields, request, canDelete, submit, onDelete, close, enumOptions, }
+        return { visibleFields, request, canDelete, submit, onDelete, close, enumOptions, user, isAuthenticated }
     }
 }

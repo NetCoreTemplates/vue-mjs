@@ -1,8 +1,6 @@
 import { ref } from "vue"
-import { serializeToObject } from "@servicestack/client"
-import { useClient } from "@servicestack/vue"
+import { useClient, useAuth } from "@servicestack/vue"
 import { Authenticate } from "../mjs/dtos.mjs"
-import { AppData } from "../mjs/app.mjs"
 
 export default {
     template:/*html*/`    
@@ -58,10 +56,12 @@ export default {
             userName.value = email
             password.value = "p@55wOrd"
         }
+        
+        const { signIn } = useAuth()
         async function submit() {
             const authApi = await api(new Authenticate(unRefs({ provider: 'credentials', userName, password, rememberMe })))
             if (authApi.succeeded) {
-                AppData.Auth = authApi.response
+                signIn(authApi.response)
                 location.href = props.redirect || '/'
             }
         }

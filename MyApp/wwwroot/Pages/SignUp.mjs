@@ -1,8 +1,7 @@
-import { ref, watchEffect, nextTick } from "vue"
-import { leftPart, rightPart, serializeToObject, toPascalCase } from "@servicestack/client"
+import { ref } from "vue"
+import { leftPart, rightPart, toPascalCase } from "@servicestack/client"
 import { useClient } from "@servicestack/vue"
 import { Register } from "../mjs/dtos.mjs"
-import { AppData } from "../mjs/app.mjs"
 
 export default {
     template:/*html*/`    
@@ -66,7 +65,7 @@ export default {
                 autoLogin,
             })))
             if (registerApi.succeeded) {
-                location.href = '/signin'
+                location.href = props.returnUrl || '/signin'
             }
         }
         return { displayName, userName, password, confirmPassword, autoLogin, setUser, onSubmit }
