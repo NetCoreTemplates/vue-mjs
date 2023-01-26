@@ -1,12 +1,12 @@
 import { createApp, reactive, ref, computed } from "vue"
 import { JsonApiClient, $1, $$ } from "@servicestack/client"
-import ServiceStackVue, { RouterLink } from "@servicestack/vue"
+import ServiceStackVue, { RouterLink, useAppMetadata } from "@servicestack/vue"
 import HelloApi from "./components/HelloApi.mjs"
 import SrcLink from "./components/SrcLink.js"
 
 let client = null, Apps = []
-let AppData = { 
-    init:false 
+let AppData = {
+    init:false
 }
 export { client, Apps }
 
@@ -93,7 +93,7 @@ export function init(exports) {
     AppData = reactive(AppData)
     AppData.init = true
     mountAll()
-    
+
     if (exports) {
         exports.client = client
         exports.Apps = Apps

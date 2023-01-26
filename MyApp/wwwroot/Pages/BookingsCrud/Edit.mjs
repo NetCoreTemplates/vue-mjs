@@ -1,8 +1,7 @@
 import { computed, inject, ref, watchEffect } from "vue"
 import { DeleteBooking, QueryBookings, UpdateBooking } from "../../mjs/dtos.mjs"
 import { sanitizeForUi } from "../../mjs/utils.mjs"
-import { enumOptions } from "../../mjs/types.mjs"
-import { useClient, useAuth } from "@servicestack/vue"
+import { useClient, useAuth, useAppMetadata } from "@servicestack/vue"
 
 export default {
     template:/*html*/`
@@ -84,6 +83,7 @@ export default {
 
         const close = () => emit('done')
         
+        const { enumOptions } = useAppMetadata()
         return { visibleFields, request, canDelete, submit, onDelete, close, enumOptions, user, isAuthenticated }
     }
 }

@@ -509,30 +509,43 @@ Which is used to reduce UI yankiness from showing server rendered content before
 
 The rich server metadata about your APIs that's used to generate your App's DTOs in 
 [Multiple Programming Languages](https://docs.servicestack.net/add-servicestack-reference) or power the built-in 
-[API Explorer UIs](https://docs.servicestack.net/api-explorer) are also available to your App where it can be embedded in pages 
-that need them with:
+[API Explorer UIs](https://docs.servicestack.net/api-explorer) are also available to your App where it's automatically
+loaded in `_Layout.cshtml` with:
 
-```html
-<script>window.Server=@Gateway.Send(new MetadataApp()).ToJson().AsRaw()</script>
+```csharp
+let { clear, load } = useAppMetadata()
+@if (dev) {
+    <text>load(@((await Html.Gateway().ApiAsync(new MetadataApp())).Response.AsRawJson()));</text>
+} else {
+    <text>
+    clear({ olderThan: 24 * 60 * 60 * 1000 }) //1 day
+    load()
+    </text>
+}
 ```
+
+Where during development it always embeds the AppMetadata in each page but as this metadata can become large depending on the size and
+number of your APIs, the above optimization will only clear and reloads the AppMetadata after **1 day**, otherwise it will
+use a local copy cached in `localStorage` at `/metadata/app.json`, which Apps needing more fine-grained cache invalidation strategies
+could inspect and clear.
 
 Which you'll be able to access with the helper functions in `types.mjs`:
 
 ```js
-import { getAppMetadata, getType, getProperty, propertyOptions, enumOptions } from "/mjs/types.mjs"
+const { metadataApi, typeOf, property, enumOptions, propertyOptions } = useAppMetadata()
 ```
 
 For example you can use this to print out all the C# property names and their Types for the `Contact` C# DTO with:
 
 ```js
-getType('Contact').properties.forEach(prop => console.log(`${prop.name}: ${prop.type}`))
+typeOf('Contact').properties.forEach(prop => console.log(`${prop.name}: ${prop.type}`))
 ```
 
 More usefully this can be used to avoid code maintenance and duplication efforts from maintaining enum values on both server
 and client forms. 
 
-An example of this is in the [/Contacts](/Contacts) component which uses the server metadata to populate the **Title** and
-**Favorite Genre** select options from the `Title` and `FilmGenre` enums:
+An example of this is in the [Contacts.mjs](https://github.com/NetCoreTemplates/razor-tailwind/blob/main/MyApp/wwwroot/Pages/Contacts.mjs) 
+component which uses the server metadata to populate the **Title** and **Favorite Genre** select options from the `Title` and `FilmGenre` enums:
 
 ```html
 <div class="grid grid-cols-6 gap-6">
@@ -557,11 +570,11 @@ An example of this is in the [/Contacts](/Contacts) component which uses the ser
 Whilst the `colorOptions` gets its values from the available options on the `CreateContact.Color` property:    
 
 ```js
-import { getProperty, propertyOptions, enumOptions } from "/mjs/types.mjs"
 const Edit = {
     //...
     setup(props) {
-        const colorOptions = propertyOptions(getProperty('CreateContact','Color'))
+        const { property, propertyOptions, enumOptions } = useAppMetadata()
+        const colorOptions = propertyOptions(property('CreateContact','Color'))
         return { enumOptions, colorOptions }
         //..
     }
@@ -595,5 +608,5 @@ public class AppData
 }
 ```
 
-Incidentally this same metadata is also used to populate the [Create Contact](/ui/CreateContact) and [Update Contact](/ui/UpdateContact) 
-auto forms in the built-in [API Explorer](https://docs.servicestack.net/api-explorer).
+Incidentally this same metadata is also used to populate the auto forms in the built-in 
+[API Explorer](https://docs.servicestack.net/api-explorer).

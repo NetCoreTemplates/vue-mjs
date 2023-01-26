@@ -1,7 +1,6 @@
 import { CreateBooking, RoomType } from "../../mjs/dtos.mjs"
 import { dateInputFormat } from "../../mjs/utils.mjs"
-import { enumOptions } from "../../mjs/types.mjs"
-import { useClient } from "@servicestack/vue"
+import { useClient, useAppMetadata } from "@servicestack/vue"
 
 export default {
   template:/*html*/`
@@ -68,7 +67,8 @@ export default {
       if (api.succeeded) close()
     }
     const close = () => emit('done')
-    
+
+    const { enumOptions } = useAppMetadata()
     return { visibleFields, request, submit, close, enumOptions }
   }
 }
