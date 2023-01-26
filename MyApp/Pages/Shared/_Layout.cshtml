@@ -43,11 +43,11 @@
     <script type="module">
         import { useAuth, useAppMetadata } from "@@servicestack/vue"
         const { signIn } = useAuth()
-        signIn(@((await Html.Gateway().ApiAsync(new Authenticate())).Response.AsRawJson()))
+        signIn(@await Html.ApiAsJsonAsync(new Authenticate()))
         
         let { clear, load } = useAppMetadata()
         @if (dev) {
-            <text>load(@((await Html.Gateway().ApiAsync(new MetadataApp())).Response.AsRawJson()));</text>
+            <text>load(@await Html.ApiAsJsonAsync(new MetadataApp()));</text>
         } else {
             <text>
             clear({ olderThan: 24 * 60 * 60 * 1000 }) //1 day

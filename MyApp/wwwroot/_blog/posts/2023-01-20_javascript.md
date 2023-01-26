@@ -460,16 +460,21 @@ with their JS framework to mount their App component before it starts fetching t
 
 A complex solution to this problem is to server render the initial HTML content then re-render it again on the client after the page loads. 
 A simpler solution is to just embed the JSON data the component needs in the page that loads it, which is what [/Todos](/TodoMvc) does
-to load its initial list of todos using the [Service Gateway](https://docs.servicestack.net/service-gateway) to invoke your APIs in process
-that can be rendered as unescaped JSON with the `AsRawJson()` extension method:
+to load its initial list of todos using the [Service Gateway](https://docs.servicestack.net/service-gateway) to invoke your APIs in process with:
 
 ```html
-<script>todos = @((await Gateway.SendAsync(new QueryTodos())).Results.AsRawJson())</script>
+<script>todos = @await ApiResultsAsJsonAsync(new QueryTodos())</script>
 <script type="module">
 import TodoMvc from "/Pages/TodoMvc.mjs"
 import { mount } from "/mjs/app.mjs"
 mount('#todomvc', TodoMvc, { todos })
 </script>
+```
+
+Where `ApiResultsAsJsonAsync` is a simplified helper that uses the `Gateway` to call your API and returns its unencoded JSON response:
+
+```csharp
+(await Gateway.ApiAsync(new QueryTodos())).Response?.Results.AsRawJson();
 ```
 
 The result of which should render the List of Todos instantly when the page loads since it doesn't need to perform any additional Ajax requests
@@ -481,7 +486,7 @@ We can get SPA-like page loading performance using htmx's [Boosting](https://htm
 by converting all anchor tags to use Ajax to load page content into the page body, improving perceived performance from needing to reload 
 scripts and CSS in `<head>`.
 
-This is used in [https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp/Pages/Shared/Header.cshtml](Header.cshtml) to **boost** all
+This is used in [Header.cshtml](https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp/Pages/Shared/Header.cshtml) to **boost** all
 main navigation links:
 
 ```html
@@ -515,7 +520,7 @@ loaded in `_Layout.cshtml` with:
 ```csharp
 let { clear, load } = useAppMetadata()
 @if (dev) {
-    <text>load(@((await Html.Gateway().ApiAsync(new MetadataApp())).Response.AsRawJson()));</text>
+    <text>load(@await Html.ApiAsJsonAsync(new MetadataApp()));</text>
 } else {
     <text>
     clear({ olderThan: 24 * 60 * 60 * 1000 }) //1 day

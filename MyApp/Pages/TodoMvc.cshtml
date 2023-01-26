@@ -75,7 +75,7 @@
 </div>
 </template>
 
-<script>todos = @((await Gateway.SendAsync(new QueryTodos())).Results.AsRawJson())</script>
+<script>todos = @await ApiResultsAsJsonAsync(new QueryTodos())</script>
 <script type="module">
 import TodoMvc from "/Pages/TodoMvc.mjs"
 import { mount } from "/mjs/app.mjs"
