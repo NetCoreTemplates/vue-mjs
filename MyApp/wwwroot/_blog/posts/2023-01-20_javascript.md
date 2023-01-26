@@ -529,7 +529,7 @@ number of your APIs, the above optimization will only clear and reloads the AppM
 use a local copy cached in `localStorage` at `/metadata/app.json`, which Apps needing more fine-grained cache invalidation strategies
 could inspect and clear.
 
-Which you'll be able to access with the helper functions in `types.mjs`:
+Which you'll be able to access with the helper functions in `useAppMetadata`:
 
 ```js
 const { metadataApi, typeOf, property, enumOptions, propertyOptions } = useAppMetadata()
