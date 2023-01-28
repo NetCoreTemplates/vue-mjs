@@ -517,22 +517,22 @@ The rich server metadata about your APIs that's used to generate your App's DTOs
 [API Explorer UIs](https://docs.servicestack.net/api-explorer) are also available to your App where it's automatically
 loaded in `_Layout.cshtml` with:
 
-```csharp
+```js
 let { clear, load } = useAppMetadata()
 @if (dev) {
     <text>load(@await Html.ApiAsJsonAsync(new MetadataApp()));</text>
 } else {
     <text>
-    clear({ olderThan: 24 * 60 * 60 * 1000 }) //1 day
+    clear(location.hash === '#clear' ? null : { olderThan: 24 * 60 * 60 * 1000 }) //1 day
     load()
     </text>
 }
 ```
 
 Where during development it always embeds the AppMetadata in each page but as this metadata can become large depending on the size and
-number of your APIs, the above optimization will only clear and reloads the AppMetadata after **1 day**, otherwise it will
-use a local copy cached in `localStorage` at `/metadata/app.json`, which Apps needing more fine-grained cache invalidation strategies
-could inspect and clear.
+number of your APIs, the above optimization clears and reloads the AppMetadata after **1 day** or if the page was explicitly loaded with `#clear`, 
+otherwise it will use a local copy cached in `localStorage` at `/metadata/app.json`, which Apps needing more 
+fine-grained cache invalidation strategies could inspect and clear.
 
 Which you'll be able to access with the helper functions in `useAppMetadata`:
 
