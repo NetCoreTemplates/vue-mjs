@@ -55,11 +55,13 @@ public class CreateBooking : ICreateDb<Booking>, IReturn<IdResponse>
 {
     [Description("Name this Booking is for"), ValidateNotEmpty]
     public string Name { get; set; } = default!;
-    public RoomType RoomType { get; set; }
+    [ValidateNotEmpty]
+    public RoomType? RoomType { get; set; }
     [ValidateGreaterThan(0)]
     public int RoomNumber { get; set; }
     [ValidateGreaterThan(0)]
     public decimal Cost { get; set; }
+    [ValidateNotEmpty]
     public DateTime BookingStartDate { get; set; }
     public DateTime? BookingEndDate { get; set; }
     [Input(Type = "textarea")]
