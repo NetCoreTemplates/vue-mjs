@@ -1,6 +1,6 @@
 import { createApp, reactive, ref, computed } from "vue"
 import { JsonApiClient, $1, $$ } from "@servicestack/client"
-import ServiceStackVue, { RouterLink, useAppMetadata } from "@servicestack/vue"
+import ServiceStackVue, { RouterLink } from "@servicestack/vue"
 import HelloApi from "./components/HelloApi.mjs"
 import SrcLink from "./components/SrcLink.js"
 

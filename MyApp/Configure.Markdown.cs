@@ -21,7 +21,7 @@ public class ConfigureMarkdown : IHostingStartup
             services.AddSingleton<BlogPosts>();
         })
         .ConfigureAppHost(
-            appHost => appHost.Plugins.Add(new StaticFilePrettyUrlsFeature()),
+            appHost => appHost.Plugins.Add(new CleanUrlsFeature()),
             afterPluginsLoaded: appHost => 
         {
             var blogPosts = appHost.Resolve<BlogPosts>();

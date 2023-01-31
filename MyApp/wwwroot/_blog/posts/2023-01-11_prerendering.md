@@ -224,7 +224,7 @@ A nicety we can add to serving static `.html` pages is giving them [Pretty URLs]
 by registering the Plugin: 
 
 ```csharp
-Plugins.Add(new StaticFilePrettyUrlsFeature());
+Plugins.Add(new CleanUrlsFeature());
 ```
 
 Which allows prerendered pages to be accessed with and without its file extension:
