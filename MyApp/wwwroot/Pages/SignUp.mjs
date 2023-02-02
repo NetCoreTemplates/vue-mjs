@@ -20,7 +20,7 @@ export default {
         <div class="pt-5 px-4 py-3 bg-gray-50 dark:bg-gray-900 text-right sm:px-6">
           <div class="flex justify-end">
             <FormLoading v-if="loading" class="flex-1" />
-            <PrimaryButton class="ml-3">Sign Up</PrimaryButton>
+            <PrimaryButton :disabled="loading" class="ml-3">Sign Up</PrimaryButton>
           </div>
         </div>
       </div>
