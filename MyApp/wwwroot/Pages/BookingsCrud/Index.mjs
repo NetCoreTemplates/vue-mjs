@@ -1,81 +1,40 @@
-import Create from "./Create.mjs"
-import Edit from "./Edit.mjs"
-
-import { ref, onMounted } from "vue"
-import { useClient } from "@servicestack/vue"
-import { formatDate, formatCurrency } from "../../mjs/utils.mjs"
-import { Booking, QueryBookings } from "../../mjs/dtos.mjs"
+import { computed, ref, watch } from "vue"
+import { useClient, useAuth, useFormatters } from "@servicestack/vue"
+import { QueryBookings } from "../../mjs/dtos.mjs"
 
 export default {
-  components: { Create, Edit },
-  template:/*html*/`<div title="Bookings CRUD" class="sm:max-w-fit">
-    <Create v-if="newBooking" @done="onDone" title="New Booking" />
-    <Edit v-else-if="editId" :id="editId" @done="onDone" />
-    <OutlineButton @click="() => reset({newBooking:true})">
+  template:/*html*/`
+  <div title="Bookings CRUD" class="sm:max-w-fit">
+    <AutoCreateForm v-if="create" type="CreateBooking" @done="done" @save="done" />
+    <AutoEditForm v-else-if="edit" type="UpdateBooking" :deleteType="canDelete ? 'DeleteBooking' : null" v-model="edit" @done="done" @save="done" @delete="done" />
+    <OutlineButton @click="() => reset({ create:true })">
       <svg class="w-5 h-5 mr-1 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"></path></svg>
       New Booking
     </OutlineButton>
-    <div v-if="bookings.length > 0" class="mt-4 flex flex-col">
-      <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-          <div class="shadow overflow-hidden border-b border-gray-200 dark:border-gray-700 sm:rounded-lg">
-            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-              <thead class="bg-gray-50 dark:bg-gray-900">
-              <tr class="select-none">
-                <th scope="col" :class="css.th">
-                  Id
-                </th>
-                <th :class="['hidden sm:table-cell',css.th]">
-                  Name
-                </th>
-                <th scope="col" :class="css.th">
-                  <span class="hidden sm:inline">Room </span>Type
-                </th>
-                <th scope="col" :class="css.th">
-                  <span class="hidden sm:inline">Room </span>No
-                </th>
-                <th scope="col" :class="css.th">
-                  Cost
-                </th>
-                <th :class="['hidden md:table-cell',css.th]">
-                  Start Date
-                </th>
-                <th :class="['hidden md:table-cell',css.th]">
-                  Created By
-                </th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-for="(booking, index) in bookings" :key="booking.id" @click="editId = editId == booking.id ? null : booking.id" 
-                  :class="[booking.id == editId ? css.trActive : css.tr + (index % 2 === 0 ? ' bg-white dark:bg-black' : ' bg-gray-50 dark:bg-gray-800')]">
-                <td :class="css.td">
-                  {{ booking.id }}
-                </td>
-                <td :class="['hidden sm:table-cell',css.td]">
-                  {{ booking.name }}
-                </td>
-                <td :class="css.td">
-                  {{ booking.roomType }}
-                </td>
-                <td :class="css.td">
-                  {{ booking.roomNumber }}
-                </td>
-                <td :class="css.td">
-                  {{ formatCurrency(booking.cost) }}
-                </td>
-                <td :class="['hidden md:table-cell',css.td]">
-                  {{ formatDate(booking.bookingStartDate) }}
-                </td>
-                <td :class="['hidden md:table-cell',css.td]">
-                  {{ booking.createdBy }}
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
+    <DataGrid :items="bookings" :visible-from="{ name:'xl', bookingStartDate:'sm', bookingEndDate:'xl' }"
+              @row-selected="editId = editId == $event.id ? null : $event.id" :is-selected="row => editId == row.id" >
+      <template #id="{ id }">
+          <span class="text-gray-900">{{ id }}</span>
+      </template>
+      <template #name="{ name }">
+          {{ name }}
+      </template>
+      <template #roomNumber-header>
+          <span class="hidden lg:inline">Room </span>No
+      </template>
+      <template #cost="{ cost }">{{ currency(cost) }}</template>
+      
+      <template #bookingStartDate-header>
+          Start<span class="hidden lg:inline"> Date</span>
+      </template>
+      <template #bookingEndDate-header>
+          End<span class="hidden lg:inline"> Date</span>
+      </template>
+      <template #createdBy-header>
+          Employee
+      </template>
+      <template #createdBy="{ createdBy }">{{ createdBy }}</template>
+    </DataGrid>
     <div class="mt-5 flex">
       <SrcLink href="https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp.ServiceModel/Bookings.cs">
         <svg class="w-5 h-5 inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m14.6 16.6l4.6-4.6l-4.6-4.6L16 6l6 6l-6 6l-1.4-1.4m-5.2 0L4.8 12l4.6-4.6L8 6l-6 6l6 6l1.4-1.4Z"/></svg>
@@ -87,38 +46,46 @@ export default {
   </div>`,
   props: { bookings:Array },
   setup(props) {
-    const css = {
-      trActive:'cursor-pointer bg-indigo-100 dark:bg-blue-800',
-      tr:'cursor-pointer hover:bg-yellow-50 dark:hover:bg-blue-900',
-      th:'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider',
-      td:'px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400',
-    }
-    
-    const newBooking = ref(false)
+    const create = ref(false)
     const editId = ref()
+    const edit = ref()
     const expandAbout = ref(false)
     const bookings = ref(props.bookings || [])
 
-    const { api } = useClient()
+    const client = useClient()
+    const { currency } = useFormatters()
+    const { hasRole } = useAuth()
+    const canDelete = computed(() => hasRole('Manager'))
     
-    const refresh = async () => {
-      const r = await api(new QueryBookings())
-      if (r.succeeded) {
-        bookings.value = r.response.results || []
+    async function refresh() {
+      const api = await client.api(new QueryBookings())
+      if (api.succeeded) {
+        bookings.value = api.response.results || []
       }
     }
 
-    /** @param {{ newBooking?: boolean, editId?:number }} [args] */
-    const reset = (args={}) => {
-      newBooking.value = args.newBooking ?? false
+    /** @param {{ create?: boolean, editId?:number }} [args] */
+    function reset(args={}) {
+      create.value = args.create ?? false
       editId.value = args.editId ?? undefined
     }
 
-    const onDone = () => {
-      reset()
+    function done() {
       refresh()
+      reset()
     }
     
-    return { css, newBooking, editId, expandAbout, bookings, refresh, reset, onDone, formatDate, formatCurrency }
+    watch(editId, async () => {
+      if (editId.value) {
+        const api = await client.api(new QueryBookings({ id: editId.value }))
+        if (api.succeeded) {
+          edit.value = api.response.results[0]
+          return
+        }
+      }
+      edit.value = null
+    })
+    
+    return { create, editId, edit, canDelete, expandAbout, bookings, reset, done, currency }
   }
 }

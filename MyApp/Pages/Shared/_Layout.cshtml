@@ -8,6 +8,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/svg" href="/img/logo.svg">
     <title>@ViewData["Title"] - My App</title>
     <script>
     let colorScheme = localStorage.getItem('color-scheme')
@@ -36,24 +37,22 @@
     @Html.ImportMap(new()
     {
         ["vue"]                  = ("/lib/mjs/vue.mjs",                 "https://unpkg.com/vue@3.2.45/dist/vue.esm-browser.prod.js"),
-        ["@servicestack/client"] = ("/lib/mjs/servicestack-client.mjs", "https://unpkg.com/@servicestack/client@2.0.1/dist/servicestack-client.min.mjs"),
-        ["@servicestack/vue"]    = ("/lib/mjs/servicestack-vue.mjs",    "https://unpkg.com/@servicestack/vue@3.0.17/dist/servicestack-vue.min.mjs")
+        ["@servicestack/client"] = ("/lib/mjs/servicestack-client.mjs", "https://unpkg.com/@servicestack/client@2.0.5/dist/servicestack-client.min.mjs"),
+        ["@servicestack/vue"]    = ("/lib/mjs/servicestack-vue.mjs",    "https://unpkg.com/@servicestack/vue@3.0.36/dist/servicestack-vue.min.mjs")
     })
     
+    @if (dev) {
+        <script>window.Server = @await Html.ApiAsJsonAsync(new MetadataApp())</script>
+    }
     <script type="module">
         import { useAuth, useAppMetadata } from "@@servicestack/vue"
         const { signIn } = useAuth()
         signIn(@await Html.ApiAsJsonAsync(new Authenticate()))
         
-        let { clear, load } = useAppMetadata()
-        @if (dev) {
-            <text>load(@await Html.ApiAsJsonAsync(new MetadataApp()));</text>
-        } else {
-            <text>
-            clear(location.hash === '#clear' ? null : { olderThan: 24 * 60 * 60 * 1000 }) //1 day
-            load()
-            </text>
-        }
+        const { loadMetadata } = useAppMetadata()
+        loadMetadata({
+            olderThan: window.Server ? null : location.hash === '#clear' ? 0 : 24 * 60 * 60 * 1000 //1 day 
+        })
     </script>
 </head>
 <body class="bg-white dark:bg-black dark:text-white">

@@ -517,16 +517,18 @@ The rich server metadata about your APIs that's used to generate your App's DTOs
 [API Explorer UIs](https://docs.servicestack.net/api-explorer) are also available to your App where it's automatically
 loaded in `_Layout.cshtml` with:
 
-```js
-let { clear, load } = useAppMetadata()
+```html
 @if (dev) {
-    <text>load(@await Html.ApiAsJsonAsync(new MetadataApp()));</text>
-} else {
-    <text>
-    clear(location.hash === '#clear' ? null : { olderThan: 24 * 60 * 60 * 1000 }) //1 day
-    load()
-    </text>
+    <script>window.Server = @await Html.ApiAsJsonAsync(new MetadataApp())</script>
 }
+<script type="module">
+import { useAppMetadata } from "@@servicestack/vue"
+
+const { loadMetadata } = useAppMetadata()
+loadMetadata({
+    olderThan: window.Server ? null : location.hash === '#clear' ? 0 : 24 * 60 * 60 * 1000 //1 day 
+})
+</script>
 ```
 
 Where during development it always embeds the AppMetadata in each page but as this metadata can become large depending on the size and
@@ -534,15 +536,13 @@ number of your APIs, the above optimization clears and reloads the AppMetadata a
 otherwise it will use a local copy cached in `localStorage` at `/metadata/app.json`, which Apps needing more 
 fine-grained cache invalidation strategies could inspect and clear.
 
-Which you'll be able to access with the helper functions in `useAppMetadata`:
-
-```js
-const { metadataApi, typeOf, property, enumOptions, propertyOptions } = useAppMetadata()
-```
+Which you'll be able to access with the helper functions in [useAppMetadata](https://docs.servicestack.net/vue/use-appmetadata).
 
 For example you can use this to print out all the C# property names and their Types for the `Contact` C# DTO with:
 
 ```js
+const { typeOf } = useAppMetadata()
+
 typeOf('Contact').properties.forEach(prop => console.log(`${prop.name}: ${prop.type}`))
 ```
 

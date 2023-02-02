@@ -19,7 +19,7 @@ export default {
         </div>
         <div class="pt-5 px-4 py-3 bg-gray-50 dark:bg-gray-900 text-right sm:px-6">
           <div class="flex justify-end">
-            <FormLoading class="flex-1"/>
+            <FormLoading v-if="loading" class="flex-1" />
             <PrimaryButton class="ml-3">Sign Up</PrimaryButton>
           </div>
         </div>
@@ -37,7 +37,7 @@ export default {
     </div>`,
     props: { returnUrl:String },
     setup(props) {
-        const { api, setError, unRefs } = useClient()
+        const { api, setError, unRefs, loading } = useClient()
         const displayName = ref("")
         const userName = ref("")
         const password = ref("")
@@ -68,6 +68,6 @@ export default {
                 location.href = props.returnUrl || '/signin'
             }
         }
-        return { displayName, userName, password, confirmPassword, autoLogin, setUser, onSubmit }
+        return { loading, displayName, userName, password, confirmPassword, autoLogin, setUser, onSubmit }
     }
 }

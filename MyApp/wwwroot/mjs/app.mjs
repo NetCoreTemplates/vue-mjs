@@ -45,6 +45,8 @@ const Components = {
     Plugin,
 }
 
+const alreadyMounted = el => el.__vue_app__ 
+
 /** Mount Vue3 Component
  * @param sel {string|Element} - Element or Selector where component should be mounted
  * @param component 
@@ -54,6 +56,7 @@ export function mount(sel, component, props) {
         init(globalThis)
     }
     const el = $1(sel)
+    if (alreadyMounted(el)) return
     const app = createApp(component, props)
     app.provide('client', client)
     Object.keys(Components).forEach(name => {
@@ -67,7 +70,7 @@ export function mount(sel, component, props) {
 
 export function mountAll() {
     $$('[data-component]').forEach(el => {
-        if (el.hasAttribute('data-v-app')) return
+        if (alreadyMounted(el)) return
         let componentName = el.getAttribute('data-component')
         let component = componentName && Components[componentName]
         if (!component) {

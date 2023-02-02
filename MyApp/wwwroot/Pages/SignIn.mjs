@@ -16,7 +16,7 @@ export default {
         </div>
         <div class="pt-5 px-4 py-3 bg-gray-50 dark:bg-gray-900 text-right sm:px-6">
           <div class="flex justify-end">
-            <FormLoading class="flex-1"/>
+            <FormLoading v-if="loading" class="flex-1" />
             <SecondaryButton href="/signup">Register New User</SecondaryButton>
             <PrimaryButton class="ml-3">Login</PrimaryButton>
           </div>
@@ -47,7 +47,7 @@ export default {
     </div>`,
     props: { redirect:String },
     setup(props) {
-        const { api, unRefs } = useClient()
+        const { api, unRefs, loading } = useClient()
         const userName = ref('')
         const password = ref('')
         const rememberMe = ref(true)
@@ -65,6 +65,6 @@ export default {
                 location.href = props.redirect || '/'
             }
         }
-        return { userName, password, rememberMe, setUser, submit }
+        return { loading, userName, password, rememberMe, setUser, submit }
     }
 }
