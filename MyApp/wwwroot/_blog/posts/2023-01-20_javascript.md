@@ -246,7 +246,7 @@ let api = await client.api(new Hello({ name }))
 #### useClient - unRefs
 
 But as DTOs are typed, passing reference values will report a type annotation warning in IDEs with type-checking enabled, 
-which can be avoided by explicitly unwrapping DTO ref values with `unRefs`:
+which can be resolved by explicitly unwrapping DTO ref values with `unRefs`:
 
 ```js
 let api = await client.api(new Hello(unRefs({ name })))
@@ -384,11 +384,11 @@ Input Components are able to automatically apply contextual validation errors ne
 
 ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/scripts/edit-contact-validation.png)
 
-#### AutoForm Components
+### AutoForm Components
 
 We can elevate our productivity even further with
 [Auto Form Components](https://docs.servicestack.net/vue/gallery/autoform) that can automatically generate an
-instant API-enabled form with validation binding by just specifying the Request DTO to create the form for, e.g:
+instant API-enabled form with validation binding by specifying the Request DTO to create the form for, e.g:
 
 ```html
 <AutoCreateForm type="CreateBooking" formStyle="card" />
@@ -403,6 +403,51 @@ reused across all ServiceStack Auto UIs, including:
  - [API Explorer](https://docs.servicestack.net/api-explorer) 
  - [Locode](https://docs.servicestack.net/locode/)
  - [Blazor Tailwind Components](https://docs.servicestack.net/templates-blazor-components)
+
+### useAuth
+
+Your Vue.js code can access Authenticated Users using [useAuth()](https://docs.servicestack.net/vue/use-auth)
+which can also be populated without the overhead of an Ajax request by embedding the response of the built-in
+[Authenticate API](/ui/Authenticate?tab=details) inside `_Layout.cshtml` with:
+
+```html
+<script type="module">
+import { useAuth } from "@@servicestack/vue"
+const { signIn } = useAuth()
+signIn(@await Html.ApiAsJsonAsync(new Authenticate()))
+</script>
+```
+
+Where it enables access to the below [useAuth()](https://docs.servicestack.net/vue/use-auth) utils for inspecting the 
+current authenticated user:  
+
+```js
+const { 
+    signIn,           // Sign In the currently Authenticated User
+    signOut,          // Sign Out currently Authenticated User
+    user,             // Access Authenticated User info in a reactive Ref<AuthenticateResponse>
+    isAuthenticated,  // Check if the current user is Authenticated in a reactive Ref<boolean>
+    hasRole,          // Check if the Authenticated User has a specific role
+    hasPermission,    // Check if the Authenticated User has a specific permission
+    isAdmin           // Check if the Authenticated User has the Admin role
+} = useAuth()
+```
+
+This is used in [BookingsCrud/Index.mjs](https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp/wwwroot/Pages/BookingsCrud/Index.mjs)
+to control whether the `<AutoEditForm>` component should enable its delete functionality:
+
+```js
+export default {
+    template/*html*/:`
+    <AutoEditForm type="UpdateBooking" :deleteType="canDelete ? 'DeleteBooking' : null" />
+    `,
+    setup(props) {
+        const { hasRole } = useAuth()
+        const canDelete = computed(() => hasRole('Manager'))
+        return { canDelete }
+    }
+}
+```
 
 #### [JSDoc](https://jsdoc.app)
 
