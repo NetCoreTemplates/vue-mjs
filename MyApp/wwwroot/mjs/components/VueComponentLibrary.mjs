@@ -9,7 +9,7 @@ export default {
         <div class="pt-4 pb-16">
             <div class="mx-auto">
                 <NavList class="mt-8" title="">
-                    <NavListItem title="useMetadata" href="https://docs.servicestack.net/vue/use-appmetadata" :iconSvg="Icons.Code">
+                    <NavListItem title="useMetadata" href="https://docs.servicestack.net/vue/use-metadata" :iconSvg="Icons.Code">
                         Reflective utils for inspecting API AppMetadata
                     </NavListItem>
                     <NavListItem title="useClient" href="https://docs.servicestack.net/vue/use-client" :iconSvg="Icons.Code">
