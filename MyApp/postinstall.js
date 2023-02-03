@@ -22,8 +22,6 @@ const files = {
       '@vue/shared.d.ts':                  '/@vue/shared@3/dist/shared.d.ts',
       '@servicestack/client/index.d.ts':   '/@servicestack/client/dist/index.d.ts',  
       '@servicestack/vue/index.d.ts':      '/@servicestack/vue@3/dist/index.d.ts',
-      '@servicestack/vue/components.d.ts': '/@servicestack/vue@3/dist/components/index.d.ts',
-      '@servicestack/ui/index.d.ts':       '/@servicestack/ui/shared.d.ts',
   }
 }
 
