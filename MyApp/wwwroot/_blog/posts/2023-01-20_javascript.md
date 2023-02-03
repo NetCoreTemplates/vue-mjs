@@ -379,7 +379,7 @@ const Edit = {
 }
 ```
 
-This effectively makes form validation binding a transparent detail where all `@servicestack/vue` 
+Effectively making form validation binding a transparent detail where all `@servicestack/vue` 
 Input Components are able to automatically apply contextual validation errors next to the fields they apply to: 
 
 ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/scripts/edit-contact-validation.png)
