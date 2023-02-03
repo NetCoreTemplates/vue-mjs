@@ -65,7 +65,8 @@ export function mount(sel, component, props) {
     Object.keys(Components).forEach(name => {
         app.component(name, Components[name])
     })
-    app.use(ServiceStackVue,{ include:['RouterLink'] })
+    app.use(ServiceStackVue)
+    app.component('RouterLink', ServiceStackVue.component('RouterLink'))
     app.mount(el)
     Apps.push(app)
     return app
@@ -75,8 +76,8 @@ export function mountAll() {
     $$('[data-component]').forEach(el => {
         if (alreadyMounted(el)) return
         let componentName = el.getAttribute('data-component')
-        let component = componentName && Components[componentName]
-            || ServiceStackVue.component(componentName)
+        if (!componentName) return
+        let component = Components[componentName] || ServiceStackVue.component(componentName)
         if (!component) {
             console.error(`Could not create component ${componentName}`)
             return

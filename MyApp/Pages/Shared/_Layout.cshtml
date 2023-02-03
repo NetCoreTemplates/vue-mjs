@@ -44,11 +44,11 @@
         <script>window.Server = @await Html.ApiAsJsonAsync(new MetadataApp())</script>
     }
     <script type="module">
-    import { useAuth, useAppMetadata } from "@@servicestack/vue"
+    import { useAuth, useMetadata } from "@@servicestack/vue"
     const { signIn } = useAuth()
     signIn(@await Html.ApiAsJsonAsync(new Authenticate()))
     
-    const { loadMetadata } = useAppMetadata()
+    const { loadMetadata } = useMetadata()
     loadMetadata({
         olderThan: window.Server ? null : location.hash === '#clear' ? 0 : 24 * 60 * 60 * 1000 //1 day 
     })
