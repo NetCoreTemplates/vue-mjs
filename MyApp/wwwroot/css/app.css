@@ -1237,6 +1237,14 @@ select{
   height: 0.5rem;
 }
 
+.h-44 {
+  height: 11rem;
+}
+
+.h-32 {
+  height: 8rem;
+}
+
 .max-h-60 {
   max-height: 15rem;
 }
@@ -1315,6 +1323,14 @@ select{
 
 .w-72 {
   width: 18rem;
+}
+
+.w-44 {
+  width: 11rem;
+}
+
+.w-32 {
+  width: 8rem;
 }
 
 .min-w-0 {
@@ -1846,6 +1862,11 @@ select{
   background-color: rgb(21 128 61 / var(--tw-bg-opacity));
 }
 
+.bg-gray-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(75 85 99 / var(--tw-bg-opacity));
+}
+
 .bg-opacity-75 {
   --tw-bg-opacity: 0.75;
 }
@@ -2078,6 +2099,10 @@ select{
 
 .pl-5 {
   padding-left: 1.25rem;
+}
+
+.pb-16 {
+  padding-bottom: 4rem;
 }
 
 .text-left {
@@ -2394,6 +2419,11 @@ select{
 .text-purple-800 {
   --tw-text-opacity: 1;
   color: rgb(107 33 168 / var(--tw-text-opacity));
+}
+
+.text-gray-600 {
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity));
 }
 
 .underline {
@@ -3544,12 +3574,20 @@ select{
     height: 100vh;
   }
 
+  .sm\:h-44 {
+    height: 11rem;
+  }
+
   .sm\:w-12 {
     width: 3rem;
   }
 
   .sm\:w-full {
     width: 100%;
+  }
+
+  .sm\:w-44 {
+    width: 11rem;
   }
 
   .sm\:max-w-lg {
@@ -3657,6 +3695,11 @@ select{
   .sm\:text-sm {
     font-size: 0.875rem;
     line-height: 1.25rem;
+  }
+
+  .sm\:text-5xl {
+    font-size: 3rem;
+    line-height: 1;
   }
 
   .sm\:duration-700 {

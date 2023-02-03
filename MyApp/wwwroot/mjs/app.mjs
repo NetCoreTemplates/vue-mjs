@@ -2,7 +2,9 @@ import { createApp, reactive, ref, computed } from "vue"
 import { JsonApiClient, $1, $$ } from "@servicestack/client"
 import ServiceStackVue, { RouterLink } from "@servicestack/vue"
 import HelloApi from "./components/HelloApi.mjs"
-import SrcLink from "./components/SrcLink.js"
+import SrcLink from "./components/SrcLink.mjs"
+import VueComponentGallery from "./components/VueComponentGallery.mjs"
+import VueComponentLibrary from "./components/VueComponentLibrary.mjs"
 
 let client = null, Apps = []
 let AppData = {
@@ -43,6 +45,8 @@ const Components = {
     Hello,
     Counter,
     Plugin,
+    VueComponentGallery,
+    VueComponentLibrary,
 }
 
 const alreadyMounted = el => el.__vue_app__ 

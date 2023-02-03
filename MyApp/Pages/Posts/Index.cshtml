@@ -40,14 +40,14 @@
                         </div>
                         <div class="mt-6 flex items-center">
                             <div class="flex-shrink-0">
-                                <a href="@BlogPosts.GetAuthorLink(post.Author)">
+                                <a href="@BlogPosts.GetAuthorLink(post.Author!)">
                                     <span class="sr-only">@post.Author</span>
                                     <img class="h-10 w-10 rounded-full" src="@BlogPosts.GetAuthorProfileUrl(post.Author)" alt="@post.Title background">
                                 </a>
                             </div>
                             <div class="ml-3">
                                 <p class="text-sm font-medium text-gray-900">
-                                    <a href="@BlogPosts.GetAuthorLink(post.Author)" class="hover:underline">@post.Author</a>
+                                    <a href="@BlogPosts.GetAuthorLink(post.Author!)" class="hover:underline">@post.Author</a>
                                 </p>
                                 <div class="flex space-x-1 text-sm text-gray-500">
                                     <time datetime="@BlogPosts.GetDateTimestamp(post.Date)">@BlogPosts.GetDateLabel(post.Date)</time>
