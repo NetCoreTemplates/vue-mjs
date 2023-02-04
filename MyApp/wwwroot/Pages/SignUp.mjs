@@ -5,16 +5,16 @@ import { Register } from "../mjs/dtos.mjs"
 
 export default {
     template:/*html*/`    
-    <form @submit.prevent="onSubmit">
+    <form @submit.prevent="submit">
       <div class="shadow overflow-hidden sm:rounded-md">
-        <ErrorSummary except="displayName,userName,password,confirmPassword,autoLogin"/>
+        <ErrorSummary except="displayName,userName,password,confirmPassword,autoLogin" />
         <div class="px-4 py-5 bg-white dark:bg-black space-y-6 sm:p-6">
           <div class="flex flex-col gap-y-4">
-            <TextInput id="displayName" help="Your first and last name" v-model="displayName"/>
-            <TextInput id="userName" label="Email" placeholder="Email" help="" v-model="userName"/>
-            <TextInput id="password" type="password" help="6 characters or more" v-model="password"/>
-            <TextInput id="confirmPassword" type="password" v-model="confirmPassword"/>
-            <CheckboxInput id="autoLogin" v-model="autoLogin" />
+            <TextInput id="displayName" help="Your first and last name" v-model="request.displayName" />
+            <TextInput id="userName" label="Email" placeholder="Email" help="" v-model="request.userName" />
+            <TextInput id="password" type="password" help="6 characters or more" v-model="request.password" />
+            <TextInput id="confirmPassword" type="password" v-model="request.confirmPassword" />
+            <CheckboxInput id="autoLogin" v-model="request.autoLogin" />
           </div>
         </div>
         <div class="pt-5 px-4 py-3 bg-gray-50 dark:bg-gray-900 text-right sm:px-6">
@@ -37,37 +37,34 @@ export default {
     </div>`,
     props: { returnUrl:String },
     setup(props) {
-        const { api, setError, unRefs, loading } = useClient()
-        const displayName = ref("")
-        const userName = ref("")
-        const password = ref("")
-        const confirmPassword = ref("")
-        const autoLogin = ref(true)
+        const client = useClient()
+        const { setError, loading } = client
+        const request = ref(new Register({ autoLogin:true }))
 
         /** @param email {string} */
         function setUser(email) {
             let first = leftPart(email, '@')
             let last = rightPart(leftPart(email, '.'), '@')
-            displayName.value = toPascalCase(first) + ' ' + toPascalCase(last)
-            userName.value = email
-            confirmPassword.value = password.value = 'p@55wOrd'
+            const dto = request.value
+            dto.displayName = toPascalCase(first) + ' ' + toPascalCase(last)
+            dto.userName = email
+            dto.confirmPassword = dto.password = 'p@55wOrd'
         }
-        async function onSubmit() {
-            if (password.value !== confirmPassword.value) {
+        
+        /** @param {Event} e */
+        async function submit(e) {
+            if (request.value.password !== request.value.confirmPassword) {
                 setError({ fieldName: 'confirmPassword', message: 'Passwords do not match' })
                 return
             }
-            const registerApi = await api(new Register(unRefs({
-                displayName,
-                email: userName,
-                password,
-                confirmPassword,
-                autoLogin,
-            })))
-            if (registerApi.succeeded) {
+            
+            // Example using client.apiForm()
+            const api = await client.apiForm(new Register(), new FormData(e.target))
+            if (api.succeeded) {
                 location.href = props.returnUrl || '/signin'
             }
         }
-        return { loading, displayName, userName, password, confirmPassword, autoLogin, setUser, onSubmit }
+        
+        return { loading, request, setUser, submit }
     }
 }

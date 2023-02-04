@@ -6,12 +6,12 @@ export default {
     template:/*html*/`    
     <form @submit.prevent="submit">
       <div class="shadow overflow-hidden sm:rounded-md">
-        <ErrorSummary except="userName,password,rememberMe"/>
+        <ErrorSummary except="userName,password,rememberMe" />
         <div class="px-4 py-5 bg-white dark:bg-black space-y-6 sm:p-6">
           <div class="flex flex-col gap-y-4">
-            <TextInput id="userName" placeholder="Email" help="Email you signed up with" v-model="userName" />
-            <TextInput id="password" type="password" help="6 characters or more" v-model="password"/>
-            <CheckboxInput id="rememberMe" v-model="rememberMe" />
+            <TextInput id="userName" placeholder="Email" help="Email you signed up with" v-model="request.userName" />
+            <TextInput id="password" type="password" help="6 characters or more" v-model="request.password"/>
+            <CheckboxInput id="rememberMe" v-model="request.rememberMe" />
           </div>
         </div>
         <div class="pt-5 px-4 py-3 bg-gray-50 dark:bg-gray-900 text-right sm:px-6">
@@ -47,24 +47,25 @@ export default {
     </div>`,
     props: { redirect:String },
     setup(props) {
-        const { api, unRefs, loading } = useClient()
-        const userName = ref('')
-        const password = ref('')
-        const rememberMe = ref(true)
+        const client = useClient()
+        const { loading } = client
+        const request = ref(new Authenticate({ rememberMe:true }))
         
         function setUser(email) {
-            userName.value = email
-            password.value = "p@55wOrd"
+            const dto = request.value
+            dto.userName = email
+            dto.password = "p@55wOrd"
         }
         
         const { signIn } = useAuth()
         async function submit() {
-            const authApi = await api(new Authenticate(unRefs({ provider: 'credentials', userName, password, rememberMe })))
-            if (authApi.succeeded) {
-                signIn(authApi.response)
+            // Example using client.api()
+            const api = await client.api(request.value)
+            if (api.succeeded) {
+                signIn(api.response)
                 location.href = props.redirect || '/'
             }
         }
-        return { loading, userName, password, rememberMe, setUser, submit }
+        return { loading, request, setUser, submit }
     }
 }
