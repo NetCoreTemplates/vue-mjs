@@ -319,8 +319,9 @@ let store = {
 #### Implicit Error Handling
 
 More often you'll want to take advantage of the implicit validation support in `useClient()` which makes its state available to child
-components, alleviating the need to explicitly pass it in each component as seen in the [/Contacts](/Contacts) `Edit` component
-which doesn't do any manual error handling:
+components, alleviating the need to explicitly pass it in each component as seen in razor-tailwind's
+[Contacts.mjs](https://github.com/NetCoreTemplates/razor-tailwind/blob/main/MyApp/wwwroot/Pages/Contacts.mjs) `Edit` component for its
+[/Contacts](https://vue-mjs.web-templates.io/Contacts) page which doesn't do any manual error handling:
 
 ```js
 const Edit = {
@@ -328,7 +329,7 @@ const Edit = {
     <form @submit.prevent="submit">
       <input type="submit" class="hidden">
       <fieldset>
-        <ErrorSummary :except="visibleFields" class="mb-4" />
+        <ErrorSummary except="title,name,color,filmGenres,age,agree" class="mb-4" />
         <div class="grid grid-cols-6 gap-6">
           <div class="col-span-6 sm:col-span-3">
             <SelectInput id="title" v-model="request.title" :options="enumOptions('Title')" />
@@ -358,23 +359,23 @@ const Edit = {
     props:['contact'],
     emits:['done'],
     setup(props, { emit }) {
-        const visibleFields = "title,name,color,filmGenres,age,agree"
         const client = useClient()
-
         const request = ref(new UpdateContact(props.contact))
-        const colorOptions = propertyOptions(getProperty('CreateContact','Color'))
+        const colorOptions = propertyOptions(getProperty('UpdateContact','Color'))
 
-        /** @param {Event} e */
-        const submit = async (e) => {
+        async function submit() {
             const api = await client.api(request.value)
             if (api.succeeded) close()
         }
-        const onDelete = async () => {
-            const api = await client.apiVoid(new DeleteContact({id: props.id}))
+
+        async function onDelete () {
+            const api = await client.apiVoid(new DeleteContact({ id:props.id }))
             if (api.succeeded) close()
         }
+
         const close = () => emit('done')
-        return { visibleFields, submit, close, enumOptions, colorOptions, request }
+
+        return { request, enumOptions, colorOptions, submit, onDelete, close }
     }
 }
 ```
