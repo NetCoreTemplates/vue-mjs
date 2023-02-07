@@ -105,7 +105,7 @@ we can preview in this example that uses **@servicestack/vue's** `ModuleDialog` 
 ```js
 const Plugin = {
     template:`<div>
-        <b @click="show=true">Open Modal</b>
+        <PrimaryButton @click="show=true">Open Modal</PrimaryButton>
         <ModalDialog v-if="show" @done="show=false">
             <div class="p-8">Hello @servicestack/vue!</div>
         </ModalDialog>
@@ -117,7 +117,7 @@ const Plugin = {
 }
 ```
 
-<div data-component="Plugin" class="text-center text-2xl py-2 cursor-pointer select-none"></div>
+<div class="text-center"><div data-component="Plugin" id="plugin" class="text-2xl py-4"></div></div>
 
 ### @servicestack/vue
 [@servicestack/vue](https://github.com/ServiceStack/servicestack-vue) is our growing Vue 3 Tailwind component library with a number of rich Tailwind components useful 

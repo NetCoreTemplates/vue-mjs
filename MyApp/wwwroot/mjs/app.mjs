@@ -26,7 +26,7 @@ const Counter = {
 }
 const Plugin = {
     template:`<div>
-        <b @click="show=true">Open Modal</b>
+        <PrimaryButton @click="show=true">Open Modal</PrimaryButton>
         <ModalDialog v-if="show" @done="show=false">
             <div class="p-8">Hello @servicestack/vue!</div>
         </ModalDialog>
