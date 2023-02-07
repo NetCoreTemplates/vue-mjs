@@ -24,7 +24,7 @@ development can be considered optional as we can now utilize modern browser feat
 and [modern language features](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide) for a 
 sophisticated development workflow without the need for any npm build tools. 
 
-### Brining Simplicity Back
+### Bringing Simplicity Back
 
 This template focuses on simplicity and eschews many aspects that has complicated modern JavaScript development,
 specifically:
@@ -38,15 +38,15 @@ development model using Razor Pages for Server Rendered content with any interac
 
 #### Freedom to use any JS library
 
-Avoiding the SPA route ends up affording more flexibility on which JS libraries each page can use as without a heavy bundled JS
-blob of all JS used by the entire App, it's free to only load the required JS each page needs to best implement its 
+Avoiding the SPA route ends up affording more flexibility on which JS libraries each page can use as without heavy bundled JS
+blobs of all JS used in the entire App, it's free to only load the required JS each page needs to best implement its 
 required functionality, which can be any JS library, preferably utilizing ESM builds that can be referenced from a 
 [JavaScript Module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules), taking advantage of the module system
 native to modern browsers able to efficiently download the declarative matrix of dependencies each script needs. 
 
 ### Best libraries for progressive Multi Page Apps
 
-By default this template includes collection of libraries we believe offers the best modern development experience in Progressive
+By default this template includes a collection of libraries we believe offers the best modern development experience in Progressive
 MPA Web Apps, specifically:
 
 #### [Tailwind CLI](https://tailwindcss.com/docs/installation)
@@ -540,9 +540,10 @@ that's configured in this template:
 SPAs are notorious for being slow to load due to needing to download large blobs of JavaScript bundles that it needs to initialize
 with their JS framework to mount their App component before it starts fetching the data from the server it needs to render its components. 
 
-A complex solution to this problem is to server render the initial HTML content then re-render it again on the client after the page loads. 
-A simpler solution is to just embed the JSON data the component needs in the page that loads it, which is what [/Todos](/TodoMvc) does
-to load its initial list of todos using the [Service Gateway](https://docs.servicestack.net/service-gateway) to invoke your APIs in process with:
+A complex solution to this problem is to server render the initial HTML content then re-render it again on the client after the page loads.
+A simpler solution is to avoid unnecessary ajax calls by embedding the JSON data the component needs in the page that loads it, which is what 
+[/Todos](/TodoMvc) does to load its initial list of todos using the [Service Gateway](https://docs.servicestack.net/service-gateway) 
+to invoke APIs in process and embed its JSON response with:
 
 ```html
 <script>todos = @await ApiResultsAsJsonAsync(new QueryTodos())</script>
