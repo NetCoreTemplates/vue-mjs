@@ -409,9 +409,9 @@ reused across all ServiceStack Auto UIs, including:
 In addition to including Tailwind versions of the standard [HTML Form Inputs](https://docs.servicestack.net/vue/gallery/form-inputs) controls to create beautiful Tailwind Forms,
 it also contains a variety of integrated high-level components:
 
-- [FileInput](https://docs.servicestack.net/vue/gallery/form-inputs#fileinput)
-- [TagInput](https://docs.servicestack.net/vue/gallery/form-inputs#taginput)
-- [Autocomplete](https://docs.servicestack.net/vue/gallery/form-inputs#autocomplete)
+- [FileInput](https://docs.servicestack.net/vue/gallery/fileinput)
+- [TagInput](https://docs.servicestack.net/vue/gallery/taginput)
+- [Autocomplete](https://docs.servicestack.net/vue/gallery/autocomplete)
 
 ### useAuth
 
