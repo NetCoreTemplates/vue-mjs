@@ -39,10 +39,10 @@ development model using Razor Pages for Server Rendered content with any interac
 #### Freedom to use any JS library
 
 Avoiding the SPA route ends up affording more flexibility on which JS libraries each page can use as without heavy bundled JS
-blobs of all JS used in the entire App, it's free to only load the required JS each page needs to best implement its 
-required functionality, which can be any JS library, preferably utilizing ESM builds that can be referenced from a 
+blobs of all JS used in the entire App, it's free to only load the required JS each page needs to best implement its
+required functionality, which can be any JS library, preferably utilizing ESM builds that can be referenced from a
 [JavaScript Module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules), taking advantage of the module system
-native to modern browsers able to efficiently download the declarative matrix of dependencies each script needs. 
+native to modern browsers able to efficiently download the declarative matrix of dependencies each script needs.
 
 ### Best libraries for progressive Multi Page Apps
 
@@ -100,7 +100,10 @@ mount('#counter', Counter)
 ```
 
 Both methods create components with access to all your Shared Components and any 3rd Party Plugins which
-we can preview in this example that uses **@servicestack/vue's** `ModuleDialog` component:
+we can preview in this example that uses **@servicestack/vue**'s 
+[PrimaryButton](https://docs.servicestack.net/vue/gallery/navigation#primarybutton)
+and [ModalDialog](https://docs.servicestack.net/vue/gallery/modals):
+
 
 ```js
 const Plugin = {
@@ -126,9 +129,10 @@ in .NET Web Apps, including Input Components with auto form validation binding w
 <div data-component="VueComponentGallery"></div>
 
 ### @servicestack/client
-[@servicestack/client](https://github.com/ServiceStack/servicestack-client) is our generic JS/TypeScript client library
-which enables a terse, typed API for using your App's typed DTOs from the built-in `/types/mjs` endpoint 
-to enable an effortless end-to-end Typed development model for calling your APIs **without any build steps**, e.g:
+[@servicestack/client](https://docs.servicestack.net/javascript-client) is our generic JS/TypeScript client library
+which enables a terse, typed API for using your App's typed DTOs from the built-in 
+[JavaScript ES6 Classes](https://docs.servicestack.net/javascript-add-servicestack-reference) support to enable an effortless 
+end-to-end Typed development model for calling your APIs **without any build steps**, e.g:
 
 ```html
 <input type="text" id="txtName">
@@ -277,7 +281,7 @@ as done above.
 
 #### Explicit Error Handling
 
-This populated `ResponseStatus` DTO can either be manually passed into each component's **status** property as done in [/Todos](/TodoMvc):
+This populated `ResponseStatus` DTO can either be manually passed into each component's **status** property as done in [/TodoMvc](/TodoMvc):
 
 ```html
 <template id="TodoMvc-template">
@@ -289,9 +293,9 @@ This populated `ResponseStatus` DTO can either be manually passed into each comp
 </template>
 ```
 
-Where if you try adding an empty Todo the `CreateTodo` API will fail and populate its `store.error` reactive property with the 
-APIs Error Response DTO which the `<TextInput />` component checks for to display any field validation errors matching the
-field in `id` adjacent to the HTML Input:
+Where if you try adding an empty Todo the `CreateTodo` API will fail and populate its `store.error` reactive property with the
+APIs Error Response DTO which the `<TextInput />` component checks to display any field validation errors adjacent to the HTML Input
+with matching `id` fields:
 
 ```js
 let store = {
@@ -299,18 +303,13 @@ let store = {
     todos: [],
     newTodo:'',
     error:null,
-    async refreshTodos(errorStatus) {
-        this.error = errorStatus
-        let api = await client.api(new QueryTodos())
-        if (api.succeeded)
-            this.todos = api.response.results
-    },
     async addTodo() {
         this.todos.push(new Todo({ text:this.newTodo }))
         let api = await client.api(new CreateTodo({ text:this.newTodo }))
         if (api.succeeded)
             this.newTodo = ''
-        return this.refreshTodos(api.error)
+        else
+            this.error = api.error
     },
     //...
 }
@@ -380,8 +379,8 @@ const Edit = {
 }
 ```
 
-Effectively making form validation binding a transparent detail where all `@servicestack/vue` 
-Input Components are able to automatically apply contextual validation errors next to the fields they apply to: 
+Effectively making form validation binding a transparent detail where all `@servicestack/vue`
+Input Components are able to automatically apply contextual validation errors next to the fields they apply to:
 
 ![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/scripts/edit-contact-validation.png)
 
@@ -389,7 +388,7 @@ Input Components are able to automatically apply contextual validation errors ne
 
 We can elevate our productivity even further with
 [Auto Form Components](https://docs.servicestack.net/vue/gallery/autoform) that can automatically generate an
-instant API-enabled form with validation binding by specifying the Request DTO to create the form for, e.g:
+instant API-enabled form with validation binding by just specifying the Request DTO you want to create the form of, e.g:
 
 ```html
 <AutoCreateForm type="CreateBooking" formStyle="card" />
@@ -404,6 +403,15 @@ reused across all ServiceStack Auto UIs, including:
  - [API Explorer](https://docs.servicestack.net/api-explorer) 
  - [Locode](https://docs.servicestack.net/locode/)
  - [Blazor Tailwind Components](https://docs.servicestack.net/templates-blazor-components)
+
+### Form Input Components
+
+In addition to including Tailwind versions of the standard [HTML Form Inputs](https://docs.servicestack.net/vue/gallery/form-inputs) controls to create beautiful Tailwind Forms,
+it also contains a variety of integrated high-level components:
+
+- [FileInput](https://docs.servicestack.net/vue/gallery/form-inputs#fileinput)
+- [TagInput](https://docs.servicestack.net/vue/gallery/form-inputs#taginput)
+- [Autocomplete](https://docs.servicestack.net/vue/gallery/form-inputs#autocomplete)
 
 ### useAuth
 
@@ -452,12 +460,11 @@ export default {
 
 #### [JSDoc](https://jsdoc.app)
 
-We get great value from using [TypeScript](https://www.typescriptlang.org) to maintain our libraries typed code bases, however it 
-does mandate using an external tool to convert it to valid JS before it can be run, something this template expressly avoids. 
+We get great value from using [TypeScript](https://www.typescriptlang.org) to maintain our libraries typed code bases, however it
+does mandate using an external tool to convert it to valid JS before it can be run, something the new Razor Vue.js templates expressly avoids.
 
-Instead this template uses JSDoc to add type annotations to App code where they add value, which  at the cost of slightly more 
-verbose syntax enables much of the same static analysis and intelli-sense benefits of TypeScript, but without needing any tools 
-to convert it to valid JavaScript:   
+Instead it adds JSDoc type annotations to code where it adds value, which at the cost of slightly more verbose syntax enables much of the
+same static analysis and intelli-sense benefits of TypeScript, but without needing any tools to convert it to valid JavaScript, e.g:
 
 ```js
 /** @param {KeyboardEvent} e */
@@ -471,9 +478,9 @@ function validateSafeName(e) {
 
 #### TypeScript Language Service
 
-Whilst the code-base doesn't use TypeScript syntax in its code base directly, it still uses TypeScript's language services to enable
-static analysis for the included libraries from the TypeScript definitions included in `/lib/typings`, downloaded 
-in [postinstall.js](https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp/postinstall.js) after installing the template.
+Whilst the code-base doesn't use TypeScript syntax in its code base directly, it still benefits from TypeScript's language services 
+in IDEs for the included libraries from the TypeScript definitions included in `/lib/typings`, downloaded in
+[postinstall.js](https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp/postinstall.js) after **npm install**.
 
 ### Import Maps
 
@@ -538,11 +545,11 @@ that's configured in this template:
 ### Fast Component Loading
 
 SPAs are notorious for being slow to load due to needing to download large blobs of JavaScript bundles that it needs to initialize
-with their JS framework to mount their App component before it starts fetching the data from the server it needs to render its components. 
+with their JS framework to mount their App component before it starts fetching the data from the server it needs to render its components.
 
 A complex solution to this problem is to server render the initial HTML content then re-render it again on the client after the page loads.
 A simpler solution is to avoid unnecessary ajax calls by embedding the JSON data the component needs in the page that loads it, which is what 
-[/Todos](/TodoMvc) does to load its initial list of todos using the [Service Gateway](https://docs.servicestack.net/service-gateway) 
+[/TodoMvc](/TodoMvc) does to load its initial list of todos using the [Service Gateway](https://docs.servicestack.net/service-gateway) 
 to invoke APIs in process and embed its JSON response with:
 
 ```html
