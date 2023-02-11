@@ -11,7 +11,9 @@
     <div id="bookings"></div>
 
     <h4 class="mt-8 text-center text-xl">
-        <a href="/ui/QueryBookings" class="font-semibold text-indigo-600 dark:text-indigo-300 hover:text-indigo-500">Manage Bookings</a> in API Explorer
+        Manage Bookings in 
+        <a href="/locode/QueryBookings" class="font-semibold text-indigo-600 dark:text-indigo-300 hover:text-indigo-500">Locode</a> or
+        <a href="/ui/QueryBookings" class="font-semibold text-indigo-600 dark:text-indigo-300 hover:text-indigo-500">API Explorer</a>
     </h4>
 
     <div class="mt-16 mx-auto text-gray-500 max-w-screen-lg">
@@ -36,7 +38,7 @@
 
 <script>bookings = @await ApiResultsAsJsonAsync(new QueryBookings())</script>
 <script type="module">
-import Bookings from "/Pages/BookingsCrud/Index.mjs"
+import Bookings from "/Pages/Bookings.mjs"
 import { mount } from "/mjs/app.mjs"
 mount("#bookings", Bookings, { bookings })
 </script>

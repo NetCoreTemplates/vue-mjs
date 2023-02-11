@@ -18,7 +18,7 @@ public class ConfigureAutoQuery : IHostingStartup
             // For TodosService
             appHost.Plugins.Add(new AutoQueryDataFeature());
 
-            // For Bookings https://github.com/NetCoreApps/BookingsCrud
+            // For Bookings https://docs.servicestack.net/autoquery-crud-bookings
             appHost.Plugins.Add(new AutoQueryFeature {
                 MaxLimit = 1000,
                 //IncludeTotal = true,

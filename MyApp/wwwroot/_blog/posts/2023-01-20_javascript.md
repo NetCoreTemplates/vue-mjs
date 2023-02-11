@@ -442,7 +442,7 @@ const {
 } = useAuth()
 ```
 
-This is used in [BookingsCrud/Index.mjs](https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp/wwwroot/Pages/BookingsCrud/Index.mjs)
+This is used in [Bookings.mjs](https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp/wwwroot/Pages/Bookings.mjs)
 to control whether the `<AutoEditForm>` component should enable its delete functionality:
 
 ```js
