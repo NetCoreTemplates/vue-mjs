@@ -49,7 +49,7 @@
     
     const { loadMetadata } = useMetadata()
     loadMetadata({
-        olderThan: window.Server ? null : location.hash === '#clear' ? 0 : 24 * 60 * 60 * 1000 //1 day 
+        olderThan: window.Server ? null : location.search.includes('clear=metadata') ? 0 : 60 * 60 * 1000 //1hr 
     })
     </script>
 </head>
