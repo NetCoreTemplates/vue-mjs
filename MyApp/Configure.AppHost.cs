@@ -20,5 +20,10 @@ public class AppHost : AppHostBase, IHostingStartup
     {
         SetConfig(new HostConfig {
         });
+        
+        Plugins.Add(new CorsFeature(new[] {
+            "http://localhost:5173", //vite dev
+        }, allowCredentials:true));
+
     }
 }

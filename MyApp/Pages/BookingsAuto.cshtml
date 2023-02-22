@@ -13,14 +13,35 @@
 </div>
 
 <script type="module">
-import { mount } from "/mjs/app.mjs"
+import { ref } from "vue"
+import { mount, client } from "/mjs/app.mjs"
+import { QueryCoupons } from "/mjs/dtos.mjs"
 const Bookings = {
     template:/*html*/`
-        <AutoQueryGrid type="Booking" selected-columns="id,name,cost,bookingStartDate,bookingEndDate,createdBy" />
+        <AutoQueryGrid type="Booking" selected-columns="id,name,cost,bookingStartDate,bookingEndDate,couponId,createdBy">
+          <template #couponId="{ discount }">
+            <TextLink v-if="discount" class="flex items-end" v-on:click.stop="showCoupon(discount.id)" :title="discount.id">
+              <Icon class="w-5 h-5 mr-1" type="Coupon" />
+              <PreviewFormat :value="discount.description" />
+            </TextLink>
+          </template>
+        </AutoQueryGrid>
+        <AutoEditForm v-if="coupon" class="my-8" type="UpdateCoupon" v-model="coupon" v-on:done="close" v-on:save="close" />
         <div class="mt-5 flex">
             <SrcLink href="https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp.ServiceModel/Bookings.cs" />
             <SrcLink href="https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp/Pages/BookingsAuto.cshtml" />
-        </div>`
+        </div>`,
+    setup() {
+        const coupon = ref()
+        async function showCoupon(id) {
+            const api = await client.api(new QueryCoupons({ id }))
+            if (api.succeeded) {
+                coupon.value = api.response.results[0]
+            }
+        }
+        const close = () => coupon.value = null 
+        return { coupon, showCoupon, close }
+    }
 }
 mount("#bookings", Bookings)
 </script>
