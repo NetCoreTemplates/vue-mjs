@@ -29,11 +29,9 @@ docker-compose -f ~/nginx-proxy-compose.yml up -d
 This will run an nginx reverse proxy along with a companion container that will watch for additional containers in the same docker network and attempt to initialize them with valid TLS certificates.
 
 ## GitHub Repository setup
-The `release.yml` assumes 6 secrets have been setup.
+The `release.yml` uses the following secrets.
 
-- CR_PAT - GitHub Personal Token with read/write access to packages.
 - DEPLOY_HOST - hostname used to SSH to, this can either be an IP address or subdomain with A record pointing to the server.
-- DEPLOY_PORT - SSH port, usually `22`.
 - DEPLOY_USERNAME - the username being logged into via SSH. Eg, `ubuntu`, `ec2-user`, `root` etc.
 - DEPLOY_KEY - SSH private key used to remotely access deploy server/app host.
 - LETSENCRYPT_EMAIL - Email address, required for Let's Encrypt automated TLS certificates.
@@ -41,9 +39,7 @@ The `release.yml` assumes 6 secrets have been setup.
 These secrets can use the [GitHub CLI](https://cli.github.com/manual/gh_secret_set) for ease of creation. Eg, using the GitHub CLI the following can be set.
 
 ```bash
-gh secret set CR_PAT -b"<CR_PAT, Container Registry Personal Access Token>"
 gh secret set DEPLOY_HOST -b"<DEPLOY_HOST, domain or subdomain for your application and server host.>"
-gh secret set DEPLOY_PORT -b"<DEPLOY_PORT, eg SSH port, usually 22>"
 gh secret set DEPLOY_USERNAME -b"<DEPLOY_USERNAME, the username being logged into via SSH. Eg, `ubuntu`, `ec2-user`, `root` etc.>"
 gh secret set DEPLOY_KEY -b"<DEPLOY_KEY, SSH private key used to remotely access deploy server/app host.>"
 gh secret set LETSENCRYPT_EMAIL -b"<LETSENCRYPT_EMAIL, Email address for your TLS certificate generation, eg me@example.com>"
