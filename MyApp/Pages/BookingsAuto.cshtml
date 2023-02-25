@@ -26,7 +26,7 @@ const Bookings = {
             </TextLink>
           </template>
         </AutoQueryGrid>
-        <AutoEditForm v-if="coupon" class="my-8" type="UpdateCoupon" v-model="coupon" v-on:done="close" v-on:save="close" />
+        <AutoEditForm v-if="coupon" type="UpdateCoupon" v-model="coupon" v-on:done="close" v-on:save="close" />
         <div class="mt-5 flex">
             <SrcLink href="https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp.ServiceModel/Bookings.cs" />
             <SrcLink href="https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp/Pages/BookingsAuto.cshtml" />
