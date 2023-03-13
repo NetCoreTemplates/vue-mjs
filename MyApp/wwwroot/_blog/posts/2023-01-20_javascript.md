@@ -587,7 +587,7 @@ main navigation links:
 </nav>
 ```
 
-htmlx has lots of useful [real world examples](https://htmx.org/examples/) that can be activated with declarative attributes, 
+htmx has lots of useful [real world examples](https://htmx.org/examples/) that can be activated with declarative attributes, 
 another feature this template uses is the [class-tools](https://htmx.org/extensions/class-tools/) extension to hide elements from 
 appearing until after the page is loaded:
 
