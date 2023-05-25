@@ -26,10 +26,6 @@ public class ConfigureMarkdown : IHostingStartup
         {
             var blogPosts = appHost.Resolve<BlogPosts>();
             blogPosts.VirtualFiles = appHost.GetVirtualFileSource<FileSystemVirtualFiles>();
-
-            //Optional, prerender to /blog with: `$ npm run prerender` 
-            AppTasks.Register("prerender", args => blogPosts.LoadPosts("_blog/posts", renderTo: "blog"));
-
             blogPosts.LoadPosts("_blog/posts");
         });
 }
@@ -74,9 +70,7 @@ public class BlogPosts
         return latestPosts.OrderByDescending(x => x.Date).ToList();
     }
 
-    public string GetPostLink(MarkdownFileInfo post, bool isStatic = false) => isStatic
-        ? $"/blog/{post.Slug}"
-        : $"/posts/{post.Slug}";
+    public string GetPostLink(MarkdownFileInfo post) => $"/posts/{post.Slug}";
 
     public string GetPostsLink() => "/posts";
     public string GetAuthorLink(string author) => GetPostsLink().AddQueryParam("author", author);
@@ -156,16 +150,13 @@ public class BlogPosts
         return pipeline;
     }
 
-    public void LoadPosts(string fromDirectory, string? renderTo = null)
+    public void LoadPosts(string fromDirectory)
     {
         Posts.Clear();
         var fs = VirtualFiles ?? throw new NullReferenceException($"{nameof(VirtualFiles)} is not populated");
         var files = fs.GetDirectory(fromDirectory).GetAllFiles().ToList();
         var log = LogManager.GetLogger(GetType());
         log.InfoFormat("Found {0} posts", files.Count);
-
-        if (renderTo != null)
-            fs.DeleteFolder(renderTo);
 
         var pipeline = CreatePipeline();
 
@@ -178,25 +169,11 @@ public class BlogPosts
                     continue;
 
                 Posts.Add(doc);
-
-                // prerender /blog/{slug}.html
-                if (renderTo != null)
-                {
-                    log.InfoFormat("Writing {0}/{1}...", renderTo, doc.HtmlFileName);
-                    fs.WriteFile($"{renderTo}/{doc.HtmlFileName}", doc.HtmlPage);
-                }
             }
             catch (Exception e)
             {
                 log.Error(e, "Couldn't load {0}: {1}", file.VirtualPath, e.Message);
             }
-        }
-
-        // prerender /blog/index.html
-        if (renderTo != null)
-        {
-            log.InfoFormat("Writing {0}/index.html...", renderTo);
-            RenderToFile(razorPages.GetView(PagesPath).View, new Pages.Posts.IndexModel { Static = true }, $"{renderTo}/index.html");
         }
     }
 

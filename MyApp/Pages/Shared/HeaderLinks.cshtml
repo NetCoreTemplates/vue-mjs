@@ -20,10 +20,9 @@
     }
 
     // Uses prerendered /blog for production
-    RenderNavLink(Html.IsDebug() ? "/posts" : "/blog/", "Blog", "ml-8 sm:ml-0");
+    RenderNavLink("/blog", "Blog", "ml-8 sm:ml-0");
     RenderNavLink("/todomvc", "Todos");
-    RenderNavLink("/bookings-crud", "Bookings");
-    RenderNavLink("/bookings-auto", "AutoQueryGrid");
+    RenderNavLink("/bookings-auto", "Bookings");
     if (isAuthenticated)
         RenderNavLink("/profile", "Profile");
     if (isAdmin)

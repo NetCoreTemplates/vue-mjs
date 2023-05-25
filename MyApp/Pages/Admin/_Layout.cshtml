@@ -17,7 +17,6 @@
     };
 
     var dev = HostContext.AppHost.IsDevelopmentEnvironment();
-    var min = dev ? "" : "[hash].min";
 }
 <head>
     <meta charset="utf-8"/>
@@ -25,14 +24,6 @@
     <link rel="icon" type="image/svg" href="/img/logo.svg">
     <title>@ViewData["Title"] - Admin</title>
     <link rel="stylesheet" href="/css/app.css">
-
-    @Html.BundleJs(new BundleOptions {
-        Sources = {
-            "/lib/js/"
-        },
-        SaveToDisk = !dev,
-        OutputTo = $"/js/lib.bundle{min}.js"
-    })
 
     @if (Context.Request.Headers.UserAgent.Any(x => x.Contains("Safari") && !x.Contains("Chrome"))) {
         <script async src="https://ga.jspm.io/npm:es-module-shims@1.6.3/dist/es-module-shims.js"></script>

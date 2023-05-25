@@ -63,7 +63,7 @@ jobs:
       - name: Publish dotnet project
         working-directory: ./MyApp
         run: | 
-          dotnet publish -c Release /p:APP_TASKS=prerender
+          dotnet publish -c Release
 
       # Authenticate, build and push to GitHub Container Registry (ghcr.io)
       - name: Login to GitHub Container Registry

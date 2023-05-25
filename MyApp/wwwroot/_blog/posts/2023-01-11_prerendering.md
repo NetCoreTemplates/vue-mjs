@@ -13,7 +13,7 @@ generating static content at deployment which can be optionally hosted from a CD
 As such we thought it a valuable technique to include in this template to show how it can be easily achieved
 within a Razor Pages Application. Since prerendered content is only updated at deployment, it's primarily only 
 useful for static content like this Blog which is powered by the static markdown content in 
-[_blog/posts](https://github.com/NetCoreTemplates/vue-mjs/tree/main/MyApp/wwwroot/_blog/posts) whose content
+[_blog/posts](https://github.com/NetCoreTemplates/vue-mjs/tree/prerender/MyApp/wwwroot/_blog/posts) whose content
 is prerendered to: 
 
   - [/blog](/blog)
@@ -21,7 +21,7 @@ is prerendered to:
 ### Parsing Markdown Files
 
 All the functionality to load and render Markdown files is maintained in 
-[Configure.Markdown.cs](https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp/Configure.Markdown.cs),
+[Configure.Markdown.cs](https://github.com/NetCoreTemplates/vue-mjs/blob/prerender/MyApp/Configure.Markdown.cs),
 most of which is spent populating the POCO below from the content and frontmatter of each Markdown file:  
 
 ```csharp
@@ -101,7 +101,7 @@ doc.Preview = writer.ToString();
 At this point we've populated Markdown Blog Posts into a POCO which is the data source used to implement all the blog's functionality. 
 
 We can now start prerendering entire HTML Pages by rendering the markdown inside the 
-[Post.cshtml](https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp/Pages/Posts/Post.cshtml) Razor Page by populating its PageModel
+[Post.cshtml](https://github.com/NetCoreTemplates/vue-mjs/blob/prerender/MyApp/Pages/Posts/Post.cshtml) Razor Page by populating its PageModel
 from the `MarkdownFileInfo` POCO. It also sets a `Static` flag that tells the Razor Page that this page is being statically rendered so 
 it can render the appropriate links.
 
@@ -134,7 +134,7 @@ Http, View and Page contexts to render Razor Pages, registered in ASP.NET Core's
 
 The process of saving the prerendered content is then simply a matter of saving the rendered Razor Page at the preferred locations,
 done for each post and the [/blog](/blog) index page using the
-[Posts/Index.cshtml](https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp/Pages/Posts/Index.cshtml) Razor Page:
+[Posts/Index.cshtml](https://github.com/NetCoreTemplates/vue-mjs/blob/prerender/MyApp/Pages/Posts/Index.cshtml) Razor Page:
 
 ```csharp
 foreach (var file in files)
@@ -193,7 +193,8 @@ $ npm run prerender
 
 ### Prerendering at Deployment
 
-To ensure this is always run at deployment it's also added as an MS Build task in **MyApp.csproj**:
+To ensure this is always run at deployment it's also added as an MS Build task in
+[MyApp.csproj](https://github.com/NetCoreTemplates/vue-mjs/blob/prerender/MyApp/MyApp.csproj):
 
 ```xml
 <Target Name="AppTasks" AfterTargets="Build" Condition="$(APP_TASKS) != ''">
@@ -206,7 +207,7 @@ To ensure this is always run at deployment it's also added as an MS Build task i
 ```
 
 Configured to run when the .NET App is published in the GitHub Actions deployment task in 
-[/.github/workflows/release.yml](https://github.com/NetCoreTemplates/vue-mjs/blob/main/.github/workflows/release.yml):
+[/.github/workflows/release.yml](https://github.com/NetCoreTemplates/vue-mjs/blob/prerender/.github/workflows/release.yml):
 
 ```yaml
  # Publish .NET Project
