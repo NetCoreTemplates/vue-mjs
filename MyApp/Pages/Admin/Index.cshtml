@@ -1,15 +1,14 @@
 @page
 @{
-    ViewBag.Title = "Dashboard";
-    var user = await GetSessionAsync();
-    var stats = await Html.GetPageStatesAsync();
+    ViewData["Title"] = "Dashboard";
+    var adminData = await Html.Gateway().SendAsync(new AdminData());
 }
 
 <div>
     <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-        @foreach (var item in stats)
+        @foreach (var item in adminData.PageStats)
         {
-            <a href="@item.Href" class="block hover:bg-gray-50 overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+            <a href="/admin/@item.Label.ToLower()" class="block hover:bg-gray-50 overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
                 <dt class="truncate text-sm font-medium text-gray-500">Total @item.Label</dt>
                 <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">@item.Total</dd>
             </a>

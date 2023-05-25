@@ -111,7 +111,7 @@
             </ul>
         </nav>
         <template #mobiletitlebar>
-            <div class="flex-1 text-sm font-semibold leading-6 text-gray-900">@ViewBag.Title</div>
+            <div class="flex-1 text-sm font-semibold leading-6 text-gray-900">@ViewData["Title"]</div>
             <span class="cursor-pointer bg-gray-50">
                 <span class="sr-only">Your profile</span>
                 <img class="h-8 w-8 rounded-full bg-gray-50" src="@user.GetProfileUrl()" alt="">
@@ -120,7 +120,7 @@
     </sidebar-layout>
     <main class="pt-16 lg:pl-72">
         <div class="px-4 sm:px-6 lg:px-8">
-            <h1 class="hidden lg:block pt-4 mb-2 text-3xl font-bold leading-tight tracking-tight text-gray-900">@ViewBag.Title</h1>
+            <h1 class="hidden lg:block pt-4 mb-2 text-3xl font-bold leading-tight tracking-tight text-gray-900">@ViewData["Title"]</h1>
             @RenderBody()
         </div>
     </main>

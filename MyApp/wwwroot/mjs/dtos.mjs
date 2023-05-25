@@ -1,6 +1,6 @@
 /* Options:
-Date: 2023-02-22 11:08:42
-Version: 6.61
+Date: 2023-05-25 16:12:17
+Version: 6.81
 Tip: To override a DTO option, remove "//" prefix before updating
 BaseUrl: https://localhost:5001
 
@@ -104,6 +104,14 @@ export class Booking extends AuditBase {
     /** @type {?boolean} */
     cancelled;
 }
+export class PageStats {
+    /** @param {{label?:string,total?:number}} [init] */
+    constructor(init) { Object.assign(this, init) }
+    /** @type {string} */
+    label;
+    /** @type {number} */
+    total;
+}
 export class ResponseError {
     /** @param {{errorCode?:string,fieldName?:string,message?:string,meta?:{ [index: string]: string; }}} [init] */
     constructor(init) { Object.assign(this, init) }
@@ -135,6 +143,12 @@ export class HelloResponse {
     constructor(init) { Object.assign(this, init) }
     /** @type {string} */
     result;
+}
+export class AdminDataResponse {
+    /** @param {{pageStats?:PageStats[]}} [init] */
+    constructor(init) { Object.assign(this, init) }
+    /** @type {PageStats[]} */
+    pageStats;
 }
 export class Todo {
     /** @param {{id?:number,text?:string,isFinished?:boolean}} [init] */
@@ -253,6 +267,12 @@ export class Hello {
     getTypeName() { return 'Hello' }
     getMethod() { return 'POST' }
     createResponse() { return new HelloResponse() }
+}
+export class AdminData {
+    constructor(init) { Object.assign(this, init) }
+    getTypeName() { return 'AdminData' }
+    getMethod() { return 'GET' }
+    createResponse() { return new AdminDataResponse() }
 }
 export class QueryTodos extends QueryData {
     /** @param {{id?:number,ids?:number[],textContains?:string,skip?:number,take?:number,orderBy?:string,orderByDesc?:string,include?:string,fields?:string,meta?:{ [index: string]: string; }}} [init] */
