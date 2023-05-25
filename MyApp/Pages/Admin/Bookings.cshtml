@@ -1,0 +1,9 @@
+@page
+@{
+    ViewBag.Title = "Bookings";
+}
+
+<auto-query-grid type="Booking"
+    selected-columns="id,name,roomType,roomNumber,bookingStartDate,bookingEndDate,cost,couponId,discount"
+    :header-titles="{ roomNumber:'Room No', bookingStartDate:'Start Date', bookingEndDate:'End Date', couponId:'Coupon' }"
+    :visible-from="{ roomNumber:'lg', bookingEndDate:'xl', cost:'md', couponId:'xl', discount:'never' }" ></auto-query-grid>

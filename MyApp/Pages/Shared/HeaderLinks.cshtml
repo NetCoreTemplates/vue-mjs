@@ -1,0 +1,37 @@
+@{
+    var isAuthenticated = await Html.IsAuthenticatedAsync();
+    var isAdmin = await Html.HasRoleAsync("Admin");
+    void RenderNavLink(string href, string childContent, string? cls = null)
+    {
+        <li class="@Html.ClassNames("relative flex flex-wrap just-fu-start m-0",cls)">
+            <a href="@href" class="@Html.ClassNames("p-4 flex items-center justify-start mw-full hover:text-sky-500 dark:hover:text-sky-400", 
+                Html.MatchesPath(href) ? "text-blue-700 dark:text-blue-300" : "")">
+                @Html.Raw(childContent)
+            </a>
+        </li>
+    }
+    void RenderLinkButton(string href, string childContent, string? cls = null)
+    {
+        <li class="relative flex flex-wrap just-fu-start m-0">
+            <a href="@href" class="@(cls ?? Css.SecondaryButton)">
+                @Html.Raw(childContent)
+            </a>
+        </li>
+    }
+
+    // Uses prerendered /blog for production
+    RenderNavLink(Html.IsDebug() ? "/posts" : "/blog/", "Blog", "ml-8 sm:ml-0");
+    RenderNavLink("/todomvc", "Todos");
+    RenderNavLink("/bookings-crud", "Bookings");
+    RenderNavLink("/bookings-auto", "AutoQueryGrid");
+    if (isAuthenticated)
+        RenderNavLink("/profile", "Profile");
+    if (isAdmin)
+        RenderNavLink("/admin", "Admin");
+    if (isAuthenticated)
+        RenderLinkButton("/auth/logout?continue=/", "Sign Out");
+    if (!isAuthenticated)
+        RenderLinkButton("/signin", "Sign In");
+    if (!isAuthenticated)
+        RenderLinkButton("/signup", "Sign Up", $"ml-2 {Css.PrimaryButton}");
+}

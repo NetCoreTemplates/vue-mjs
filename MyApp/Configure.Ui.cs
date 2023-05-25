@@ -1,9 +1,5 @@
-using System.Net;
-using System.Text;
-using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using MyApp.ServiceModel.Types;
-using ServiceStack.Text;
+using ServiceStack.OrmLite;
 
 [assembly: HostingStartup(typeof(MyApp.ConfigureUi))]
 
@@ -26,4 +22,17 @@ public class ConfigureUi : IHostingStartup
 public class AppData
 {
     internal static readonly AppData Instance = new();
+}
+
+public record PageStats(string Label, string Href, int Total);
+public static class HtmlExtensions
+{
+    public static async Task<List<PageStats>> GetPageStatesAsync(this IHtmlHelper html)
+    {
+        using var db = HostContext.AppHost.GetDbConnection();
+        return (await db.SelectAsync<(string label, string href, int total)>(@"
+            SELECT 'Bookings', '/admin/bookings', COUNT(*) FROM Booking UNION  
+            SELECT 'Coupons',  '/admin/coupons',  COUNT(*) FROM Coupon"))
+            .Map(x => new PageStats(x.label, x.href, x.total));
+    }
 }

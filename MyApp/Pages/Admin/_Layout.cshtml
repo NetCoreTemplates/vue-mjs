@@ -1,0 +1,148 @@
+﻿@inherits Microsoft.AspNetCore.Mvc.Razor.RazorPage<TModel>
+<!doctype html>
+<html lang="en" class="h-full bg-white">
+@{
+    if (!await Html.EnsureRoleAsync("Admin"))
+    {
+        IgnoreBody();
+        return;
+    }
+
+    var user = await Html.GetRequest().GetSessionAsync();
+    (string label, string href, string icon)[] sections = 
+    {
+        ("Dashboard", "/admin/",         Icons.Dashboard),
+        ("Bookings",  "/admin/bookings", Icons.Booking),
+        ("Coupons",   "/admin/coupons",  Icons.Coupon),
+    };
+
+    var dev = HostContext.AppHost.IsDevelopmentEnvironment();
+    var min = dev ? "" : "[hash].min";
+}
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/svg" href="/img/logo.svg">
+    <title>@ViewData["Title"] - Admin</title>
+    <link rel="stylesheet" href="/css/app.css">
+
+    @Html.BundleJs(new BundleOptions {
+        Sources = {
+            "/lib/js/"
+        },
+        SaveToDisk = !dev,
+        OutputTo = $"/js/lib.bundle{min}.js"
+    })
+
+    @if (Context.Request.Headers.UserAgent.Any(x => x.Contains("Safari") && !x.Contains("Chrome"))) {
+        <script async src="https://ga.jspm.io/npm:es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+    }
+    @Html.ImportMap(new() {
+        ["vue"]                  = ("/lib/mjs/vue.mjs",                 "/lib/mjs/vue.min.mjs"),
+        ["@servicestack/client"] = ("/lib/mjs/servicestack-client.mjs", "/lib/mjs/servicestack-client.min.mjs"),
+        ["@servicestack/vue"]    = ("/lib/mjs/servicestack-vue.mjs",    "/lib/mjs/servicestack-vue.min.mjs"),
+    })
+    
+    @if (dev) {
+        <script>window.Server = @await Html.ApiAsJsonAsync(new MetadataApp())</script>
+    }
+    <script type="module">
+    import { useAuth, useMetadata } from "@@servicestack/vue"
+    const { signIn } = useAuth()
+    signIn(@await Html.ApiAsJsonAsync(new Authenticate()))
+    
+    const { loadMetadata } = useMetadata()
+    loadMetadata({
+        olderThan: window.Server ? null : location.search.includes('clear=metadata') ? 0 : 60 * 60 * 1000 //1hr 
+    })
+    </script>
+</head>
+<body class="h-full bg-white dark:bg-black dark:text-white">
+
+<header class="top-0 fixed z-50 h-14 bg-white dark:bg-black opacity-90 w-full shadow pr-3">
+    <div class="w-full flex flex-wrap items-center">
+        <div class="absolute z-10 top-2 left-2 sm:static flex-shrink flex-grow-0">
+            <div class="cursor-pointer">
+                <a class="navbar-brand flex items-center" href="/">
+                    <img class="w-8 h-8 sm:ml-2 sm:w-12 sm:h-12" src="/img/logo.svg" alt="MyApp logo">
+                    <span class="hidden sm:block text-2xl font-semibold">Admin</span>
+                </a>
+            </div>
+        </div>
+        <div class="flex flex-grow flex-shrink flex-nowrap justify-end items-center">
+            <nav class="relative flex flex-grow leading-6 font-semibold text-slate-700 dark:text-slate-200">
+                <ul class="flex flex-wrap items-center justify-end w-full m-0 pb-2 sm:pb-0">
+                    @await Html.PartialAsync("HeaderLinks")
+                </ul>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<script>document.querySelector(`[data-component=DarkModeToggle]`).remove()</script>
+
+<div id="app" v-cloak>
+    <sidebar-layout ref="sidebar">
+        <nav class="mt-16 pt-2 flex flex-1 flex-col">
+            <ul role="list" class="flex flex-1 flex-col gap-y-7">
+                <li>
+                    <ul role="list" class="-mx-2 space-y-1">
+                        @foreach (var item in sections)
+                        {
+                            <li>
+                                <a href="@item.href" class="@Html.ClassNames(Html.MatchesPath(item.href, exact:true) ? "bg-gray-50 text-indigo-600" : "cursor-pointer text-gray-700 hover:text-indigo-600 hover:bg-gray-50", "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold select-none")">
+                                    <icon svg="@item.icon" class="h-6 w-6 shrink-0 text-indigo-600"></icon>
+                                    @item.label
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+                <li class="-mx-6 mt-auto">
+                    <div v-if="showUserMenu" class="font-normal absolute z-10 -mt-10 left-6 w-60 origin-top-right rounded-md bg-white dark:bg-black py-1 shadow-lg ring-1 ring-black dark:ring-gray-600 ring-opacity-5 focus:outline-none right-2" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                        <a href="/auth/logout" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800" role="menuitem" tabindex="-1">Logout</a>
+                    </div>
+                    <span v-on:click="showUserMenu=!showUserMenu" class="flex cursor-pointer bg-gray-50 items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50">
+                        <img class="h-8 w-8 rounded-full bg-gray-50" src="@user.GetProfileUrl()" alt="">
+                        <span class="sr-only">Your profile</span>
+                        <span aria-hidden="true">@user.DisplayName</span>
+                    </span>
+                </li>
+            </ul>
+        </nav>
+        <template #mobiletitlebar>
+            <div class="flex-1 text-sm font-semibold leading-6 text-gray-900">@ViewBag.Title</div>
+            <span class="cursor-pointer bg-gray-50">
+                <span class="sr-only">Your profile</span>
+                <img class="h-8 w-8 rounded-full bg-gray-50" src="@user.GetProfileUrl()" alt="">
+            </span>
+        </template>
+    </sidebar-layout>
+    <main class="pt-16 lg:pl-72">
+        <div class="px-4 sm:px-6 lg:px-8">
+            <h1 class="hidden lg:block pt-4 mb-2 text-3xl font-bold leading-tight tracking-tight text-gray-900">@ViewBag.Title</h1>
+            @RenderBody()
+        </div>
+    </main>
+</div>
+
+
+<script type="module">
+import { ref } from "vue"
+import { mount } from "/mjs/app.mjs"
+
+const App = {
+    setup() {
+        const showUserMenu = ref(false)
+        
+        return { showUserMenu }
+    }
+}
+
+mount('#app', App)
+</script>
+
+@await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

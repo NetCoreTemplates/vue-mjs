@@ -1,0 +1,185 @@
+<html class="h-full bg-white">
+<head>
+<title>Admin Portal</title>
+<link rel="icon" type="image/svg" href="/img/logo.svg">
+<link rel="stylesheet" href="/css/app.css">
+<script async src="https://ga.jspm.io/npm:es-module-shims@1.6.3/dist/es-module-shims.js"></script><!--safari polyfill-->
+<script type="importmap">
+{
+    "imports": {
+        "vue": "/lib/mjs/vue.mjs",
+        "@servicestack/client": "/lib/mjs/servicestack-client.mjs",
+        "@servicestack/vue": "/lib/mjs/servicestack-vue.mjs",
+        "dtos.mjs": "/mjs/dtos.mjs"
+    }
+}
+</script>
+</head>
+<body class="h-full">
+<div id="app" v-cloak>
+    <sidebar-layout ref="sidebar">
+        <div class="flex h-16 shrink-0 items-center">
+            <a href="/" class="text-2xl whitespace-nowrap overflow-x-hidden flex items-center">
+                <img class="mr-1 h-8 w-auto text-indigo-600" src="/img/logo.svg" alt="Logo">
+                <span class="hidden sm:block text-2xl font-semibold">Client Admin</span>
+            </a>
+        </div>
+        <nav class="flex flex-1 flex-col">
+            <ul role="list" class="flex flex-1 flex-col gap-y-7">
+                <li>
+                    <ul role="list" class="-mx-2 space-y-1">
+                        <li v-for="section in sections">
+                            <a @click.prevent="navTo(section.id)" :class="[activeSection.id === section.id ? 'bg-gray-50 text-indigo-600' : 'cursor-pointer text-gray-700 hover:text-indigo-600 hover:bg-gray-50', 'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold select-none']" @click="$forceUpdate()">
+                                <icon :svg="section.icon" class="h-6 w-6 shrink-0 text-indigo-600" ></icon>
+                                {{section.label}}
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="-mx-6 mt-auto">
+                    <div v-if="showUserMenu" class="font-normal absolute z-10 -mt-10 left-6 w-60 origin-top-right rounded-md bg-white dark:bg-black py-1 shadow-lg ring-1 ring-black dark:ring-gray-600 ring-opacity-5 focus:outline-none right-2" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                        <a href="/auth/logout" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800" role="menuitem" tabindex="-1">Logout</a>
+                    </div>
+                    <span v-if="user" @click="showUserMenu=!showUserMenu" class="flex cursor-pointer bg-gray-50 items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50">
+                        <img class="h-8 w-8 rounded-full bg-gray-50" :src="user.profileUrl" alt="">
+                        <span class="sr-only">Your profile</span>
+                        <span aria-hidden="true">{{user.displayName}}</span>
+                    </span>
+                </li>
+            </ul>
+        </nav>
+        <template #mobiletitlebar>
+            <div class="flex-1 text-sm font-semibold leading-6 text-gray-900">{{ activeSection.label }}</div>
+            <span v-if="user" class="cursor-pointer bg-gray-50">
+                <span class="sr-only">Your profile</span>
+                <img class="h-8 w-8 rounded-full bg-gray-50" :src="user.profileUrl" alt="">
+            </span>
+        </template>
+    </sidebar-layout>
+    <main class="lg:pl-72">
+        <div v-if="init" class="px-4 sm:px-6 lg:px-8">
+            <sign-in v-if="!user"></sign-in>
+            <div v-else>
+                <h1 class="hidden lg:block pt-4 mb-2 text-3xl font-bold leading-tight tracking-tight text-gray-900">{{ activeSection.label }}</h1>
+                <component :key="refreshKey" :is="activeSection.component" @nav="navTo" :type="activeSection.type"></component>
+            </div>            
+        </div>
+    </main>
+</div>
+
+<script type="module">
+    import { createApp, ref, onMounted, shallowRef } from "vue"
+    import { JsonApiClient, leftPart, rightPart, appendQueryString, humanize } from "@servicestack/client"
+    import ServiceStackVue, { useClient, useAuth, useMetadata } from "@servicestack/vue"
+    import { Authenticate, QueryBookings, QueryCoupons } from "dtos.mjs"
+
+    const { loadMetadata, metadataApi, typeOf } = useMetadata()
+    await loadMetadata({
+        olderThan: window.Server ? null : location.search.includes('clear=metadata') ? 0 : 60 * 60 * 1000 //1hr 
+    })
+
+    const sections = {
+        Dashboard: {
+            icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></svg>`,
+            component: {
+                template:`
+            <div>
+              <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+                <div v-for="(total,label) in totals" @click="$emit('nav',label)" class="cursor-pointer hover:bg-gray-50 overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+                  <dt class="truncate text-sm font-medium text-gray-500">Total {{label}}</dt>
+                  <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{total}}</dd>
+                </div>
+              </dl>
+              <p class="mt-8 text-sm font-semibold leading-6">
+                Go to <a href="/admin/" class="text-indigo-600">Server Rendered Admin <span aria-hidden="true">&rarr;</span></a>    
+              </p>
+            </div>`,
+                setup() {
+                    const client = useClient()
+                    const totals = ref({
+                        Bookings: '',
+                        Coupons: '',
+                    })
+                    onMounted(async () => {
+                        const requests = {
+                            Bookings: new QueryBookings({ take:0, include:'total' }),
+                            Coupons:  new QueryCoupons({ take:0, include:'total' }),
+                        }
+                        await Promise.all(Object.keys(requests).map(async id => {
+                            const api = await client.api(requests[id])
+                            totals.value[id] = api.response.total
+                        }))
+                    })
+                    return { totals }
+                }
+            },
+        },
+        Bookings: {
+            type: 'Booking',
+            component: {
+                template:`<AutoQueryGrid :type="type" 
+                    selected-columns="id,name,roomType,roomNumber,bookingStartDate,bookingEndDate,cost,couponId,discount"
+                    :header-titles="{ roomNumber:'Room No', bookingStartDate:'Start Date', bookingEndDate:'End Date', couponId:'Coupon' }"
+                    :visible-from="{ roomNumber:'lg', bookingEndDate:'xl', cost:'md', couponId:'xl', discount:'never' }" />`,
+            },
+        },
+        Coupons: {
+            type: 'Coupon',
+            component: {
+                template:`<AutoQueryGrid :type="type" />`,
+            },
+        },
+    }
+    Object.keys(sections).map(id => {
+        const section = sections[id]
+        section.id = id
+        section.label = section.label || humanize(id)
+        section.icon  = section.icon  || typeOf(section.type)?.icon?.svg
+        section.component.props = section.component.props || ['type']
+        section.component.emits = section.component.emits || ['nav']
+    })
+
+    const App = {
+        setup() {
+            const { user, signIn } = useAuth()
+            const client = useClient()
+            const sidebar = ref()
+            const refreshKey = ref(1)
+            const showUserMenu = ref(false)
+            const init = ref(false)
+            const activeSection = shallowRef(sections[rightPart(leftPart(location.hash,'?'), '#')] || sections.Dashboard)
+
+            function navTo(section, args, pushState=true) {
+                if (!args) args = {}
+                refreshKey.value++
+                activeSection.value = sections[section] || sections.Dashboard
+                if (pushState) history.pushState({ section, ...args }, null, appendQueryString(`#${section}`, args))
+                sidebar.value.toggle(false)
+            }
+
+            onMounted(async () => {
+                window.addEventListener('popstate', event => {
+                    navTo(event.state?.section, {}, false)
+                })
+                
+                const api = await client.api(new Authenticate())
+                if (api.succeeded) {
+                    signIn(api.response)
+                }
+                init.value = true
+            })
+
+            return { init, sidebar, user, sections, activeSection, navTo, refreshKey, showUserMenu }
+        }
+    }
+
+    const client = JsonApiClient.create()
+    const app = createApp(App)
+    app.use(ServiceStackVue)
+    app.component('RouterLink', ServiceStackVue.component('RouterLink'))
+    app.provide('client', client)
+    app.mount('#app')
+</script>
+
+</body>
+</html>

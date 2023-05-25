@@ -2,61 +2,25 @@
     <div class="flex flex-wrap items-center">
         <div class="absolute z-10 top-2 left-2 sm:static flex-shrink flex-grow-0">
             <div class="cursor-pointer">
-                <a hx-boost="true" class="navbar-brand flex items-center" href="/">
+                <a class="navbar-brand flex items-center" href="/">
                     <img class="w-8 h-8 sm:ml-2 sm:w-12 sm:h-12" src="/img/logo.svg" alt="MyApp logo">
                     <span class="hidden sm:block text-2xl font-semibold">.mjs</span>
                 </a>
             </div>
         </div>
         <div class="flex flex-grow flex-shrink flex-nowrap justify-end items-center">
-            <nav hx-boost="true" class="relative flex flex-grow leading-6 font-semibold text-slate-700 dark:text-slate-200">
+            <nav class="relative flex flex-grow leading-6 font-semibold text-slate-700 dark:text-slate-200">
                 <ul class="flex flex-wrap items-center justify-end w-full m-0 pb-2 sm:pb-0">
-                    @{
-                        var isAuthenticated = await Html.IsAuthenticatedAsync();
-                        var isAdmin = await Html.HasRoleAsync("Admin");
-                        void RenderNavLink(string href, string childContent, string? cls = null)
-                        {
-                            <li class="@Html.ClassNames("relative flex flex-wrap just-fu-start m-0",cls)">
-                                <a href="@href" class="@Html.ClassNames("p-4 flex items-center justify-start mw-full hover:text-sky-500 dark:hover:text-sky-400", 
-                                    Html.MatchesPath(href) ? "text-blue-700 dark:text-blue-300" : "")">
-                                    @Html.Raw(childContent)
-                                </a>
-                            </li>
-                        }
-                        void RenderLinkButton(string href, string childContent, string? cls = null)
-                        {
-                            <li class="relative flex flex-wrap just-fu-start m-0">
-                                <a href="@href" class="@(cls ?? Css.SecondaryButton)">
-                                    @Html.Raw(childContent)
-                                </a>
-                            </li>
-                        }
-
-                        // Uses prerendered /blog for production
-                        RenderNavLink(Html.IsDebug() ? "/posts" : "/blog/", "Blog", "ml-8 sm:ml-0");
-                        RenderNavLink("/todomvc", "Todos");
-                        RenderNavLink("/bookings-crud", "Bookings");
-                        RenderNavLink("/bookings-auto", "AutoQueryGrid");
-                        if (isAuthenticated)
-                            RenderNavLink("/profile", "Profile");
-                        if (isAdmin)
-                            RenderNavLink("/admin", "Admin");
-                        if (isAuthenticated)
-                            RenderLinkButton("/auth/logout?continue=/", "Sign Out");
-                        if (!isAuthenticated)
-                            RenderLinkButton("/signin", "Sign In");
-                        if (!isAuthenticated)
-                            RenderLinkButton("/signup", "Sign Up", $"ml-2 {Css.PrimaryButton}");
-                    }
+                    @await Html.PartialAsync("HeaderLinks")
                     <li class="relative flex flex-wrap just-fu-start m-0">
                         <div data-component="DarkModeToggle" class="ml-2 w-10"></div>
                     </li>
                 </ul>
             </nav>
-
         </div>
     </div>
 </header>
+
 <script type="module">
 import { mountAll } from "/mjs/app.mjs"
 mountAll()
