@@ -4,12 +4,14 @@
     ViewData["Title"] = "Bookings AutoQueryGrid";
 }
 
-<div class="mt-3 mx-auto max-w-fit">
+<div class="mt-3 mb-20 mx-auto max-w-fit">
     <h2 class="mb-8 py-2 text-center text-3xl font-bold text-gray-900 dark:text-gray-100 sm:text-4xl">
-      @ViewData["Title"]
+        @ViewData["Title"]
     </h2>
 
     <div id="bookings"></div>
+    
+    @await Html.PartialAsync("BookingsVideos")
 </div>
 
 <script type="module">
@@ -27,10 +29,20 @@ const Bookings = {
           </template>
         </AutoQueryGrid>
         <AutoEditForm v-if="coupon" type="UpdateCoupon" v-model="coupon" v-on:done="close" v-on:save="close" />
-        <div class="mt-5 flex">
-            <SrcLink href="https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp.ServiceModel/Bookings.cs" />
-            <SrcLink href="https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp/Pages/BookingsAuto.cshtml" />
-        </div>`,
+
+        <div class="mt-5 flex justify-between">
+            <div>
+                <SrcLink href="https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp.ServiceModel/Bookings.cs" />
+                <SrcLink href="https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp/Pages/BookingsAuto.cshtml" />
+            </div>
+            <div>
+                <a href="/bookings-data" class="text-gray-400 hover:text-gray-600">Bookings DataGrid</a>
+                <svg viewBox="0 0 24 24" width="1.2em" height="1.2em" class="text-gray-400 w-6 h-6 inline" aria-hidden="true">
+                    <path fill="currentColor" d="M8.59 16.58L13.17 12L8.59 7.41L10 6l6 6l-6 6l-1.41-1.42Z"></path>
+                </svg>
+            </div>
+        </div>
+    `,
     setup() {
         const coupon = ref()
         async function showCoupon(id) {

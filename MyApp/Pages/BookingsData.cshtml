@@ -1,0 +1,21 @@
+@page "/bookings-data"
+@{
+    if (!await Html.EnsureRoleAsync("Employee")) return;
+    ViewData["Title"] = "Bookings DataGrid";
+}
+
+<div class="mt-3 mx-auto max-w-fit">
+    <h2 class="py-2 text-center text-3xl font-bold text-gray-900 dark:text-gray-100 sm:text-4xl">
+      @ViewData["Title"]
+    </h2>
+    <div id="bookings"></div>
+
+    @await Html.PartialAsync("BookingsVideos")
+</div>
+
+<script>bookings = @await ApiResultsAsJsonAsync(new QueryBookings())</script>
+<script type="module">
+import Bookings from "/Pages/Bookings.mjs"
+import { mount } from "/mjs/app.mjs"
+mount("#bookings", Bookings, { bookings })
+</script>

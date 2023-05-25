@@ -22,7 +22,7 @@ export default {
       <template #roomNumber-header>
           <span class="hidden lg:inline">Room </span>No
       </template>
-      <template #cost="{ cost }">{{ currency(cost) }}</template>
+      <template #cost="{ cost }"><span v-html="currency(cost)"></span></template>
       
       <template #bookingStartDate-header>
           Start<span class="hidden lg:inline"> Date</span>
@@ -35,9 +35,18 @@ export default {
       </template>
       <template #createdBy="{ createdBy }">{{ createdBy }}</template>
     </DataGrid>
-    <div class="mt-5 flex">
-      <SrcLink href="https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp.ServiceModel/Bookings.cs" />
-      <SrcLink href="https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp/wwwroot/Pages/Bookings.mjs" />
+    
+    <div class="mt-5 flex justify-between">
+        <div>
+            <SrcLink href="https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp.ServiceModel/Bookings.cs" />
+            <SrcLink href="https://github.com/NetCoreTemplates/vue-mjs/blob/main/MyApp/wwwroot/Pages/Bookings.mjs" />
+        </div>
+        <div>
+            <a href="/bookings-auto" class="text-gray-400 hover:text-gray-600">Bookings AutoQueryGrid</a>
+            <svg viewBox="0 0 24 24" width="1.2em" height="1.2em" class="text-gray-400 w-6 h-6 inline" aria-hidden="true">
+                <path fill="currentColor" d="M8.59 16.58L13.17 12L8.59 7.41L10 6l6 6l-6 6l-1.41-1.42Z"></path>
+            </svg>
+        </div>
     </div>
   </div>`,
   props: { bookings:Array },
