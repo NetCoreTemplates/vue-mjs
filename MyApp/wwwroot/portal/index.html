@@ -26,11 +26,12 @@
         </div>
         <nav class="flex flex-1 flex-col">
             <ul role="list" class="flex flex-1 flex-col gap-y-7">
-                <li>
+                <li v-for="group in new Set(Object.keys(sections).flatMap(k => sections[k].group))">
+                    <div v-if="group" class="text-sm font-semibold leading-6 text-gray-400">{{group}}</div>
                     <ul role="list" class="-mx-2 space-y-1">
-                        <li v-for="section in sections">
+                        <li v-for="section in Object.keys(sections).map(k => sections[k].group === group ? sections[k] : null).filter(x => !!x)">
                             <a @click.prevent="navTo(section.id)" :class="[activeSection.id === section.id ? 'bg-gray-50 text-indigo-600' : 'cursor-pointer text-gray-700 hover:text-indigo-600 hover:bg-gray-50', 'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold select-none']" @click="$forceUpdate()">
-                                <icon :svg="section.icon" class="h-6 w-6 shrink-0 text-indigo-600" ></icon>
+                                <icon :svg="section.icon" class="h-6 w-6 shrink-0 text-indigo-600"></icon>
                                 {{section.label}}
                             </a>
                         </li>
@@ -68,105 +69,106 @@
 </div>
 
 <script type="module">
-    import { createApp, ref, onMounted, shallowRef } from "vue"
-    import { JsonApiClient, leftPart, rightPart, appendQueryString, humanize } from "@servicestack/client"
-    import ServiceStackVue, { useClient, useAuth, useMetadata } from "@servicestack/vue"
-    import { Authenticate, AdminData } from "dtos.mjs"
+import { createApp, ref, onMounted, shallowRef } from "vue"
+import { JsonApiClient, leftPart, rightPart, appendQueryString, humanize } from "@servicestack/client"
+import ServiceStackVue, { useClient, useAuth, useMetadata } from "@servicestack/vue"
+import { Authenticate, AdminData } from "dtos.mjs"
 
-    const { loadMetadata, metadataApi, typeOf } = useMetadata()
-    await loadMetadata({
-        olderThan: window.Server ? null : location.search.includes('clear=metadata') ? 0 : 60 * 60 * 1000 //1hr 
-    })
+const { loadMetadata, metadataApi, typeOf } = useMetadata()
+await loadMetadata({
+    olderThan: window.Server ? null : location.search.includes('clear=metadata') ? 0 : 60 * 60 * 1000, //1hr
+})
 
-    const sections = {
-        Dashboard: {
-            icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></svg>`,
-            component: {
-                template:`
-                <div>
-                  <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-                    <div v-for="stat in stats" @click="$emit('nav',stat.label)" class="cursor-pointer hover:bg-gray-50 overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-                      <dt class="truncate text-sm font-medium text-gray-500">Total {{stat.label}}</dt>
-                      <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{stat.total}}</dd>
-                    </div>
-                  </dl>
-                  <p class="mt-8 text-sm font-semibold leading-6">
-                    Go to <a href="/admin/" class="text-indigo-600">Server Rendered Admin <span aria-hidden="true">&rarr;</span></a>    
-                  </p>
-                </div>`,
-                setup() {
-                    const client = useClient()
-                    const stats = ref([])
-                    client.swr(new AdminData(), r => stats.value = r.response?.pageStats || [])
-                    return { stats }
-                }
-            },
-        },
-        Bookings: {
-            type: 'Booking',
-            component: {
-                template:`<AutoQueryGrid :type="type" 
-                    selected-columns="id,name,roomType,roomNumber,bookingStartDate,bookingEndDate,cost,couponId,discount"
-                    :header-titles="{ roomNumber:'Room No', bookingStartDate:'Start Date', bookingEndDate:'End Date', couponId:'Coupon' }"
-                    :visible-from="{ roomNumber:'lg', bookingEndDate:'xl', cost:'md', couponId:'xl', discount:'never' }" />`,
-            },
-        },
-        Coupons: {
-            type: 'Coupon',
-            component: {
-                template:`<AutoQueryGrid :type="type" />`,
-            },
-        },
-    }
-    Object.keys(sections).map(id => {
-        const section = sections[id]
-        section.id = id
-        section.label = section.label || humanize(id)
-        section.icon  = section.icon  || typeOf(section.type)?.icon?.svg
-        section.component.props = section.component.props || ['type']
-        section.component.emits = section.component.emits || ['nav']
-    })
-
-    const App = {
-        setup() {
-            const { user, signIn } = useAuth()
-            const client = useClient()
-            const sidebar = ref()
-            const refreshKey = ref(1)
-            const showUserMenu = ref(false)
-            const init = ref(false)
-            const activeSection = shallowRef(sections[rightPart(leftPart(location.hash,'?'), '#')] || sections.Dashboard)
-
-            function navTo(section, args, pushState=true) {
-                if (!args) args = {}
-                refreshKey.value++
-                activeSection.value = sections[section] || sections.Dashboard
-                if (pushState) history.pushState({ section, ...args }, null, appendQueryString(`#${section}`, args))
-                sidebar.value.toggle(false)
+const sections = {
+    Dashboard: {
+        icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></svg>`,
+        component: {
+            template:`
+            <div>
+              <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+                <div v-for="stat in stats" @click="$emit('nav',stat.label)" class="cursor-pointer hover:bg-gray-50 overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+                  <dt class="truncate text-sm font-medium text-gray-500">Total {{humanize(stat.label)}}</dt>
+                  <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{formatNumber(stat.total)}}</dd>
+                </div>
+              </dl>
+              <p class="mt-8 text-sm font-semibold leading-6">
+                Go to <a href="/admin/" class="text-indigo-600">Server Rendered Admin <span aria-hidden="true">&rarr;</span></a>    
+              </p>
+            </div>`,
+            setup() {
+                const client = useClient()
+                const stats = ref([])
+                client.swr(new AdminData(), r => stats.value = r.response?.pageStats || [])
+                const formatNumber = value => new Intl.NumberFormat().format(value)
+                return { stats, humanize, formatNumber }
             }
+        },
+    },
+    Bookings: {
+        type: 'Booking',
+        component: {
+            template:`<AutoQueryGrid :type="type" 
+                selected-columns="id,name,roomType,roomNumber,bookingStartDate,bookingEndDate,cost,couponId,discount"
+                :header-titles="{ roomNumber:'Room No', bookingStartDate:'Start Date', bookingEndDate:'End Date', couponId:'Coupon' }"
+                :visible-from="{ roomNumber:'lg', bookingEndDate:'xl', cost:'md', couponId:'xl', discount:'never' }" />`,
+        },
+    },
+    Coupons: {
+        type: 'Coupon',
+        component: {
+            template:`<AutoQueryGrid :type="type" />`,
+        },
+    },
+}
+Object.keys(sections).map(id => {
+    const section = sections[id]
+    section.id = id
+    section.label = section.label || humanize(id)
+    section.icon  = section.icon  || typeOf(section.type)?.icon?.svg
+    section.component.props = section.component.props || ['type']
+    section.component.emits = section.component.emits || ['nav']
+})
 
-            onMounted(async () => {
-                window.addEventListener('popstate', event => {
-                    navTo(event.state?.section, {}, false)
-                })
-                
-                const api = await client.api(new Authenticate())
-                if (api.succeeded) {
-                    signIn(api.response)
-                }
-                init.value = true
-            })
+const App = {
+    setup() {
+        const { user, signIn } = useAuth()
+        const client = useClient()
+        const sidebar = ref()
+        const refreshKey = ref(1)
+        const showUserMenu = ref(false)
+        const init = ref(false)
+        const activeSection = shallowRef(sections[rightPart(leftPart(location.hash,'?'), '#')] || sections.Dashboard)
 
-            return { init, sidebar, user, sections, activeSection, navTo, refreshKey, showUserMenu }
+        function navTo(section, args, pushState=true) {
+            if (!args) args = {}
+            refreshKey.value++
+            activeSection.value = sections[section] || sections.Dashboard
+            if (pushState) history.pushState({ section, ...args }, null, appendQueryString(`#${section}`, args))
+            sidebar.value.toggle(false)
         }
-    }
 
-    const client = JsonApiClient.create()
-    const app = createApp(App)
-    app.use(ServiceStackVue)
-    app.component('RouterLink', ServiceStackVue.component('RouterLink'))
-    app.provide('client', client)
-    app.mount('#app')
+        onMounted(async () => {
+            window.addEventListener('popstate', event => {
+                navTo(event.state?.section, {}, false)
+            })
+            
+            const api = await client.api(new Authenticate())
+            if (api.succeeded) {
+                signIn(api.response)
+            }
+            init.value = true
+        })
+
+        return { init, sidebar, user, sections, activeSection, navTo, refreshKey, showUserMenu }
+    }
+}
+
+const client = JsonApiClient.create()
+const app = createApp(App)
+app.use(ServiceStackVue)
+app.component('RouterLink', ServiceStackVue.component('RouterLink'))
+app.provide('client', client)
+app.mount('#app')
 </script>
 
 </body>
