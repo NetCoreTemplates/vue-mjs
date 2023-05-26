@@ -71,7 +71,7 @@
     import { createApp, ref, onMounted, shallowRef } from "vue"
     import { JsonApiClient, leftPart, rightPart, appendQueryString, humanize } from "@servicestack/client"
     import ServiceStackVue, { useClient, useAuth, useMetadata } from "@servicestack/vue"
-    import { Authenticate, AdminData, QueryBookings, QueryCoupons } from "dtos.mjs"
+    import { Authenticate, AdminData } from "dtos.mjs"
 
     const { loadMetadata, metadataApi, typeOf } = useMetadata()
     await loadMetadata({
