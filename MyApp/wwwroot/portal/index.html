@@ -97,7 +97,7 @@
                 setup() {
                     const client = useClient()
                     const stats = ref([])
-                    client.swr(new AdminData(), r => stats.value = r.response.pageStats)
+                    client.swr(new AdminData(), r => stats.value = r.response?.pageStats || [])
                     return { stats }
                 }
             },
