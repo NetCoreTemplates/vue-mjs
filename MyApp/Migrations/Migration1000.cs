@@ -1,3 +1,4 @@
+using System.Data;
 using ServiceStack;
 using ServiceStack.DataAnnotations;
 using ServiceStack.OrmLite;
@@ -44,16 +45,22 @@ public class Migration1000 : MigrationBase
         Db.CreateTable<Booking>();
 
         new[] { 5, 10, 15, 20, 25, 30, 40, 50, 60, 70,  }.Each(percent => {
-            Db.Insert(new Coupon { Id = $"BOOK{percent}", Description = $"{percent}% off", Discount = percent, ExpiryDate = DateTime.UtcNow.AddDays(30) });
+            Db.Insert(new Coupon { 
+                Id = $"BOOK{percent}", 
+                Description = $"{percent}% off", 
+                Discount = percent, 
+                ExpiryDate = DateTime.UtcNow.AddDays(30) 
+            });
         });
 
-        CreateBooking("First Booking!",  RoomType.Queen,  10, 100, "BOOK10", "employee@email.com");
-        CreateBooking("Booking 2",       RoomType.Double, 12, 120, "BOOK25", "manager@email.com");
-        CreateBooking("Booking the 3rd", RoomType.Suite,  13, 130, null,     "employee@email.com");
+        CreateBooking(Db, "First Booking!",  RoomType.Queen,  10, 100, "BOOK10", "employee@email.com");
+        CreateBooking(Db, "Booking 2",       RoomType.Double, 12, 120, "BOOK25", "manager@email.com");
+        CreateBooking(Db, "Booking the 3rd", RoomType.Suite,  13, 130, null,     "employee@email.com");
     }
     
-    public void CreateBooking(string name, RoomType type, int roomNo, decimal cost, string? couponId, string by) =>
-        Db.Insert(new Booking {
+    public void CreateBooking(IDbConnection? db, 
+        string name, RoomType type, int roomNo, decimal cost, string? couponId, string by) =>
+        db.Insert(new Booking {
             Name = name,
             RoomType = type,
             RoomNumber = roomNo,
