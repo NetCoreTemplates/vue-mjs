@@ -120,13 +120,17 @@ const sections = {
         },
     },
 }
+function getIcon(id) {
+    const section = sections[id]
+    return section.icon  || typeOf(section.type)?.icon?.svg ||
+        `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2M3 8v6m0-6h6m12 0v6m0-6H9m12 6v4a2 2 0 0 1-2 2H9m12-6H9m-6 0v4a2 2 0 0 0 2 2h4m-6-6h6m0-6v6m0 0v6m6-12v12"></path></svg>`
+}
 Object.keys(sections).map(id => {
     const section = sections[id]
     section.id = id
     section.label = section.label || humanize(id)
     section.title = section.title || section.label
-    section.icon  = section.icon  || typeOf(section.type)?.icon?.svg || 
-        `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2M3 8v6m0-6h6m12 0v6m0-6H9m12 6v4a2 2 0 0 1-2 2H9m12-6H9m-6 0v4a2 2 0 0 0 2 2h4m-6-6h6m0-6v6m0 0v6m6-12v12"></path></svg>`
+    section.icon  = getIcon(id)
     section.component.props = section.component.props || ['type']
     section.component.emits = section.component.emits || ['nav']
 })
