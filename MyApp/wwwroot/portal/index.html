@@ -139,7 +139,8 @@ const App = {
         const refreshKey = ref(1)
         const showUserMenu = ref(false)
         const init = ref(false)
-        const activeSection = shallowRef(sections[rightPart(leftPart(location.hash,'?'), '#')] || sections.Dashboard)
+        const getSection = () => rightPart(leftPart(location.hash,'?'), '#')
+        const activeSection = shallowRef(sections[getSection()] || sections.Dashboard)
 
         function navTo(section, args, pushState=true) {
             if (!args) args = {}
@@ -151,9 +152,9 @@ const App = {
 
         onMounted(async () => {
             window.addEventListener('popstate', event => {
-                navTo(event.state?.section, {}, false)
+                navTo(event.state?.section || getSection(), {}, false)
             })
-            
+
             const api = await client.api(new Authenticate())
             if (api.succeeded) {
                 signIn(api.response)
