@@ -1,8 +1,8 @@
 ---
 title: Simple, Modern JavaScript
 summary: Learn about JS Modules, Vue 3 and available rich UI Components
-tags: js,dev
-splash: https://images.unsplash.com/photo-1497515114629-f71d768fd07c?crop=entropy&fit=crop&h=1000&w=2000
+tags: [js, dev]
+image: https://images.unsplash.com/photo-1497515114629-f71d768fd07c?crop=entropy&fit=crop&h=1000&w=2000
 author: Brandon Foley
 ---
 
@@ -16,7 +16,7 @@ that we used to rely on external tools for is now available in modern browsers a
 complex tooling and npm dependencies that have historically plagued modern web development.
 
 The good news is that the complex npm tooling that was previously considered mandatory in modern JavaScript App 
-development can be considered optional as we can now utilize modern browser features like  
+development can be considered optional as we can now utilize modern browser features like 
 [async/await](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function),
 [JavaScript Modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules), 
 [dynamic imports](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import), 
@@ -26,7 +26,8 @@ sophisticated development workflow without the need for any npm build tools.
 
 ### Bringing Simplicity Back
 
-This template focuses on simplicity and eschews many aspects that has complicated modern JavaScript development,
+The [vue-mjs](https://github.com/NetCoreTemplates/vue-mjs) template focuses on simplicity and eschews many aspects that has 
+complicated modern JavaScript development,
 specifically:
 
  - No npm node_modules or build tools
@@ -46,7 +47,7 @@ native to modern browsers able to efficiently download the declarative matrix of
 
 ### Best libraries for progressive Multi Page Apps
 
-By default this template includes a collection of libraries we believe offers the best modern development experience in Progressive
+It includes a collection of libraries we believe offers the best modern development experience in Progressive
 MPA Web Apps, specifically:
 
 #### [Tailwind CLI](https://tailwindcss.com/docs/installation)
@@ -66,7 +67,9 @@ const Hello = {
     props: { name:String }
 }
 ```
-<div data-component="Hello" data-props="{ name: 'Vue 3' }" class="text-center text-2xl py-2"></div>
+<div class="text-center text-2xl py-2">
+    <hello name="Vue 3"></hello>
+</div>
 
 Or a simple reactive example:
 
@@ -82,11 +85,24 @@ const Counter = {
 }
 ```
 
-<div data-component="Counter" class="text-center text-2xl py-2 cursor-pointer select-none"></div>
+<div class="text-center text-2xl py-2 cursor-pointer select-none">
+    <counter></counter>
+</div>
 
-These components can be mounted using the standard [Vue 3 mount](https://vuejs.org/api/application.html#app-mount) API, but to 
-make it easier we've added additional APIs for declaratively mounting components to pages using the `data-component` and `data-props`
-attributes, especially useful for including Vue components in Markdown content like this, e.g:  
+### Vue Components in Markdown
+
+Inside `.md` Markdown pages Vue Components can be embedded using Vue's progressive 
+[HTML Template Syntax](https://vuejs.org/guide/essentials/template-syntax.html):
+
+```html
+<counter></counter>
+```
+
+### Vue Components in Razor Pages
+
+Inside `.cshtml` Razor Pages these components can be mounted using the standard [Vue 3 mount](https://vuejs.org/api/application.html#app-mount) API, but to 
+make it easier we've added additional APIs for declaratively mounting components to pages using `data-component` and `data-props`
+attributes:  
 
 ```html
 <div data-component="Hello" data-props="{ name: 'Vue 3' }"></div>
@@ -101,9 +117,8 @@ mount('#counter', Counter)
 
 Both methods create components with access to all your Shared Components and any 3rd Party Plugins which
 we can preview in this example that uses **@servicestack/vue**'s 
-[PrimaryButton](https://docs.servicestack.net/vue/gallery/navigation#primarybutton)
-and [ModalDialog](https://docs.servicestack.net/vue/gallery/modals):
-
+[PrimaryButton](https://docs.servicestack.net/vue//navigation#primarybutton)
+and [ModalDialog](https://docs.servicestack.net/vue//modals):
 
 ```js
 const Plugin = {
@@ -120,13 +135,20 @@ const Plugin = {
 }
 ```
 
-<div class="text-center"><div data-component="Plugin" id="plugin" class="text-2xl py-4"></div></div>
+```html
+<plugin></plugin>
+```
+
+<div class="text-center">
+    <plugin id="plugin" class="text-2xl py-4"></plugin>
+</div>
 
 ### @servicestack/vue
 [@servicestack/vue](https://github.com/ServiceStack/servicestack-vue) is our growing Vue 3 Tailwind component library with a number of rich Tailwind components useful 
-in .NET Web Apps, including Input Components with auto form validation binding which is used by all HTML forms in this template. 
+in .NET Web Apps, including Input Components with auto form validation binding which is used by all HTML forms in
+the [vue-mjs](https://github.com/NetCoreTemplates/vue-mjs) template. 
 
-<div data-component="VueComponentGallery"></div>
+<vue-component-gallery></vue-component-gallery>
 
 ### @servicestack/client
 [@servicestack/client](https://docs.servicestack.net/javascript-client) is our generic JS/TypeScript client library
@@ -154,9 +176,9 @@ on('#txtName', {
 
 For better IDE intelli-sense during development, save the annotated Typed DTOs to disk with:
 
-```bash
-$ npm run dtos
-```
+:::sh
+npm run dtos
+:::
 
 That can be referenced instead to unlock your IDE's static analysis type-checking and intelli-sense benefits during development:
 
@@ -200,7 +222,11 @@ export default {
 
 Which we can also mount below:
 
-<div data-component="HelloApi" data-props="{ value: 'Vue 3' }" class="w-full font-semibold"></div>
+```html
+<hello-api value="Vue 3"></hello-api>
+```
+
+<hello-api value="Vue 3" class="w-full font-semibold"></hello-api>
 
 We'll also go through and explain other features used in this component:
 
@@ -212,7 +238,7 @@ VS Code extension to provide syntax highlighting and an enhanced authoring exper
 
 ### useClient
 
-[useClient()](https://docs.servicestack.net/vue/use-client) provides managed APIs around the `JsonServiceClient` 
+[useClient()](https://docs.servicestack.net/vue//use-client) provides managed APIs around the `JsonServiceClient` 
 instance registered in Vue App's with:
 
 ```js
@@ -387,16 +413,18 @@ Input Components are able to automatically apply contextual validation errors ne
 ### AutoForm Components
 
 We can elevate our productivity even further with
-[Auto Form Components](https://docs.servicestack.net/vue/gallery/autoform) that can automatically generate an
+[Auto Form Components](https://docs.servicestack.net/vue//autoform) that can automatically generate an
 instant API-enabled form with validation binding by just specifying the Request DTO you want to create the form of, e.g:
 
 ```html
 <AutoCreateForm type="CreateBooking" formStyle="card" />
 ```
 
-<div class="not-prose" data-component="AutoCreateForm" data-props="{ type:'CreateBooking', formStyle:'card' }"></div>
+<div class="not-prose">
+    <auto-create-form type="CreateBooking" form-style="card"></auto-create-form>
+</div>
 
-The AutoForm components are powered by your [App Metadata](https://docs.servicestack.net/vue/use-appmetadata) which allows creating 
+The AutoForm components are powered by your [App Metadata](https://docs.servicestack.net/vue//use-appmetadata) which allows creating 
 highly customized UIs from [declarative C# attributes](https://docs.servicestack.net/locode/declarative) whose customizations are
 reused across all ServiceStack Auto UIs, including:
 
@@ -406,12 +434,12 @@ reused across all ServiceStack Auto UIs, including:
 
 ### Form Input Components
 
-In addition to including Tailwind versions of the standard [HTML Form Inputs](https://docs.servicestack.net/vue/gallery/form-inputs) controls to create beautiful Tailwind Forms,
+In addition to including Tailwind versions of the standard [HTML Form Inputs](https://docs.servicestack.net/vue//form-inputs) controls to create beautiful Tailwind Forms,
 it also contains a variety of integrated high-level components:
 
-- [FileInput](https://docs.servicestack.net/vue/gallery/fileinput)
-- [TagInput](https://docs.servicestack.net/vue/gallery/taginput)
-- [Autocomplete](https://docs.servicestack.net/vue/gallery/autocomplete)
+- [FileInput](https://docs.servicestack.net/vue//fileinput)
+- [TagInput](https://docs.servicestack.net/vue//taginput)
+- [Autocomplete](https://docs.servicestack.net/vue//autocomplete)
 
 ### useAuth
 
@@ -532,8 +560,7 @@ Or if you don't want your Web App to reference any external dependencies, have t
 #### Polyfill for Safari
 
 Unfortunately Safari is the last modern browser to [support import maps](https://caniuse.com/import-maps) which is only now in
-Technical Preview. Luckily this feature can be polyfilled with the [ES Module Shims](https://github.com/guybedford/es-module-shims)
-that's configured in this template:
+Technical Preview. Luckily this feature can be polyfilled with the [ES Module Shims](https://github.com/guybedford/es-module-shims):
 
 ```html
 @if (Context.Request.Headers.UserAgent.Any(x => x.Contains("Safari") && !x.Contains("Chrome")))
@@ -588,7 +615,7 @@ main navigation links:
 ```
 
 htmx has lots of useful [real world examples](https://htmx.org/examples/) that can be activated with declarative attributes, 
-another feature this template uses is the [class-tools](https://htmx.org/extensions/class-tools/) extension to hide elements from 
+another useful feature is the [class-tools](https://htmx.org/extensions/class-tools/) extension to hide elements from 
 appearing until after the page is loaded:
 
 ```html
@@ -609,4 +636,4 @@ we'll continue to significantly invest in to unlock even greater productivity be
 In addition to a variety of high-productive components, it also contains a core library of functionality 
 underpinning the Vue Components that most Web Apps should also find useful: 
 
-<div data-component="VueComponentLibrary" class="mt-4"></div>
+<vue-component-library class="mt-4"></vue-component-library>
