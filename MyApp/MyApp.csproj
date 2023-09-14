@@ -35,7 +35,5 @@
     <ProjectReference Include="..\MyApp.ServiceInterface\MyApp.ServiceInterface.csproj" />
     <ProjectReference Include="..\MyApp.ServiceModel\MyApp.ServiceModel.csproj" />
   </ItemGroup>
-
-
-
+  
 </Project>
