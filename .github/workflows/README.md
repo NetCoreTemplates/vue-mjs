@@ -1,52 +1,99 @@
-# ServiceStack mix GitHub Actions
-`release.yml` generated from `x mix release-ghr-vanilla`, this template in designed to help with CI deployment to a dedicated server with SSH access.
-
 ## Overview
-`release.yml` is designed to work with a ServiceStack app deploying directly to a single server via SSH. A docker image is built and stored on GitHub's `ghcr.io` docker registry when a GitHub Release is created.
 
-GitHub Actions specified in `release.yml` then copy files remotely via scp and use `docker-compose` to run the app remotely via SSH.
+This template uses the deployment configurations for a ServiceStack .NET 8 application. The application is containerized using Docker and is set up to be automatically built and deployed via GitHub Actions. The recommended deployment target is a stand-alone Linux server running Ubuntu, with an NGINX reverse proxy also containerized using Docker, which a Docker Compose file is included in the template under the `.deploy` directory.
 
-## Deployment server setup
-To get this working, a server needs to be setup with the following:
+### Highlights
+- 🌐 **NGINX Reverse Proxy**: Utilizes an NGINX reverse proxy to handle web traffic and SSL termination.
+- 🚀 **GitHub Actions**: Leverages GitHub Actions for CI/CD, pushing Docker images to GitHub Container Registry and deploying them on a remote server.
+- 🐳 **Dockerized ServiceStack App**: The application is containerized, with the image built using `.NET 8`.
+- 🔄 **Automated Migrations**: Includes a separate service for running database migrations.
 
-- SSH access
-- docker
-- docker-compose
-- ports 443 and 80 for web access of your hosted application
+### Technology Stack
+- **Web Framework**: ServiceStack
+- **Language**: C# (.NET 8)
+- **Containerization**: Docker
+- **Reverse Proxy**: NGINX
+- **CI/CD**: GitHub Actions
+- **OS**: Ubuntu 22.04 (Deployment Server)
 
-This can be your own server or any cloud hosted server like Digital Ocean, AWS, Azure etc. 
 
-When setting up your server, you'll want to use a dedicated SSH key for access to be used by GitHub Actions. GitHub Actions will need the *private* SSH key within a GitHub Secret to authenticate. This can be done via ssh-keygen and copying the public key to the authorized clients on the server.
 
-To let your server handle multiple ServiceStack applications and automate the generation and management of TLS certificates, an additional docker-compose file is provided via the `x mix` template, `nginx-proxy-compose.yml`. This docker-compose file is ready to run and can be copied to the deployment server.
+## Deployment Server Setup
 
-For example, once copied to remote `~/nginx-proxy-compose.yml`, the following command can be run on the remote server.
+To successfully host your ServiceStack applications, there are several components you need to set up on your deployment server. This guide assumes you're working on a standalone Linux server (Ubuntu is recommended) with SSH access enabled.
 
-```
-docker-compose -f ~/nginx-proxy-compose.yml up -d
-```
+### Prerequisites
 
-This will run an nginx reverse proxy along with a companion container that will watch for additional containers in the same docker network and attempt to initialize them with valid TLS certificates.
+1. **SSH Access**: Required for GitHub Actions to communicate with your server.
+2. **Docker**: To containerize your application.
+3. **Docker-Compose**: For orchestrating multiple containers.
+4. **Ports**: 80 and 443 should be open for web access.
+5. **nginx-reverse-proxy**: For routing traffic to multiple ServiceStack applications and managing TLS certificates.
 
-## GitHub Repository setup
-The `release.yml` uses the following secrets.
+You can use any cloud-hosted or on-premises server like Digital Ocean, AWS, Azure, etc., for this setup.
 
-- DEPLOY_HOST - hostname used to SSH to, this can either be an IP address or subdomain with A record pointing to the server.
-- DEPLOY_USERNAME - the username being logged into via SSH. Eg, `ubuntu`, `ec2-user`, `root` etc.
-- DEPLOY_KEY - SSH private key used to remotely access deploy server/app host.
-- LETSENCRYPT_EMAIL - Email address, required for Let's Encrypt automated TLS certificates.
+### Step-by-Step Guide
 
-These secrets can use the [GitHub CLI](https://cli.github.com/manual/gh_secret_set) for ease of creation. Eg, using the GitHub CLI the following can be set.
+#### 1. Install Docker and Docker-Compose
+
+It is best to follow the [latest installation instructions on the Docker website](https://docs.docker.com/engine/install/ubuntu/) to ensure to have the correct setup with the latest patches.
+
+#### 2. Configure SSH for GitHub Actions
+
+Generate a dedicated SSH key pair to be used by GitHub Actions:
 
 ```bash
-gh secret set DEPLOY_HOST -b"<DEPLOY_HOST, domain or subdomain for your application and server host.>"
-gh secret set DEPLOY_USERNAME -b"<DEPLOY_USERNAME, the username being logged into via SSH. Eg, `ubuntu`, `ec2-user`, `root` etc.>"
-gh secret set DEPLOY_KEY -b"<DEPLOY_KEY, SSH private key used to remotely access deploy server/app host.>"
-gh secret set LETSENCRYPT_EMAIL -b"<LETSENCRYPT_EMAIL, Email address for your TLS certificate generation, eg me@example.com>"
+ssh-keygen -t rsa -b 4096 -f ~/.ssh/github_actions
 ```
 
-These secrets are used to populate variables within GitHub Actions and other configuration files.
+Add the public key to the `authorized_keys` file on your server:
 
-## What's the process of `release.yml`?
+```bash
+cat ~/.ssh/github_actions.pub >> ~/.ssh/authorized_keys
+```
 
-![](https://raw.githubusercontent.com/ServiceStack/docs/master/docs/images/mix/release-ghr-vanilla-diagram.png)
+Then, add the *private* key to your GitHub Secrets as `DEPLOY_KEY` to enable GitHub Actions to SSH into the server securely.
+
+#### 3. Set Up nginx-reverse-proxy
+
+You should have a `docker-compose` file similar to the `nginx-proxy-compose.yml` in your repository. Upload this file to your server:
+
+```bash
+scp nginx-proxy-compose.yml user@your_server:~/
+```
+
+To bring up the nginx reverse proxy and its companion container for handling TLS certificates, run:
+
+```bash
+docker compose -f ~/nginx-proxy-compose.yml up -d
+```
+
+This will start an nginx reverse proxy along with a companion container. They will automatically watch for additional Docker containers on the same network and initialize them with valid TLS certificates.
+
+
+
+## GitHub Repository Setup
+
+Configuring your GitHub repository is an essential step for automating deployments via GitHub Actions. This guide assumes you have a `release.yml` workflow file in your repository's `.github/workflows/` directory, and your deployment server has been set up according to the [Deployment Server Setup](#Deployment-Server-Setup) guidelines.
+
+### Secrets Configuration
+
+Your GitHub Actions workflow requires the following secrets to be set in your GitHub repository:
+
+1. **`DEPLOY_HOST`**: The hostname for SSH access. This can be either an IP address or a domain with an A-record pointing to your server.
+2. **`DEPLOY_USERNAME`**: The username for SSH login. Common examples include `ubuntu`, `ec2-user`, or `root`.
+3. **`DEPLOY_KEY`**: The SSH private key to securely access the deployment server. This should be the same key you've set up on your server for GitHub Actions.
+4. **`LETSENCRYPT_EMAIL`**: Your email address, required for Let's Encrypt automated TLS certificates.
+
+#### Using GitHub CLI for Secret Management
+
+You can conveniently set these secrets using the [GitHub CLI](https://cli.github.com/manual/gh_secret_set) like this:
+
+```bash
+gh secret set DEPLOY_HOST --body="your-host-or-ip"
+gh secret set DEPLOY_USERNAME --body="your-username"
+gh secret set DEPLOY_KEY --bodyFile="path/to/your/ssh-private-key"
+gh secret set LETSENCRYPT_EMAIL --body="your-email@example.com"
+```
+
+These secrets will populate environment variables within your GitHub Actions workflow and other configuration files, enabling secure and automated deployment of your ServiceStack applications.
