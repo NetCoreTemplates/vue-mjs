@@ -11,7 +11,7 @@ export default {
         <div class="px-4 py-5 bg-white dark:bg-black space-y-6 sm:p-6">
           <div class="flex flex-col gap-y-4">
             <TextInput id="displayName" help="Your first and last name" v-model="request.displayName" />
-            <TextInput id="userName" label="Email" placeholder="Email" help="" v-model="request.userName" />
+            <TextInput id="email" label="Email" placeholder="Email" help="" v-model="request.email" />
             <TextInput id="password" type="password" help="6 characters or more" v-model="request.password" />
             <TextInput id="confirmPassword" type="password" v-model="request.confirmPassword" />
             <CheckboxInput id="autoLogin" v-model="request.autoLogin" />
@@ -47,7 +47,7 @@ export default {
             let last = rightPart(leftPart(email, '.'), '@')
             const dto = request.value
             dto.displayName = toPascalCase(first) + ' ' + toPascalCase(last)
-            dto.userName = email
+            dto.email = email
             dto.confirmPassword = dto.password = 'p@55wOrd'
         }
         
