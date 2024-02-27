@@ -1,7 +1,5 @@
-using ServiceStack;
 using ServiceStack.Web;
 using ServiceStack.Auth;
-using ServiceStack.Configuration;
 using ServiceStack.Data;
 
 [assembly: HostingStartup(typeof(MyApp.ConfigureAuthRepository))]
@@ -40,7 +38,7 @@ namespace MyApp
             // .ConfigureServices(services => services.AddSingleton<IAuthRepository>(c =>
             //     new InMemoryAuthRepository<AppUser, UserAuthDetails>()))
             .ConfigureServices(services => services.AddSingleton<IAuthRepository>(c =>
-                new OrmLiteAuthRepository<AppUser, UserAuthDetails>(c.Resolve<IDbConnectionFactory>())))
+                new OrmLiteAuthRepository<AppUser, UserAuthDetails>(c.GetRequiredService<IDbConnectionFactory>())))
             .ConfigureAppHost(appHost => {
                 var authRepo = appHost.Resolve<IAuthRepository>();
                 authRepo.InitSchema();
