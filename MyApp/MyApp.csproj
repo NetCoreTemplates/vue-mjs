@@ -1,24 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-  <PublishProfile>DefaultContainer</PublishProfile>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <ContainerLabel Include="service" Value="my-app" />
-    </ItemGroup>
+  <PropertyGroup> 
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <PublishProfile>DefaultContainer</PublishProfile>
-    </PropertyGroup>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <ContainerLabel Include="service" Value="my-app" />
-    </ItemGroup>
-
-
+  <ItemGroup>
+    <ContainerLabel Include="service" Value="my-app" />
+  </ItemGroup>
 
   <ItemGroup>
     <Using Include="MyApp" />
