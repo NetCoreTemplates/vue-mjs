@@ -1,8 +1,8 @@
 # Name of your application. Used to uniquely configure containers.
-service: vue-mjs
+service: my-app
 
 # Name of the container image.
-image: my-user/vuemjs
+image: my-user/myapp
 
 # Required for use of ASP.NET Core with Kamal-Proxy.
 env:
@@ -21,7 +21,7 @@ servers:
 # in Cloudflare's SSL/TLS setting to "Full" to enable end-to-end encryption.
 proxy:
   ssl: true
-  host: vue-mjs.example.com
+  host: my-app.example.com
   # kamal-proxy connects to your container over port 80, use `app_port` to specify a different port.
   app_port: 8080
 
@@ -41,14 +41,14 @@ builder:
   arch: amd64
 
 volumes:
-  - "/opt/docker/VueMjs/App_Data:/app/App_Data"
+  - "/opt/docker/MyApp/App_Data:/app/App_Data"
 
 #accessories:
 #  litestream:
 #    roles: ["web"]
 #    image: litestream/litestream
 #    files: ["config/litestream.yml:/etc/litestream.yml"]
-#    volumes: ["/opt/docker/VueMjs/App_Data:/data"]
+#    volumes: ["/opt/docker/MyApp/App_Data:/data"]
 #    cmd: replicate
 #    env:
 #      secret:

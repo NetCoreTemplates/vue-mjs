@@ -46,12 +46,12 @@ jobs:
       - name: Modify csproj for template deploy
         if: env.HAS_DEPLOY_ACTION == 'true'
         run: |
-          sed -i 's#<ContainerLabel Include="service" Value="vue-mjs" />#<ContainerLabel Include="service" Value="${{ env.repository_name_lower }}" />#g' VueMjs/VueMjs.csproj
+          sed -i 's#<ContainerLabel Include="service" Value="my-app" />#<ContainerLabel Include="service" Value="${{ env.repository_name_lower }}" />#g' MyApp/MyApp.csproj
 
       - name: Check for Client directory and package.json
         id: check_client
         run: |
-          if [ -d "VueMjs.Client" ] && [ -f "VueMjs.Client/package.json" ]; then
+          if [ -d "MyApp.Client" ] && [ -f "MyApp.Client/package.json" ]; then
             echo "client_exists=true" >> $GITHUB_OUTPUT
           else
             echo "client_exists=false" >> $GITHUB_OUTPUT
@@ -65,7 +65,7 @@ jobs:
 
       - name: Install npm dependencies
         if: steps.check_client.outputs.client_exists == 'true'
-        working-directory: ./VueMjs.Client
+        working-directory: ./MyApp.Client
         run: npm install
 
       - name: Install x tool
@@ -73,7 +73,7 @@ jobs:
 
       - name: Apply Production AppSettings
         if: env.HAS_APPSETTINGS_PATCH == 'true'
-        working-directory: ./VueMjs
+        working-directory: ./MyApp
         run: |
           cat <<EOF >> appsettings.json.patch
           ${{ secrets.APPSETTINGS_PATCH }}
