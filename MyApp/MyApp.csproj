@@ -6,7 +6,14 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <PublishProfile>DefaultContainer</PublishProfile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ContainerLabel Include="service" Value="my-app" />
+  </ItemGroup>
+
+
   <ItemGroup>
     <Using Include="MyApp" />
     <Using Include="ServiceStack" />
