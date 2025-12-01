@@ -12,6 +12,9 @@ public class AppHost : AppHostBase, IHostingStartup
     public void Configure(IWebHostBuilder builder) => builder
         .ConfigureServices(services => {
             // Configure ASP.NET Core IOC Dependencies
+            services.AddPlugin(new CorsFeature([
+                "http://localhost:5173", //vite dev
+            ], allowCredentials:true));
         });
 
     public AppHost() : base("MyApp", typeof(MyServices).Assembly) {}
@@ -20,10 +23,5 @@ public class AppHost : AppHostBase, IHostingStartup
     {
         SetConfig(new HostConfig {
         });
-        
-        Plugins.Add(new CorsFeature(new[] {
-            "http://localhost:5173", //vite dev
-        }, allowCredentials:true));
-
     }
 }
